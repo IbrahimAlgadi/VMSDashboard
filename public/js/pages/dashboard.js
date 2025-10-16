@@ -7,6 +7,7 @@
 
   const Dashboard = {
     data: null,
+    alertsData: null,
     refreshInterval: null,
 
     /**
@@ -16,10 +17,15 @@
       console.log('📊 Dashboard initializing...');
       
       await this.loadData();
+      await this.loadAlerts();
+      await Charts.init();
+      
       this.renderKPIs();
+      this.renderCharts();
       this.renderQuickActions();
       this.renderSummary();
       this.renderRegionBreakdown();
+      this.renderRecentAlerts();
       this.setupRefresh();
       this.setupInteractivity();
       
@@ -37,6 +43,19 @@
       } catch (error) {
         console.error('Error loading dashboard data:', error);
         this.showError();
+      }
+    },
+
+    /**
+     * Load alerts data
+     */
+    async loadAlerts() {
+      try {
+        const response = await fetch('/data/mock/alerts-data.json');
+        this.alertsData = await response.json();
+        return this.alertsData;
+      } catch (error) {
+        console.error('Error loading alerts data:', error);
       }
     },
 
@@ -230,12 +249,138 @@
     },
 
     /**
+     * Render charts
+     */
+    renderCharts() {
+      if (!this.data) return;
+
+      // System Health Gauge
+      Charts.createGaugeChart('health-gauge-chart', {
+        title: 'System Health',
+        value: this.data.summary.systemUptime,
+        max: 100,
+        color: ['#198754', '#ffc107', '#dc3545']
+      });
+
+      // Camera Status Pie Chart
+      const { totalCameras } = this.data.kpis;
+      Charts.createPieChart('status-pie-chart', {
+        title: 'Camera Status',
+        data: [
+          { value: totalCameras.online, name: 'Online' },
+          { value: totalCameras.offline, name: 'Offline' },
+          { value: 2, name: 'Maintenance' }
+        ],
+        colors: ['#198754', '#dc3545', '#ffc107']
+      });
+
+      // Storage Trends Line Chart
+      Charts.createLineChart('storage-line-chart', {
+        title: 'Storage Usage',
+        xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        series: [
+          {
+            name: 'Used Storage',
+            data: [58, 60, 62, 61, 63, 64, 65]
+          },
+          {
+            name: 'Total Capacity',
+            data: [100, 100, 100, 100, 100, 100, 100]
+          }
+        ],
+        colors: ['#0d6efd', '#e9ecef']
+      });
+    },
+
+    /**
+     * Render recent alerts
+     */
+    renderRecentAlerts() {
+      if (!this.alertsData) return;
+
+      const container = document.getElementById('recent-alerts');
+      if (!container) return;
+
+      const { recentAlerts } = this.alertsData;
+      const displayAlerts = recentAlerts.slice(0, 5);
+
+      if (displayAlerts.length === 0) {
+        container.innerHTML = `
+          <div class="alerts-empty">
+            <i class="bi bi-check-circle"></i>
+            <p>No recent alerts</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = displayAlerts.map(alert => {
+        const timeAgo = this.getTimeAgo(alert.timestamp);
+        const iconMap = {
+          camera_offline: 'bi-camera-video-off',
+          storage_warning: 'bi-hdd',
+          maintenance: 'bi-tools',
+          nvr_offline: 'bi-hdd-rack',
+          motion_detected: 'bi-eye'
+        };
+
+        return `
+          <div class="alert-item ${alert.severity} ${!alert.acknowledged ? 'unread' : ''}">
+            <div class="alert-icon ${alert.severity}">
+              <i class="bi ${iconMap[alert.type] || 'bi-info-circle'}"></i>
+            </div>
+            <div class="alert-content">
+              <div class="alert-header">
+                <h6 class="alert-title">${alert.title}</h6>
+                <span class="badge rounded-pill text-bg-${alert.severity} alert-badge">
+                  ${alert.severity}
+                </span>
+              </div>
+              <p class="alert-message">${alert.message}</p>
+              <div class="alert-meta">
+                <div class="alert-meta-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>${alert.location}</span>
+                </div>
+                <div class="alert-meta-item">
+                  <i class="bi bi-clock"></i>
+                  <span>${timeAgo}</span>
+                </div>
+                <div class="alert-meta-item">
+                  <span class="alert-status-dot ${alert.status}"></span>
+                  <span>${alert.status}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    },
+
+    /**
+     * Get time ago string
+     */
+    getTimeAgo(timestamp) {
+      const now = new Date();
+      const time = new Date(timestamp);
+      const diff = Math.floor((now - time) / 1000); // seconds
+
+      if (diff < 60) return `${diff} seconds ago`;
+      if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+      return `${Math.floor(diff / 86400)} days ago`;
+    },
+
+    /**
      * Refresh dashboard data
      */
     async refresh() {
       console.log('🔄 Refreshing dashboard...');
       await this.loadData();
+      await this.loadAlerts();
       this.renderKPIs();
+      this.renderCharts();
+      this.renderRecentAlerts();
       this.updateLastRefreshTime();
     },
 

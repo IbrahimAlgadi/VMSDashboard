@@ -2,6 +2,8 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/css/pages/dashboard.css">
+<link rel="stylesheet" href="/css/components/charts.css">
+<link rel="stylesheet" href="/css/components/alerts.css">
 {% endblock %}
 
 {% block content %}
@@ -128,6 +130,50 @@
 
   </div>
 
+  <!-- Charts Section -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 mb-3">
+      <h5><i class="bi bi-bar-chart me-2"></i>System Analytics</h5>
+    </div>
+
+    <!-- System Health Gauge -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card chart-card">
+        <div class="card-header">
+          <h6><i class="bi bi-speedometer me-2"></i>System Health</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" id="health-gauge-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Distribution Pie -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card chart-card">
+        <div class="card-header">
+          <h6><i class="bi bi-pie-chart me-2"></i>Camera Status</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" id="status-pie-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Storage Trends Line -->
+    <div class="col-lg-4 col-md-12">
+      <div class="card chart-card">
+        <div class="card-header">
+          <h6><i class="bi bi-graph-up me-2"></i>Storage Trend (7 Days)</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" id="storage-line-chart"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <!-- Quick Actions -->
   <div class="row quick-actions mb-4">
     <div class="col-12 mb-3">
@@ -148,14 +194,17 @@
   <!-- Dashboard Details Row -->
   <div class="row">
     
-    <!-- System Summary -->
-    <div class="col-lg-4 mb-4">
+    <!-- Recent Alerts -->
+    <div class="col-lg-6 mb-4">
       <div class="card">
         <div class="card-header bg-white">
-          <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>System Summary</h6>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Recent Alerts</h6>
+            <span class="badge bg-danger">3 Active</span>
+          </div>
         </div>
-        <div class="card-body">
-          <div id="dashboard-summary">
+        <div class="card-body p-0">
+          <div class="alerts-timeline p-3" id="recent-alerts">
             <!-- Populated by JavaScript -->
             <div class="text-center py-3">
               <div class="spinner-border spinner-border-sm text-primary" role="status">
@@ -163,22 +212,51 @@
               </div>
             </div>
           </div>
+          <div class="view-all-alerts">
+            <a href="/alerts" class="btn btn-sm btn-outline-primary">
+              View All Alerts <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Region Breakdown -->
-    <div class="col-lg-8 mb-4">
-      <div class="card">
-        <div class="card-header bg-white">
-          <h6 class="mb-0"><i class="bi bi-pin-map me-2"></i>Regional Distribution</h6>
+    <!-- System Summary & Region Breakdown -->
+    <div class="col-lg-6 mb-4">
+      <div class="row">
+        <!-- System Summary -->
+        <div class="col-12 mb-3">
+          <div class="card">
+            <div class="card-header bg-white">
+              <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>System Summary</h6>
+            </div>
+            <div class="card-body">
+              <div id="dashboard-summary">
+                <!-- Populated by JavaScript -->
+                <div class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="region-breakdown" id="region-breakdown">
-            <!-- Populated by JavaScript -->
-            <div class="text-center py-3">
-              <div class="spinner-border spinner-border-sm text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+
+        <!-- Region Breakdown -->
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header bg-white">
+              <h6 class="mb-0"><i class="bi bi-pin-map me-2"></i>Regional Distribution</h6>
+            </div>
+            <div class="card-body">
+              <div class="region-breakdown" id="region-breakdown">
+                <!-- Populated by JavaScript -->
+                <div class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -186,22 +264,12 @@
       </div>
     </div>
 
-  </div>
-
-  <!-- Info Banner -->
-  <div class="row">
-    <div class="col-12">
-      <div class="alert alert-info alert-dismissible fade show" role="alert">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        <strong>Task 05 Complete!</strong> KPI cards with animations, quick actions, system summary, and regional breakdown are now functional.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    </div>
   </div>
 
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="/js/components/charts.js"></script>
 <script src="/js/pages/dashboard.js"></script>
 {% endblock %}

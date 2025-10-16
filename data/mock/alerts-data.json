@@ -1,0 +1,70 @@
+{
+  "recentAlerts": [
+    {
+      "id": 1,
+      "type": "camera_offline",
+      "severity": "critical",
+      "title": "Camera Offline",
+      "message": "ATM-RD-001 camera has gone offline",
+      "location": "Riyadh - King Fahd Branch",
+      "timestamp": "2024-01-15T10:25:00Z",
+      "status": "active",
+      "acknowledged": false
+    },
+    {
+      "id": 2,
+      "type": "storage_warning",
+      "severity": "warning",
+      "title": "Storage Warning",
+      "message": "NVR-RD-001 storage usage at 85%",
+      "location": "Riyadh Data Center",
+      "timestamp": "2024-01-15T09:15:00Z",
+      "status": "active",
+      "acknowledged": false
+    },
+    {
+      "id": 3,
+      "type": "maintenance",
+      "severity": "info",
+      "title": "Scheduled Maintenance",
+      "message": "System maintenance completed successfully",
+      "location": "All Locations",
+      "timestamp": "2024-01-15T08:00:00Z",
+      "status": "resolved",
+      "acknowledged": true
+    },
+    {
+      "id": 4,
+      "type": "nvr_offline",
+      "severity": "critical",
+      "title": "NVR Connection Lost",
+      "message": "NVR-JD-003 lost connection",
+      "location": "Jeddah - Al Hamra Branch",
+      "timestamp": "2024-01-15T07:45:00Z",
+      "status": "resolved",
+      "acknowledged": true
+    },
+    {
+      "id": 5,
+      "type": "motion_detected",
+      "severity": "warning",
+      "title": "Unusual Motion Detected",
+      "message": "Motion detected outside business hours",
+      "location": "Dammam - Corniche Branch",
+      "timestamp": "2024-01-15T06:30:00Z",
+      "status": "active",
+      "acknowledged": false
+    }
+  ],
+  "alertStats": {
+    "total": 127,
+    "active": 3,
+    "resolved": 124,
+    "critical": 1,
+    "warning": 2,
+    "info": 0,
+    "last24Hours": 8,
+    "last7Days": 42
+  }
+}
+
