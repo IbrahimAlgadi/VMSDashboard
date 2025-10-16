@@ -1,0 +1,56 @@
+{
+  "group": "Alerts & Reports",
+  "tasks": {
+    "task-18": {
+      "title": "Alerts Management Page",
+      "description": "Create alerts management page with filtering",
+      "deliverables": [
+        "Alert list with severity badges",
+        "Filter by severity, type, date",
+        "Alert detail modal",
+        "Acknowledge/dismiss actions",
+        "Alert statistics cards",
+        "Pagination",
+        "Mock alerts data"
+      ],
+      "files": [
+        "views/alerts.njk",
+        "public/css/pages/alerts.css",
+        "public/js/pages/alerts.js",
+        "data/mock/alerts-detailed.json"
+      ],
+      "ui_elements": [
+        "card with filters",
+        "table or list-group for alerts",
+        "badge for severity (critical, warning, info)",
+        "modal for alert details",
+        "btn-sm for actions"
+      ]
+    },
+    "task-19": {
+      "title": "Reports Generation Page",
+      "description": "Create reports page with templates and export options",
+      "deliverables": [
+        "Report templates grid",
+        "Report form with parameters",
+        "Preview section",
+        "Export format options (PDF, Excel, CSV)",
+        "Scheduled reports section",
+        "Mock report templates"
+      ],
+      "files": [
+        "views/reports.njk",
+        "public/css/pages/reports.css",
+        "public/js/pages/reports.js"
+      ],
+      "ui_elements": [
+        "card grid for templates",
+        "form with report parameters",
+        "btn-group for export formats",
+        "table for scheduled reports",
+        "icon buttons for actions"
+      ]
+    }
+  }
+}
+

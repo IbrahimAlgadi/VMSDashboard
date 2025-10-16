@@ -1,0 +1,73 @@
+{
+  "group": "Layout Components",
+  "tasks": {
+    "task-02": {
+      "title": "Navigation Bar Component",
+      "description": "Create responsive top navigation bar with branding, user menu, notifications",
+      "deliverables": [
+        "Nunjucks partial for navbar",
+        "Bootstrap navbar with brand logo",
+        "Search bar in navbar",
+        "User dropdown menu",
+        "Notification bell icon with badge",
+        "Theme toggle button",
+        "Mobile responsive hamburger menu"
+      ],
+      "files": [
+        "views/partials/navbar.njk",
+        "public/css/components/navbar.css",
+        "public/js/components/navbar.js"
+      ],
+      "ui_elements": [
+        "navbar navbar-expand-lg navbar-dark bg-primary",
+        "navbar-brand with logo",
+        "nav-item dropdowns",
+        "form-control for search",
+        "badge for notification count"
+      ]
+    },
+    "task-03": {
+      "title": "Sidebar Navigation Component",
+      "description": "Create fixed sidebar with menu items, icons, and active states",
+      "deliverables": [
+        "Nunjucks partial for sidebar",
+        "Navigation menu with icons (Bootstrap Icons)",
+        "Active page highlighting",
+        "Collapsible menu groups",
+        "Sidebar toggle for mobile",
+        "Smooth transitions"
+      ],
+      "files": [
+        "views/partials/sidebar.njk",
+        "public/css/components/sidebar.css",
+        "public/js/components/sidebar.js"
+      ],
+      "ui_elements": [
+        "Fixed sidebar with nav list",
+        "nav-link with icons (bi-house, bi-camera, etc.)",
+        "active class styling",
+        "accordion for sub-menus"
+      ]
+    },
+    "task-04": {
+      "title": "Footer Component",
+      "description": "Create footer with copyright, links, and version info",
+      "deliverables": [
+        "Nunjucks partial for footer",
+        "Copyright text",
+        "Quick links",
+        "Version number display",
+        "Sticky footer layout"
+      ],
+      "files": [
+        "views/partials/footer.njk",
+        "public/css/components/footer.css"
+      ],
+      "ui_elements": [
+        "footer.mt-auto.py-3.bg-light",
+        "container with footer content"
+      ]
+    }
+  }
+}
+

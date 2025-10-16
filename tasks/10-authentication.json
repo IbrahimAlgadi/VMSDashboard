@@ -1,0 +1,31 @@
+{
+  "group": "Authentication",
+  "tasks": {
+    "task-23": {
+      "title": "Login Page",
+      "description": "Create authentication login page",
+      "deliverables": [
+        "Centered login form",
+        "Email and password fields",
+        "Remember me checkbox",
+        "Forgot password link",
+        "Login button",
+        "Demo credentials display",
+        "Form validation styling"
+      ],
+      "files": [
+        "views/login.njk",
+        "public/css/pages/login.css",
+        "public/js/pages/login.js"
+      ],
+      "ui_elements": [
+        "container with centered card",
+        "form-floating for inputs",
+        "form-check for remember me",
+        "btn-primary btn-lg for submit",
+        "alert for demo credentials"
+      ]
+    }
+  }
+}
+

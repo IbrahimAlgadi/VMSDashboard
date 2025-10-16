@@ -1,0 +1,75 @@
+{
+  "group": "Dashboard Pages",
+  "tasks": {
+    "task-05": {
+      "title": "Dashboard Overview Page - KPI Cards",
+      "description": "Create main dashboard page with statistics cards",
+      "deliverables": [
+        "Dashboard route and template",
+        "4 KPI stat cards (Total NVRs, Cameras, Online %, Alerts)",
+        "Card hover effects",
+        "Icons for each stat",
+        "Color-coded status indicators",
+        "Mock data for display"
+      ],
+      "files": [
+        "views/dashboard.njk",
+        "public/css/pages/dashboard.css",
+        "public/js/pages/dashboard.js",
+        "data/mock/dashboard-data.json"
+      ],
+      "ui_elements": [
+        "row.row-cols-1.row-cols-md-2.row-cols-lg-4",
+        "card.stat-card with card-body",
+        "Bootstrap icons (bi-server, bi-camera-video, etc.)",
+        "text-success, text-danger for status"
+      ]
+    },
+    "task-06": {
+      "title": "Dashboard Overview Page - Charts Section",
+      "description": "Add charts section with ECharts visualizations",
+      "deliverables": [
+        "ECharts library integration",
+        "System health gauge chart",
+        "Status distribution pie chart",
+        "Storage trends line chart",
+        "Responsive chart containers",
+        "Mock data for charts"
+      ],
+      "files": [
+        "views/dashboard.njk (extend)",
+        "public/js/components/charts.js",
+        "public/css/components/charts.css"
+      ],
+      "ui_elements": [
+        "row.row-cols-1.row-cols-lg-2.row-cols-xl-3",
+        "card with chart container div",
+        "chart-container class with fixed height"
+      ]
+    },
+    "task-07": {
+      "title": "Dashboard Overview Page - Recent Alerts",
+      "description": "Add recent alerts timeline section",
+      "deliverables": [
+        "Alerts timeline component",
+        "Alert cards with severity badges",
+        "Timestamp display with relative time",
+        "Alert icons by type",
+        "View all button",
+        "Mock alert data"
+      ],
+      "files": [
+        "views/dashboard.njk (extend)",
+        "public/css/components/alerts.css",
+        "data/mock/alerts-data.json"
+      ],
+      "ui_elements": [
+        "card with list-group",
+        "list-group-item with badges",
+        "badge.rounded-pill (success, warning, danger)",
+        "bi-exclamation-triangle icon"
+      ]
+    }
+  }
+}
+

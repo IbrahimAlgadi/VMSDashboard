@@ -1,0 +1,32 @@
+{
+  "group": "Foundation",
+  "tasks": {
+    "task-01": {
+      "title": "Project Setup & Base Layout",
+      "description": "Initialize Express app with Nunjucks, create base layout template with HTML structure",
+      "deliverables": [
+        "Express server setup",
+        "Nunjucks templating engine configured",
+        "Base layout template with Bootstrap 5.3 integration",
+        "CSS and JS folder structure",
+        "Static file serving configured",
+        "Browser automation test script to verify homepage loads"
+      ],
+      "files": [
+        "server.js",
+        "package.json",
+        "views/layout.njk",
+        "public/css/main.css",
+        "public/js/app.js",
+        "tests/browser-test.js"
+      ],
+      "ui_elements": [
+        "HTML5 doctype and meta tags",
+        "Bootstrap 5.3 CSS/JS includes",
+        "CSS variables setup",
+        "Basic body structure"
+      ]
+    }
+  }
+}
+

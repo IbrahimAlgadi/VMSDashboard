@@ -1,0 +1,100 @@
+{
+  "group": "UI Enhancements",
+  "tasks": {
+    "task-24": {
+      "title": "Theme System - Light/Dark Mode",
+      "description": "Implement theme switching system",
+      "deliverables": [
+        "CSS variables for light theme",
+        "CSS variables for dark theme",
+        "Theme toggle button in navbar",
+        "LocalStorage persistence",
+        "Smooth transition animations",
+        "System preference detection"
+      ],
+      "files": [
+        "public/css/themes/light.css",
+        "public/css/themes/dark.css",
+        "public/js/core/theme.js"
+      ],
+      "ui_elements": [
+        "body.dark-mode class",
+        ":root CSS variables",
+        "bi-sun, bi-moon icons",
+        "transition properties"
+      ]
+    },
+    "task-25": {
+      "title": "Responsive Design & Mobile Optimization",
+      "description": "Optimize all pages for mobile and tablet",
+      "deliverables": [
+        "Mobile navigation menu",
+        "Responsive grid adjustments",
+        "Touch-friendly button sizes",
+        "Mobile-optimized tables (stack or horizontal scroll)",
+        "Responsive chart sizing",
+        "Test on multiple viewport sizes"
+      ],
+      "files": [
+        "public/css/responsive.css",
+        "public/js/components/responsive.js"
+      ],
+      "ui_elements": [
+        "Media queries for all breakpoints",
+        "d-none d-md-block utilities",
+        "table-responsive wrappers",
+        "offcanvas for mobile sidebar",
+        "col-* responsive classes"
+      ]
+    },
+    "task-26": {
+      "title": "Loading States & Spinners",
+      "description": "Add loading indicators throughout the app",
+      "deliverables": [
+        "Page load spinner overlay",
+        "Button loading states",
+        "Skeleton loaders for cards",
+        "Table loading state",
+        "Inline spinners for actions",
+        "CSS animations"
+      ],
+      "files": [
+        "views/partials/loading.njk",
+        "public/css/components/loading.css",
+        "public/js/utils/loading.js"
+      ],
+      "ui_elements": [
+        "spinner-border, spinner-grow",
+        "placeholder classes for skeletons",
+        "position-absolute overlays",
+        "btn with spinner",
+        "fade animations"
+      ]
+    },
+    "task-27": {
+      "title": "Toast Notifications & Alerts",
+      "description": "Implement notification system using Bootstrap Toasts",
+      "deliverables": [
+        "Toast container",
+        "Success, warning, error, info toasts",
+        "Toast trigger functions",
+        "Auto-dismiss timers",
+        "Stacking multiple toasts",
+        "Custom positioning"
+      ],
+      "files": [
+        "views/partials/toast-container.njk",
+        "public/css/components/toasts.css",
+        "public/js/components/notification.js"
+      ],
+      "ui_elements": [
+        "toast-container position-fixed",
+        "toast with toast-header, toast-body",
+        "bg-success, bg-danger classes",
+        "bi icons in toasts",
+        "animation classes"
+      ]
+    }
+  }
+}
+

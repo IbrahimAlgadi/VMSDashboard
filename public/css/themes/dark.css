@@ -1,0 +1,46 @@
+/* ===================================
+   Dark Theme
+   =================================== */
+
+body.dark-mode {
+  /* Background Colors */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  
+  /* Border Colors */
+  --border-color: #404040;
+  --border-color-light: #333333;
+  
+  /* Component Colors */
+  --card-bg: #2d2d2d;
+  --sidebar-bg: #1a1a1a;
+  --navbar-bg: #1a1a1a;
+  --footer-bg: #1a1a1a;
+  
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-mode .card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+body.dark-mode .text-dark {
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode .text-muted {
+  color: var(--text-muted) !important;
+}
+

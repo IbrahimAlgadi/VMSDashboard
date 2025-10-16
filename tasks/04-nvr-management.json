@@ -1,0 +1,78 @@
+{
+  "group": "NVR Management",
+  "tasks": {
+    "task-08": {
+      "title": "NVR Management Page - Layout & Filters",
+      "description": "Create NVR management page with filter panel",
+      "deliverables": [
+        "NVR management route and template",
+        "Page header with breadcrumb",
+        "Statistics bar (total, online, offline)",
+        "Filter panel (status, region, branch)",
+        "Search input",
+        "Add NVR button"
+      ],
+      "files": [
+        "views/nvr-management.njk",
+        "public/css/pages/nvr.css",
+        "public/js/pages/nvr-management.js"
+      ],
+      "ui_elements": [
+        "breadcrumb navigation",
+        "row with stat badges",
+        "card with filter form",
+        "form-select dropdowns",
+        "btn btn-primary for actions"
+      ]
+    },
+    "task-09": {
+      "title": "NVR Management Page - Data Table",
+      "description": "Add DataTables component with NVR list",
+      "deliverables": [
+        "DataTables library integration",
+        "NVR table with sortable columns",
+        "Status badges in cells",
+        "Action buttons (view, edit, delete)",
+        "Pagination",
+        "Export buttons (CSV, Excel, PDF)",
+        "Mock NVR data (20+ records)"
+      ],
+      "files": [
+        "views/nvr-management.njk (extend)",
+        "public/js/components/datatable.js",
+        "data/mock/nvrs.json"
+      ],
+      "ui_elements": [
+        "table.table.table-hover.table-striped",
+        "thead.table-dark",
+        "badge for status column",
+        "btn-group for actions",
+        "DataTables controls"
+      ]
+    },
+    "task-10": {
+      "title": "NVR Management Page - Detail Modal",
+      "description": "Create modal for NVR details and editing",
+      "deliverables": [
+        "Bootstrap modal component",
+        "NVR detail view (tabs: info, cameras, status)",
+        "Edit form with validation styling",
+        "Save and cancel buttons",
+        "Modal animations"
+      ],
+      "files": [
+        "views/partials/modals/nvr-detail.njk",
+        "public/css/components/modals.css",
+        "public/js/components/modal.js"
+      ],
+      "ui_elements": [
+        "modal fade",
+        "modal-dialog.modal-lg",
+        "modal-header, modal-body, modal-footer",
+        "nav-tabs for sections",
+        "form-control, form-select"
+      ]
+    }
+  }
+}
+

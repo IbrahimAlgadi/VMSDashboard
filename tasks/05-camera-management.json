@@ -1,0 +1,55 @@
+{
+  "group": "Camera Management",
+  "tasks": {
+    "task-11": {
+      "title": "Camera Management Page - Grid View",
+      "description": "Create camera management page with card grid view",
+      "deliverables": [
+        "Camera management route and template",
+        "Filter sidebar (by NVR, status, branch)",
+        "Camera cards in grid layout",
+        "Camera thumbnail placeholder",
+        "Status indicator on cards",
+        "View toggle (grid/list)",
+        "Mock camera data"
+      ],
+      "files": [
+        "views/camera-management.njk",
+        "public/css/pages/camera.css",
+        "public/js/pages/camera-management.js",
+        "data/mock/cameras.json"
+      ],
+      "ui_elements": [
+        "row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4",
+        "card with camera info",
+        "card-img-top for thumbnail",
+        "badge.position-absolute for status",
+        "btn-group for view toggle"
+      ]
+    },
+    "task-12": {
+      "title": "Camera Management Page - List View & Details",
+      "description": "Add list view and camera detail modal",
+      "deliverables": [
+        "List view with DataTable",
+        "Camera detail modal with multiple tabs",
+        "Diagnostic information display",
+        "Video player placeholder",
+        "Timeline view for recordings"
+      ],
+      "files": [
+        "views/camera-management.njk (extend)",
+        "views/partials/modals/camera-detail.njk",
+        "public/css/components/camera-card.css"
+      ],
+      "ui_elements": [
+        "table for list view",
+        "modal-xl for camera details",
+        "nav-tabs (info, stream, recordings)",
+        "video placeholder div",
+        "timeline component"
+      ]
+    }
+  }
+}
+

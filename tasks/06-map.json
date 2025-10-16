@@ -1,0 +1,52 @@
+{
+  "group": "Map Page",
+  "tasks": {
+    "task-13": {
+      "title": "Map Page - Leaflet Integration",
+      "description": "Create interactive map page with location markers",
+      "deliverables": [
+        "Leaflet library integration",
+        "Full-height map container",
+        "Map controls panel",
+        "Custom marker icons by status",
+        "Marker clustering",
+        "Mock location data"
+      ],
+      "files": [
+        "views/map.njk",
+        "public/css/pages/map.css",
+        "public/js/pages/map.js",
+        "public/js/components/map.js",
+        "data/mock/locations.json"
+      ],
+      "ui_elements": [
+        "div#map.map-container",
+        "position-absolute controls panel",
+        "leaflet marker popup styling",
+        "layer control widget"
+      ]
+    },
+    "task-14": {
+      "title": "Map Page - Sidebar & Filters",
+      "description": "Add sidebar with location list and filters",
+      "deliverables": [
+        "Collapsible sidebar overlay",
+        "Location list with status",
+        "Filter options (region, branch, status)",
+        "Search locations",
+        "Click to center map on location"
+      ],
+      "files": [
+        "views/map.njk (extend)",
+        "public/css/components/map-sidebar.css"
+      ],
+      "ui_elements": [
+        "offcanvas for sidebar",
+        "list-group for locations",
+        "form controls for filters",
+        "btn-sm for location items"
+      ]
+    }
+  }
+}
+

@@ -1,0 +1,81 @@
+{
+  "group": "Monitoring Dashboards",
+  "tasks": {
+    "task-15": {
+      "title": "Compliance Dashboard Page",
+      "description": "Create SAMA compliance tracking page",
+      "deliverables": [
+        "Compliance overview cards",
+        "Compliance status by region table",
+        "Requirement checklist",
+        "Progress bars for each category",
+        "Export compliance report button",
+        "Mock compliance data"
+      ],
+      "files": [
+        "views/compliance.njk",
+        "public/css/pages/compliance.css",
+        "public/js/pages/compliance.js",
+        "data/mock/compliance-data.json"
+      ],
+      "ui_elements": [
+        "card with compliance percentage",
+        "progress bars (progress-bar-striped)",
+        "table with color-coded cells",
+        "accordion for requirements",
+        "badge for pass/fail status"
+      ]
+    },
+    "task-16": {
+      "title": "Security Monitoring Page",
+      "description": "Create security monitoring dashboard",
+      "deliverables": [
+        "Real-time status indicators",
+        "Security event timeline",
+        "Threat level gauge",
+        "Failed access attempts table",
+        "Security metrics cards",
+        "Mock security data"
+      ],
+      "files": [
+        "views/security.njk",
+        "public/css/pages/security.css",
+        "public/js/pages/security.js",
+        "data/mock/security-data.json"
+      ],
+      "ui_elements": [
+        "alert boxes for warnings",
+        "table.table-sm for events",
+        "badge.text-bg-danger for threats",
+        "card with gauge chart",
+        "timeline component"
+      ]
+    },
+    "task-17": {
+      "title": "Analytics Dashboard Page",
+      "description": "Create analytics page with advanced charts",
+      "deliverables": [
+        "Multiple chart types (bar, line, area, heatmap)",
+        "Date range picker",
+        "Metric selector dropdown",
+        "Comparison charts",
+        "Export chart as image",
+        "Mock analytics data"
+      ],
+      "files": [
+        "views/analytics.njk",
+        "public/css/pages/analytics.css",
+        "public/js/pages/analytics.js",
+        "data/mock/analytics-data.json"
+      ],
+      "ui_elements": [
+        "row with multiple chart cards",
+        "form-control for date range",
+        "btn-group for chart type toggle",
+        "card-header with controls",
+        "chart containers with different sizes"
+      ]
+    }
+  }
+}
+

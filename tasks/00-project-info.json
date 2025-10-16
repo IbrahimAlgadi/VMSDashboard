@@ -1,0 +1,35 @@
+{
+  "project": "CCTV Camera Dashboard - UI Only",
+  "framework": "Express + Nunjucks",
+  "automation": "Playwright/Puppeteer",
+  "notes": {
+    "data_approach": "All tasks use mock JSON data, no API calls",
+    "javascript": "Vanilla JS with ES6+ for interactivity, no frameworks",
+    "focus": "UI/UX only - presentational layer",
+    "automation": "Playwright preferred for cross-browser testing",
+    "testing": "Each task should be verified with browser automation after completion"
+  },
+  "execution_order": [
+    "task-01: Foundation",
+    "task-02, task-03, task-04: Layout Components (parallel)",
+    "task-05, task-06, task-07: Dashboard (sequential)",
+    "task-08, task-09, task-10: NVR Management (sequential)",
+    "task-11, task-12: Camera Management (sequential)",
+    "task-13, task-14: Map (sequential)",
+    "task-15: Compliance",
+    "task-16: Security",
+    "task-17: Analytics",
+    "task-18: Alerts",
+    "task-19: Reports",
+    "task-20, task-21: Settings (sequential)",
+    "task-22: Profile",
+    "task-23: Login",
+    "task-24: Theme System",
+    "task-25: Responsive",
+    "task-26, task-27: UI Enhancements (parallel)",
+    "task-28: Error Pages",
+    "task-29: Documentation",
+    "task-30: Automation Tests"
+  ]
+}
+

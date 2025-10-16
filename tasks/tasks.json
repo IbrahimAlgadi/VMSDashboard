@@ -1,0 +1,957 @@
+{
+    "project": {
+      "name": "CCTV Camera Dashboard",
+      "description": "Comprehensive ATM CCTV monitoring system with real-time status, compliance tracking, and security monitoring using traditional web technologies",
+      "version": "1.0.0",
+      "type": "Multi-Page Application (MPA)",
+      "architecture": "Traditional Server-Side with Dynamic JavaScript"
+    },
+    "technology_stack": {
+      "frontend": {
+        "markup": "HTML5",
+        "styling": {
+          "framework": "Bootstrap 5.3",
+          "preprocessor": "SASS (optional)",
+          "custom": "Custom CSS with CSS Variables"
+        },
+        "scripting": {
+          "language": "JavaScript ES6+",
+          "modules": "ES6 Modules with fallback",
+          "polyfills": "core-js for older browsers"
+        }
+      },
+      "ui_framework": {
+        "name": "Bootstrap",
+        "version": "5.3+",
+        "components": [
+          "Grid System",
+          "Cards",
+          "Modals",
+          "Tables",
+          "Forms",
+          "Buttons",
+          "Alerts",
+          "Badges",
+          "Progress",
+          "Spinners",
+          "Toasts",
+          "Dropdowns",
+          "Navbars",
+          "Offcanvas",
+          "Pagination",
+          "Tabs",
+          "Accordions"
+        ],
+        "icons": {
+          "library": "Bootstrap Icons",
+          "version": "1.11+",
+          "fallback": "Font Awesome 6"
+        },
+        "themes": {
+          "light": "Default Bootstrap theme",
+          "dark": "Bootstrap dark mode with custom variables",
+          "custom": "CSS variables for brand colors"
+        }
+      },
+      "javascript_libraries": {
+        "dom_manipulation": {
+          "native": "querySelector, addEventListener",
+          "utilities": "Custom helper functions"
+        },
+        "ajax": {
+          "primary": "Fetch API",
+          "fallback": "XMLHttpRequest"
+        },
+        "state_management": {
+          "pattern": "Singleton State Manager",
+          "storage": "LocalStorage + SessionStorage"
+        },
+        "routing": {
+          "type": "Server-side with hash routing fallback",
+          "library": "Custom Router class (optional)"
+        }
+      },
+      "third_party_libraries": {
+        "charts": {
+          "name": "Apache ECharts",
+          "version": "5.4+",
+          "loading": "CDN or local",
+          "modules": ["core", "charts", "components"]
+        },
+        "maps": {
+          "name": "Leaflet",
+          "version": "1.9+",
+          "loading": "CDN or local",
+          "plugins": ["MarkerCluster", "Heat"]
+        },
+        "data_tables": {
+          "name": "DataTables",
+          "version": "1.13+",
+          "extensions": ["Responsive", "Buttons", "Select"]
+        },
+        "date_handling": {
+          "name": "Day.js",
+          "version": "1.11+",
+          "plugins": ["relativeTime", "timezone"]
+        },
+        "notifications": {
+          "name": "Toastr",
+          "version": "2.1+",
+          "alternative": "Bootstrap Toasts"
+        },
+        "validation": {
+          "name": "Parsley.js",
+          "version": "2.9+",
+          "alternative": "Native Constraint Validation API"
+        },
+        "animations": {
+          "name": "AOS (Animate On Scroll)",
+          "version": "2.3+",
+          "alternative": "CSS animations"
+        },
+        "utilities": {
+          "lodash": "4.17+ (debounce, throttle)",
+          "axios": "1.6+ (optional for API calls)"
+        }
+      },
+      "build_tools": {
+        "optional": true,
+        "bundler": "Webpack or Parcel (optional)",
+        "task_runner": "Gulp (optional)",
+        "package_manager": "npm or yarn",
+        "development_server": "Live Server or http-server"
+      }
+    },
+    "project_structure": {
+      "root": {
+        "pages": {
+          "index.html": "Dashboard overview page",
+          "login.html": "Authentication page",
+          "nvr-management.html": "NVR management page",
+          "camera-management.html": "Camera management page",
+          "map.html": "Location map page",
+          "compliance.html": "SAMA compliance page",
+          "security.html": "Security monitoring page",
+          "analytics.html": "Analytics dashboard page",
+          "alerts.html": "Alert management page",
+          "reports.html": "Reports generation page",
+          "settings.html": "Settings page",
+          "profile.html": "User profile page"
+        },
+        "assets": {
+          "css": {
+            "bootstrap.min.css": "Bootstrap framework",
+            "bootstrap-icons.css": "Bootstrap Icons",
+            "main.css": "Main custom styles",
+            "themes": {
+              "light.css": "Light theme variables",
+              "dark.css": "Dark theme variables"
+            },
+            "components": {
+              "sidebar.css": "Sidebar styles",
+              "cards.css": "Card components",
+              "tables.css": "Table enhancements",
+              "charts.css": "Chart containers",
+              "maps.css": "Map styling"
+            },
+            "pages": {
+              "dashboard.css": "Dashboard specific",
+              "nvr.css": "NVR page styles",
+              "camera.css": "Camera page styles",
+              "alerts.css": "Alerts page styles"
+            }
+          },
+          "js": {
+            "vendor": {
+              "bootstrap.bundle.min.js": "Bootstrap with Popper",
+              "echarts.min.js": "ECharts library",
+              "leaflet.js": "Leaflet maps",
+              "datatables.min.js": "DataTables",
+              "dayjs.min.js": "Day.js",
+              "toastr.min.js": "Notifications",
+              "parsley.min.js": "Form validation"
+            },
+            "core": {
+              "app.js": "Main application initialization",
+              "config.js": "Configuration constants",
+              "state.js": "State management",
+              "router.js": "Client-side routing (optional)",
+              "api.js": "API communication layer",
+              "websocket.js": "WebSocket connection",
+              "storage.js": "LocalStorage wrapper",
+              "events.js": "Event bus/emitter",
+              "utils.js": "Utility functions"
+            },
+            "components": {
+              "sidebar.js": "Sidebar component logic",
+              "navbar.js": "Navigation bar logic",
+              "datatable.js": "DataTable wrapper",
+              "chart.js": "Chart wrapper components",
+              "map.js": "Map component logic",
+              "modal.js": "Modal helpers",
+              "form.js": "Form utilities",
+              "card.js": "Card components",
+              "notification.js": "Notification system"
+            },
+            "pages": {
+              "dashboard.js": "Dashboard page logic",
+              "nvr-management.js": "NVR page logic",
+              "camera-management.js": "Camera page logic",
+              "map-page.js": "Map page logic",
+              "compliance.js": "Compliance page logic",
+              "security.js": "Security page logic",
+              "analytics.js": "Analytics page logic",
+              "alerts.js": "Alerts page logic",
+              "login.js": "Login page logic",
+              "settings.js": "Settings page logic"
+            },
+            "services": {
+              "auth.service.js": "Authentication service",
+              "nvr.service.js": "NVR data service",
+              "camera.service.js": "Camera data service",
+              "alert.service.js": "Alert service",
+              "analytics.service.js": "Analytics service",
+              "export.service.js": "Export functionality"
+            },
+            "mock": {
+              "mock-data.js": "Mock data generator",
+              "mock-api.js": "Mock API responses"
+            }
+          },
+          "images": {
+            "logo.png": "Application logo",
+            "favicon.ico": "Favicon",
+            "avatars": "User avatars directory",
+            "icons": "Custom icons directory",
+            "backgrounds": "Background images"
+          },
+          "fonts": {
+            "inter": "Inter font files",
+            "roboto": "Roboto font files"
+          }
+        },
+        "data": {
+          "mock": {
+            "nvrs.json": "Mock NVR data",
+            "cameras.json": "Mock camera data",
+            "alerts.json": "Mock alerts data",
+            "analytics.json": "Mock analytics data"
+          }
+        },
+        "templates": {
+          "components": {
+            "sidebar.html": "Sidebar template",
+            "navbar.html": "Navbar template",
+            "footer.html": "Footer template",
+            "modals": {
+              "nvr-detail.html": "NVR detail modal",
+              "camera-detail.html": "Camera detail modal",
+              "alert-detail.html": "Alert detail modal"
+            }
+          }
+        }
+      }
+    },
+    "html_structure": {
+      "base_layout": {
+        "doctype": "<!DOCTYPE html>",
+        "meta_tags": [
+          "<meta charset='UTF-8'>",
+          "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
+          "<meta name='description' content='CCTV Dashboard'>",
+          "<meta name='theme-color' content='#0d6efd'>"
+        ],
+        "css_includes": [
+          "<link href='assets/css/bootstrap.min.css' rel='stylesheet'>",
+          "<link href='assets/css/bootstrap-icons.css' rel='stylesheet'>",
+          "<link href='assets/css/main.css' rel='stylesheet'>",
+          "<link href='assets/css/themes/light.css' rel='stylesheet' id='theme-css'>"
+        ],
+        "js_includes": [
+          "<script src='assets/js/vendor/bootstrap.bundle.min.js'></script>",
+          "<script src='assets/js/core/config.js'></script>",
+          "<script src='assets/js/core/app.js' type='module'></script>"
+        ]
+      },
+      "page_template": {
+        "structure": [
+          {
+            "element": "body",
+            "classes": ["d-flex", "flex-column", "min-vh-100"],
+            "children": [
+              {
+                "element": "nav",
+                "id": "main-navbar",
+                "classes": ["navbar", "navbar-expand-lg", "navbar-dark", "bg-primary"]
+              },
+              {
+                "element": "div",
+                "classes": ["container-fluid", "flex-grow-1"],
+                "children": [
+                  {
+                    "element": "div",
+                    "classes": ["row", "h-100"],
+                    "children": [
+                      {
+                        "element": "aside",
+                        "id": "sidebar",
+                        "classes": ["col-md-3", "col-lg-2", "d-md-block", "bg-light", "sidebar"]
+                      },
+                      {
+                        "element": "main",
+                        "id": "main-content",
+                        "classes": ["col-md-9", "ms-sm-auto", "col-lg-10", "px-md-4"]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "element": "footer",
+                "id": "main-footer",
+                "classes": ["footer", "mt-auto", "py-3", "bg-light"]
+              }
+            ]
+          }
+        ]
+      },
+      "component_templates": {
+        "stat_card": {
+          "html": "<div class='card stat-card'><div class='card-body'><div class='d-flex justify-content-between align-items-start'><div><h6 class='card-subtitle mb-2 text-muted'>{{label}}</h6><h4 class='card-title mb-0'>{{value}}</h4><small class='text-{{status}}'>{{change}}</small></div><div class='stat-icon'><i class='bi bi-{{icon}} fs-1 text-{{color}}'></i></div></div></div></div>",
+          "classes": {
+            "container": "stat-card",
+            "body": "card-body",
+            "icon": "stat-icon"
+          }
+        },
+        "data_table": {
+          "html": "<div class='table-responsive'><table class='table table-hover' id='{{tableId}}'><thead><tr>{{headers}}</tr></thead><tbody>{{rows}}</tbody></table></div>",
+          "classes": {
+            "wrapper": "table-responsive",
+            "table": "table table-hover table-striped",
+            "header": "table-dark",
+            "sortable": "sortable",
+            "actions": "text-end"
+          }
+        }
+      }
+    },
+    "bootstrap_components": {
+      "grid_system": {
+        "breakpoints": {
+          "xs": "<576px",
+          "sm": "≥576px",
+          "md": "≥768px",
+          "lg": "≥992px",
+          "xl": "≥1200px",
+          "xxl": "≥1400px"
+        },
+        "containers": {
+          "container": "Fixed-width container",
+          "container-fluid": "Full-width container",
+          "container-{breakpoint}": "Responsive container"
+        },
+        "columns": {
+          "col": "Equal-width columns",
+          "col-{size}": "Specific column size (1-12)",
+          "col-{breakpoint}-{size}": "Responsive column sizes"
+        }
+      },
+      "components_mapping": {
+        "cards": {
+          "basic": "card",
+          "header": "card-header",
+          "body": "card-body",
+          "footer": "card-footer",
+          "variations": ["border-primary", "text-bg-primary", "shadow-sm"]
+        },
+        "buttons": {
+          "primary": "btn btn-primary",
+          "secondary": "btn btn-secondary",
+          "success": "btn btn-success",
+          "danger": "btn btn-danger",
+          "warning": "btn btn-warning",
+          "info": "btn btn-info",
+          "sizes": ["btn-sm", "btn-lg"],
+          "states": ["disabled", "active"],
+          "groups": "btn-group"
+        },
+        "tables": {
+          "basic": "table",
+          "striped": "table-striped",
+          "hover": "table-hover",
+          "bordered": "table-bordered",
+          "responsive": "table-responsive",
+          "dark": "table-dark",
+          "sizing": ["table-sm"]
+        },
+        "forms": {
+          "control": "form-control",
+          "select": "form-select",
+          "check": "form-check",
+          "label": "form-label",
+          "text": "form-text",
+          "floating": "form-floating",
+          "validation": ["is-valid", "is-invalid", "invalid-feedback"]
+        },
+        "modals": {
+          "container": "modal",
+          "dialog": "modal-dialog",
+          "content": "modal-content",
+          "header": "modal-header",
+          "body": "modal-body",
+          "footer": "modal-footer",
+          "sizes": ["modal-sm", "modal-lg", "modal-xl", "modal-fullscreen"]
+        },
+        "alerts": {
+          "base": "alert",
+          "dismissible": "alert-dismissible",
+          "types": ["alert-primary", "alert-success", "alert-danger", "alert-warning"]
+        },
+        "badges": {
+          "base": "badge",
+          "pill": "rounded-pill",
+          "colors": ["text-bg-primary", "text-bg-success", "text-bg-danger", "text-bg-warning"]
+        },
+        "progress": {
+          "container": "progress",
+          "bar": "progress-bar",
+          "striped": "progress-bar-striped",
+          "animated": "progress-bar-animated"
+        },
+        "spinners": {
+          "border": "spinner-border",
+          "grow": "spinner-grow",
+          "sizes": ["spinner-border-sm"]
+        },
+        "navigation": {
+          "navbar": "navbar navbar-expand-lg",
+          "nav": "nav",
+          "tabs": "nav nav-tabs",
+          "pills": "nav nav-pills",
+          "breadcrumb": "breadcrumb",
+          "pagination": "pagination"
+        }
+      },
+      "utilities": {
+        "spacing": {
+          "margin": "m-{size}",
+          "padding": "p-{size}",
+          "sizes": [0, 1, 2, 3, 4, 5, "auto"]
+        },
+        "text": {
+          "alignment": ["text-start", "text-center", "text-end"],
+          "weight": ["fw-light", "fw-normal", "fw-bold"],
+          "style": ["fst-italic", "text-decoration-none"],
+          "color": ["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info", "text-muted"]
+        },
+        "display": {
+          "types": ["d-none", "d-inline", "d-block", "d-flex", "d-grid"],
+          "responsive": "d-{breakpoint}-{type}"
+        },
+        "flex": {
+          "direction": ["flex-row", "flex-column"],
+          "justify": ["justify-content-start", "justify-content-center", "justify-content-end", "justify-content-between"],
+          "align": ["align-items-start", "align-items-center", "align-items-end"],
+          "wrap": ["flex-wrap", "flex-nowrap"]
+        },
+        "position": {
+          "types": ["position-static", "position-relative", "position-absolute", "position-fixed", "position-sticky"],
+          "placement": ["top-0", "bottom-0", "start-0", "end-0"]
+        },
+        "colors": {
+          "background": ["bg-primary", "bg-secondary", "bg-success", "bg-danger", "bg-warning", "bg-info", "bg-light", "bg-dark", "bg-white"],
+          "border": ["border", "border-0", "border-primary", "border-secondary", "rounded", "rounded-circle"]
+        }
+      }
+    },
+    "javascript_architecture": {
+      "design_patterns": {
+        "module_pattern": {
+          "description": "Encapsulate functionality in modules",
+          "example": "const Module = (function() { return { init, destroy }; })();"
+        },
+        "singleton_pattern": {
+          "description": "Single instance for state management",
+          "example": "class StateManager { static instance; static getInstance() {} }"
+        },
+        "observer_pattern": {
+          "description": "Event-driven communication",
+          "example": "class EventEmitter { on(), off(), emit() }"
+        },
+        "factory_pattern": {
+          "description": "Create component instances",
+          "example": "class ComponentFactory { createCard(), createTable() }"
+        }
+      },
+      "core_modules": {
+        "App": {
+          "file": "app.js",
+          "responsibilities": [
+            "Initialize application",
+            "Load configuration",
+            "Setup event listeners",
+            "Initialize components",
+            "Handle routing"
+          ],
+          "methods": [
+            "init()",
+            "loadPage(pageName)",
+            "setupEventListeners()",
+            "initializeComponents()",
+            "destroy()"
+          ]
+        },
+        "StateManager": {
+          "file": "state.js",
+          "responsibilities": [
+            "Manage application state",
+            "Persist state to storage",
+            "Notify subscribers of changes"
+          ],
+          "methods": [
+            "setState(key, value)",
+            "getState(key)",
+            "subscribe(key, callback)",
+            "unsubscribe(key, callback)",
+            "persist()",
+            "restore()"
+          ]
+        },
+        "APIClient": {
+          "file": "api.js",
+          "responsibilities": [
+            "Handle API requests",
+            "Manage authentication",
+            "Handle errors",
+            "Cache responses"
+          ],
+          "methods": [
+            "get(endpoint, params)",
+            "post(endpoint, data)",
+            "put(endpoint, data)",
+            "delete(endpoint)",
+            "setAuthToken(token)",
+            "handleError(error)"
+          ]
+        },
+        "WebSocketManager": {
+          "file": "websocket.js",
+          "responsibilities": [
+            "Manage WebSocket connection",
+            "Handle real-time updates",
+            "Reconnection logic"
+          ],
+          "methods": [
+            "connect(url)",
+            "disconnect()",
+            "send(message)",
+            "on(event, handler)",
+            "reconnect()"
+          ]
+        }
+      },
+      "component_classes": {
+        "DataTableComponent": {
+          "file": "components/datatable.js",
+          "extends": "BaseComponent",
+          "properties": [
+            "element",
+            "options",
+            "dataTable",
+            "data"
+          ],
+          "methods": [
+            "init()",
+            "render()",
+            "loadData()",
+            "refresh()",
+            "destroy()",
+            "onSort(column)",
+            "onFilter(filters)",
+            "onPaginate(page)",
+            "exportData(format)"
+          ]
+        },
+        "ChartComponent": {
+          "file": "components/chart.js",
+          "extends": "BaseComponent",
+          "properties": [
+            "element",
+            "chart",
+            "options",
+            "type"
+          ],
+          "methods": [
+            "init()",
+            "render()",
+            "update(data)",
+            "resize()",
+            "destroy()",
+            "setOption(option)",
+            "exportImage()"
+          ]
+        },
+        "MapComponent": {
+          "file": "components/map.js",
+          "extends": "BaseComponent",
+          "properties": [
+            "element",
+            "map",
+            "markers",
+            "layers"
+          ],
+          "methods": [
+            "init()",
+            "addMarker(location)",
+            "removeMarker(id)",
+            "addLayer(layer)",
+            "centerMap(location)",
+            "updateMarkers(data)",
+            "destroy()"
+          ]
+        }
+      },
+      "service_layer": {
+        "AuthService": {
+          "methods": [
+            "login(credentials)",
+            "logout()",
+            "refreshToken()",
+            "isAuthenticated()",
+            "getUser()",
+            "hasPermission(permission)"
+          ]
+        },
+        "NVRService": {
+          "methods": [
+            "getNVRList(filters)",
+            "getNVRById(id)",
+            "updateNVR(id, data)",
+            "deleteNVR(id)",
+            "getNVRStatus(id)",
+            "exportNVRData(format)"
+          ]
+        },
+        "CameraService": {
+          "methods": [
+            "getCameraList(filters)",
+            "getCameraById(id)",
+            "getCamerasByNVR(nvrId)",
+            "updateCamera(id, data)",
+            "getCameraSnapshot(id)",
+            "runDiagnostics(id)"
+          ]
+        }
+      }
+    },
+    "css_architecture": {
+      "structure": {
+        "main.css": {
+          "sections": [
+            "/* CSS Variables */",
+            ":root { --primary-color: #0d6efd; }",
+            "/* Base Styles */",
+            "/* Layout */",
+            "/* Components */",
+            "/* Utilities */",
+            "/* Responsive */",
+            "/* Dark Mode */"
+          ]
+        },
+        "themes": {
+          "css_variables": {
+            "colors": [
+              "--primary-color",
+              "--secondary-color",
+              "--success-color",
+              "--danger-color",
+              "--warning-color",
+              "--info-color",
+              "--light-color",
+              "--dark-color"
+            ],
+            "spacing": [
+              "--spacing-xs",
+              "--spacing-sm",
+              "--spacing-md",
+              "--spacing-lg",
+              "--spacing-xl"
+            ],
+            "typography": [
+              "--font-family-base",
+              "--font-size-base",
+              "--line-height-base",
+              "--font-weight-normal",
+              "--font-weight-bold"
+            ],
+            "borders": [
+              "--border-radius",
+              "--border-width",
+              "--border-color"
+            ],
+            "shadows": [
+              "--shadow-sm",
+              "--shadow-md",
+              "--shadow-lg"
+            ]
+          }
+        }
+      },
+      "custom_components": {
+        ".stat-card": {
+          "styles": [
+            "border-left: 4px solid var(--primary-color);",
+            "transition: transform 0.2s;",
+            "&:hover { transform: translateY(-2px); }"
+          ]
+        },
+        ".sidebar": {
+          "styles": [
+            "position: fixed;",
+            "top: 56px;",
+            "bottom: 0;",
+            "left: 0;",
+            "z-index: 100;",
+            "padding: 48px 0 0;",
+            "box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);"
+          ]
+        },
+        ".chart-container": {
+          "styles": [
+            "position: relative;",
+            "height: 400px;",
+            "width: 100%;"
+          ]
+        }
+      },
+      "responsive_design": {
+        "breakpoints": {
+          "xs": "@media (max-width: 575.98px)",
+          "sm": "@media (min-width: 576px) and (max-width: 767.98px)",
+          "md": "@media (min-width: 768px) and (max-width: 991.98px)",
+          "lg": "@media (min-width: 992px) and (max-width: 1199.98px)",
+          "xl": "@media (min-width: 1200px) and (max-width: 1399.98px)",
+          "xxl": "@media (min-width: 1400px)"
+        },
+        "mobile_first": {
+          "approach": "Start with mobile styles, add complexity for larger screens",
+          "example": ".card { padding: 1rem; } @media (min-width: 768px) { .card { padding: 2rem; } }"
+        }
+      },
+      "dark_mode": {
+        "implementation": "CSS class toggle on body element",
+        "class": "dark-mode",
+        "variables": {
+          ".dark-mode": {
+            "--bg-color": "#1a1a1a",
+            "--text-color": "#ffffff",
+            "--card-bg": "#2d2d2d",
+            "--border-color": "#404040"
+          }
+        }
+      }
+    },
+    "page_implementations": {
+      "dashboard": {
+        "file": "index.html",
+        "components": [
+          "KPI Cards Grid",
+          "System Health Gauge Chart",
+          "Status Distribution Pie Chart",
+          "Storage Trends Line Chart",
+          "Recent Alerts Timeline",
+          "Quick Actions Panel"
+        ],
+        "layout": {
+          "structure": [
+            {
+              "section": "KPI Cards",
+              "grid": "row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4",
+              "components": ["StatCard", "StatCard", "StatCard", "StatCard"]
+            },
+            {
+              "section": "Charts",
+              "grid": "row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4",
+              "components": ["ChartCard", "ChartCard", "ChartCard"]
+            },
+            {
+              "section": "Alerts",
+              "grid": "row",
+              "components": ["AlertsTimeline"]
+            }
+          ]
+        },
+        "javascript": {
+          "file": "dashboard.js",
+          "initialization": [
+            "loadKPIData()",
+            "initializeCharts()",
+            "loadRecentAlerts()",
+            "setupAutoRefresh(30000)",
+            "connectWebSocket()"
+          ]
+        }
+      },
+      "nvr_management": {
+        "file": "nvr-management.html",
+        "components": [
+          "NVR Statistics Bar",
+          "NVR Filter Panel",
+          "NVR Data Table",
+          "NVR Detail Modal",
+          "Regional Distribution Chart"
+        ],
+        "features": [
+          "Server-side pagination",
+          "Multi-column sorting",
+          "Advanced filtering",
+          "Export functionality",
+          "Bulk actions"
+        ]
+      },
+      "map": {
+        "file": "map.html",
+        "components": [
+          "Leaflet Map Container",
+          "Map Controls Panel",
+          "Map Sidebar",
+          "Marker Clusters",
+          "Heatmap Layer"
+        ],
+        "features": [
+          "Interactive markers",
+          "Real-time updates",
+          "Layer switching",
+          "Search functionality",
+          "Geolocation"
+        ]
+      }
+    },
+    "data_flow": {
+      "initialization": [
+        "1. Page loads HTML structure",
+        "2. Bootstrap CSS applied",
+        "3. JavaScript modules loaded",
+        "4. App.init() called",
+        "5. Components initialized",
+        "6. Data fetched from API",
+        "7. UI rendered with data",
+        "8. Event listeners attached",
+        "9. WebSocket connection established"
+      ],
+      "state_management": {
+        "pattern": "Centralized state with pub/sub",
+        "flow": [
+          "Component requests data",
+          "Service fetches from API",
+          "State manager updates state",
+          "Subscribers notified",
+          "Components re-render"
+        ]
+      },
+      "api_integration": {
+        "endpoints": {
+          "base_url": "http://api.example.com/v1",
+          "authentication": "/auth/login",
+          "nvrs": "/nvrs",
+          "cameras": "/cameras",
+          "alerts": "/alerts",
+          "analytics": "/analytics",
+          "compliance": "/compliance"
+        },
+        "error_handling": [
+          "Network errors",
+          "Authentication errors",
+          "Validation errors",
+          "Server errors"
+        ]
+      }
+    },
+    "deployment": {
+      "structure": {
+        "static_files": {
+          "serve": "Any static web server (Apache, Nginx, IIS)",
+          "cdn": "Optional CDN for assets"
+        },
+        "build_process": {
+          "optional": true,
+          "steps": [
+            "Minify CSS/JS",
+            "Optimize images",
+            "Bundle dependencies",
+            "Generate source maps"
+          ]
+        }
+      },
+      "optimization": {
+        "performance": [
+          "Lazy load images",
+          "Defer non-critical JavaScript",
+          "Use CDN for libraries",
+          "Enable gzip compression",
+          "Browser caching headers",
+          "Minify HTML/CSS/JS"
+        ],
+        "seo": [
+          "Proper meta tags",
+          "Semantic HTML",
+          "Schema.org markup",
+          "Sitemap.xml"
+        ]
+      },
+      "browser_support": {
+        "modern": [
+          "Chrome 90+",
+          "Firefox 88+",
+          "Safari 14+",
+          "Edge 90+"
+        ],
+        "legacy": {
+          "ie11": "Partial support with polyfills",
+          "polyfills": ["fetch", "Promise", "Object.assign"]
+        }
+      }
+    },
+    "development_setup": {
+      "quick_start": {
+        "steps": [
+          "1. Clone repository",
+          "2. Install dependencies: npm install (optional)",
+          "3. Start local server: npx http-server or Live Server",
+          "4. Open http://localhost:8080",
+          "5. Login with demo credentials"
+        ]
+      },
+      "file_structure": {
+        "minimal": [
+          "index.html",
+          "assets/css/bootstrap.min.css",
+          "assets/css/main.css",
+          "assets/js/core/app.js",
+          "assets/js/vendor/[libraries]"
+        ]
+      },
+      "dependencies": {
+        "required": [
+          "Bootstrap 5.3+",
+          "Bootstrap Icons",
+          "ECharts 5.4+",
+          "Leaflet 1.9+"
+        ],
+        "optional": [
+          "DataTables 1.13+",
+          "Day.js 1.11+",
+          "Toastr 2.1+",
+          "Parsley.js 2.9+",
+          "AOS 2.3+"
+        ]
+      },
+      "development_tools": {
+        "editor": "VS Code with Live Server extension",
+        "browser": "Chrome with DevTools",
+        "api_testing": "Postman or Insomnia",
+        "version_control": "Git"
+      }
+    }
+  }

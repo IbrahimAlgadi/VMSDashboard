@@ -1,0 +1,77 @@
+{
+  "group": "Settings & Profile",
+  "tasks": {
+    "task-20": {
+      "title": "Settings Page - Tabs Layout",
+      "description": "Create settings page with tabbed sections",
+      "deliverables": [
+        "Settings page with tab navigation",
+        "General settings tab",
+        "Notification preferences tab",
+        "Display settings tab",
+        "Advanced settings tab",
+        "Save/reset buttons"
+      ],
+      "files": [
+        "views/settings.njk",
+        "public/css/pages/settings.css",
+        "public/js/pages/settings.js"
+      ],
+      "ui_elements": [
+        "nav-tabs or nav-pills",
+        "tab-content with tab-pane",
+        "form-check for switches",
+        "form-select for dropdowns",
+        "btn-primary for save"
+      ]
+    },
+    "task-21": {
+      "title": "Settings Page - Forms Content",
+      "description": "Add form content for all settings sections",
+      "deliverables": [
+        "General settings (language, timezone, date format)",
+        "Notification preferences (email, push, SMS toggles)",
+        "Display settings (theme, density, items per page)",
+        "Advanced settings (API keys, integrations)",
+        "Form validation styling"
+      ],
+      "files": [
+        "views/settings.njk (extend)",
+        "public/js/pages/settings-validation.js"
+      ],
+      "ui_elements": [
+        "form-group with labels",
+        "form-control inputs",
+        "form-check-input switches",
+        "form-text helpers",
+        "is-valid/is-invalid states"
+      ]
+    },
+    "task-22": {
+      "title": "User Profile Page",
+      "description": "Create user profile page with edit capability",
+      "deliverables": [
+        "Profile header with avatar",
+        "User information form",
+        "Password change section",
+        "Activity log table",
+        "Upload avatar functionality (UI only)",
+        "Save changes button"
+      ],
+      "files": [
+        "views/profile.njk",
+        "public/css/pages/profile.css",
+        "public/js/pages/profile.js"
+      ],
+      "ui_elements": [
+        "row with profile header",
+        "avatar image rounded-circle",
+        "form with user fields",
+        "btn for upload",
+        "table for activity log",
+        "card for sections"
+      ]
+    }
+  }
+}
+
