@@ -16,26 +16,42 @@
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components/navbar.css">
+  <link rel="stylesheet" href="/css/components/sidebar.css">
+  <link rel="stylesheet" href="/css/components/footer.css">
   <link rel="stylesheet" href="/css/themes/light.css" id="theme-css">
   
   {% block extra_css %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
   
-  {% block content %}
-  <div class="container-fluid p-4">
-    <h1>Welcome to CCTV Dashboard</h1>
-    <p>Base layout is working!</p>
-  </div>
-  {% endblock %}
+  <!-- Navbar -->
+  {% include "partials/navbar.njk" %}
+  
+  <!-- Sidebar -->
+  {% include "partials/sidebar.njk" %}
+  
+  <!-- Main Content -->
+  <main class="main-content flex-fill">
+    {% block content %}
+    <div class="container-fluid p-4">
+      <h1>Welcome to CCTV Dashboard</h1>
+      <p>Base layout is working!</p>
+    </div>
+    {% endblock %}
+  </main>
+  
+  <!-- Footer -->
+  {% include "partials/footer.njk" %}
   
   <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   
   <!-- Core JS -->
   <script src="/js/app.js"></script>
+  <script src="/js/components/navbar.js"></script>
+  <script src="/js/components/sidebar.js"></script>
   
   {% block extra_js %}{% endblock %}
 </body>
 </html>
-

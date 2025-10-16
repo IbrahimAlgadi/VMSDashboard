@@ -1,0 +1,99 @@
+{
+  "kpis": {
+    "totalNVRs": {
+      "value": 24,
+      "change": "+2",
+      "changeType": "increase",
+      "changeLabel": "this month",
+      "icon": "bi-hdd-rack",
+      "color": "primary",
+      "trend": "up"
+    },
+    "totalCameras": {
+      "value": 156,
+      "onlinePercent": 98,
+      "online": 153,
+      "offline": 3,
+      "change": "+4",
+      "changeType": "increase",
+      "changeLabel": "since last week",
+      "icon": "bi-camera-video",
+      "color": "success",
+      "trend": "up"
+    },
+    "offlineCameras": {
+      "value": 3,
+      "percentage": 2,
+      "change": "-1",
+      "changeType": "decrease",
+      "changeLabel": "from yesterday",
+      "icon": "bi-exclamation-triangle",
+      "color": "warning",
+      "trend": "down"
+    },
+    "activeAlerts": {
+      "value": 3,
+      "critical": 1,
+      "warning": 2,
+      "info": 0,
+      "change": "+1",
+      "changeType": "increase",
+      "changeLabel": "in last hour",
+      "icon": "bi-bell",
+      "color": "danger",
+      "trend": "up"
+    }
+  },
+  "summary": {
+    "regions": 5,
+    "branches": 42,
+    "totalStorage": "12.5 TB",
+    "usedStorage": "8.1 TB",
+    "storagePercent": 65,
+    "systemUptime": 99.8,
+    "avgResponseTime": "45ms",
+    "lastUpdate": "2024-01-15T10:30:00Z"
+  },
+  "regionBreakdown": [
+    { "name": "Riyadh", "nvrs": 8, "cameras": 52, "online": 51, "offline": 1 },
+    { "name": "Jeddah", "nvrs": 6, "cameras": 38, "online": 37, "offline": 1 },
+    { "name": "Dammam", "nvrs": 4, "cameras": 28, "online": 28, "offline": 0 },
+    { "name": "Mecca", "nvrs": 3, "cameras": 22, "online": 22, "offline": 0 },
+    { "name": "Medina", "nvrs": 3, "cameras": 16, "online": 15, "offline": 1 }
+  ],
+  "quickActions": [
+    {
+      "id": 1,
+      "title": "View All NVRs",
+      "description": "Manage and monitor all NVR systems",
+      "icon": "bi-hdd-rack",
+      "link": "/nvr-management",
+      "color": "primary"
+    },
+    {
+      "id": 2,
+      "title": "Camera Status",
+      "description": "Check camera health and connectivity",
+      "icon": "bi-camera-video",
+      "link": "/camera-management",
+      "color": "success"
+    },
+    {
+      "id": 3,
+      "title": "View Map",
+      "description": "Geographic distribution of devices",
+      "icon": "bi-geo-alt",
+      "link": "/map",
+      "color": "info"
+    },
+    {
+      "id": 4,
+      "title": "Alerts",
+      "description": "Review and manage system alerts",
+      "icon": "bi-bell",
+      "link": "/alerts",
+      "color": "warning"
+    }
+  ]
+}
+

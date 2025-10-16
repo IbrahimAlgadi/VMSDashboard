@@ -1,0 +1,139 @@
+<aside class="sidebar bg-white border-end" id="sidebar">
+  <div class="sidebar-sticky">
+    
+    <!-- Main Navigation -->
+    <ul class="nav flex-column">
+      
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'dashboard' %}active{% endif %}" href="/">
+          <i class="bi bi-speedometer2 me-2"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <!-- NVR & Camera Section -->
+      <li class="nav-section-title">
+        <small class="text-muted text-uppercase fw-semibold">Monitoring</small>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'nvr-management' %}active{% endif %}" href="/nvr-management">
+          <i class="bi bi-hdd-rack me-2"></i>
+          <span>NVR Management</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'camera-management' %}active{% endif %}" href="/camera-management">
+          <i class="bi bi-camera-video me-2"></i>
+          <span>Camera Management</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'map' %}active{% endif %}" href="/map">
+          <i class="bi bi-geo-alt me-2"></i>
+          <span>Location Map</span>
+        </a>
+      </li>
+
+      <!-- Analytics Section -->
+      <li class="nav-section-title">
+        <small class="text-muted text-uppercase fw-semibold">Analytics</small>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'analytics' %}active{% endif %}" href="/analytics">
+          <i class="bi bi-bar-chart me-2"></i>
+          <span>Analytics</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'compliance' %}active{% endif %}" href="/compliance">
+          <i class="bi bi-shield-check me-2"></i>
+          <span>Compliance</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'security' %}active{% endif %}" href="/security">
+          <i class="bi bi-lock me-2"></i>
+          <span>Security Monitoring</span>
+        </a>
+      </li>
+
+      <!-- Management Section -->
+      <li class="nav-section-title">
+        <small class="text-muted text-uppercase fw-semibold">Management</small>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'alerts' %}active{% endif %}" href="/alerts">
+          <i class="bi bi-bell me-2"></i>
+          <span>Alerts</span>
+          <span class="badge bg-danger rounded-pill ms-auto">3</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'reports' %}active{% endif %}" href="/reports">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          <span>Reports</span>
+        </a>
+      </li>
+
+      <!-- Settings Section -->
+      <li class="nav-section-title">
+        <small class="text-muted text-uppercase fw-semibold">System</small>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'settings' %}active{% endif %}" href="/settings">
+          <i class="bi bi-gear me-2"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if currentPage == 'styleguide' %}active{% endif %}" href="/styleguide">
+          <i class="bi bi-palette me-2"></i>
+          <span>Style Guide</span>
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- Sidebar Footer - System Status -->
+    <div class="sidebar-footer">
+      <div class="card border-0 bg-light">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center mb-2">
+            <div class="status-indicator status-online me-2"></div>
+            <small class="text-muted">System Online</small>
+          </div>
+          <div class="small">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Uptime:</span>
+              <span class="fw-semibold">99.8%</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Storage:</span>
+              <span class="fw-semibold">65%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar Toggle Button (Mobile) -->
+  <button class="sidebar-toggle d-lg-none" id="sidebar-toggle" aria-label="Toggle sidebar">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+</aside>
+
+<!-- Sidebar Overlay for Mobile -->
+<div class="sidebar-overlay d-lg-none" id="sidebar-overlay"></div>
+

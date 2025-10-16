@@ -1,0 +1,220 @@
+/* ===================================
+   Navbar Component Styles
+   =================================== */
+
+/* Navbar Base */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1030;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  transition: var(--transition-base);
+}
+
+.navbar-brand:hover {
+  opacity: 0.9;
+}
+
+.navbar-brand i {
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover i {
+  transform: scale(1.1);
+}
+
+/* Search Bar */
+.navbar .input-group {
+  transition: var(--transition-base);
+}
+
+.navbar .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: none;
+}
+
+.navbar .input-group-text {
+  border: 1px solid #ced4da;
+}
+
+.navbar .form-control {
+  border: 1px solid #ced4da;
+}
+
+.navbar .form-control:focus + .input-group-text,
+.navbar .input-group-text:has(+ .form-control:focus) {
+  border-color: #0d6efd;
+}
+
+/* Theme Toggle */
+#theme-toggle {
+  color: rgba(255, 255, 255, 0.9);
+  transition: var(--transition-base);
+  border: none;
+  background: transparent;
+}
+
+#theme-toggle:hover {
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+}
+
+#theme-icon {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+#theme-toggle:hover #theme-icon {
+  transform: rotate(20deg);
+}
+
+/* Notification Badge */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+  border: none;
+  box-shadow: var(--shadow-lg);
+  margin-top: 0.5rem;
+}
+
+.notification-item {
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+  background-color: #f0f7ff;
+  border-left-color: #0d6efd;
+}
+
+.notification-item.unread:hover {
+  background-color: #e7f3ff;
+}
+
+/* User Dropdown */
+.dropdown-toggle::after {
+  margin-left: 0.5rem;
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: var(--shadow-lg);
+  margin-top: 0.5rem;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  transition: var(--transition-base);
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+}
+
+.dropdown-header {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Avatar */
+.rounded-circle {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile Navbar */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    margin-top: 1rem;
+  }
+
+  .navbar .d-flex {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  .navbar-nav {
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item {
+    padding: 0.5rem 0;
+  }
+
+  .notification-dropdown,
+  .dropdown-menu {
+    width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 0.5rem;
+  }
+}
+
+/* Dark Mode Adjustments */
+body.dark-mode .navbar {
+  background-color: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .dropdown-menu {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text-primary);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background-color: var(--bg-tertiary);
+}
+
+body.dark-mode .notification-item.unread {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+body.dark-mode .notification-item.unread:hover {
+  background-color: rgba(13, 110, 253, 0.15);
+}
+
+body.dark-mode .dropdown-divider {
+  border-color: var(--border-color);
+}
+
+body.dark-mode .navbar .form-control,
+body.dark-mode .navbar .input-group-text {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .navbar .input-group-text i {
+  color: var(--text-secondary);
+}
+

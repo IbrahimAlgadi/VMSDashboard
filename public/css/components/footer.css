@@ -1,0 +1,85 @@
+/* ===================================
+   Footer Component Styles
+   =================================== */
+
+.footer {
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.footer-links a {
+  transition: color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: #0d6efd !important;
+}
+
+.footer .badge {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+}
+
+.footer .badge i {
+  animation: pulse-status 2s infinite;
+}
+
+@keyframes pulse-status {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Mobile Footer */
+@media (max-width: 991.98px) {
+  .footer {
+    margin-left: 0;
+  }
+
+  .footer .col-md-4 {
+    margin-bottom: 1rem;
+  }
+
+  .footer .col-md-4:last-child {
+    margin-bottom: 0;
+  }
+
+  .footer-links {
+    font-size: 0.85rem;
+  }
+
+  .footer-links li {
+    margin: 0 0.25rem;
+  }
+}
+
+/* Tablet Adjustments */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .footer {
+    margin-left: 240px;
+  }
+}
+
+/* Dark Mode */
+body.dark-mode .footer {
+  background-color: var(--footer-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .footer .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+body.dark-mode .footer-links a {
+  color: var(--text-secondary) !important;
+}
+
+body.dark-mode .footer-links a:hover {
+  color: #0d6efd !important;
+}
+
