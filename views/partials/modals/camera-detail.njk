@@ -1,0 +1,323 @@
+<!-- Camera Detail Modal -->
+<div class="modal fade" id="cameraDetailModal" tabindex="-1" aria-labelledby="cameraDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cameraDetailModalLabel">Camera Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs mb-3" id="cameraDetailTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane" type="button" role="tab">
+              <i class="bi bi-info-circle"></i> Information
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="stream-tab" data-bs-toggle="tab" data-bs-target="#stream-pane" type="button" role="tab">
+              <i class="bi bi-play-circle"></i> Live Stream
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="recordings-tab" data-bs-toggle="tab" data-bs-target="#recordings-pane" type="button" role="tab">
+              <i class="bi bi-camera-video"></i> Recordings
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="diagnostics-tab" data-bs-toggle="tab" data-bs-target="#diagnostics-pane" type="button" role="tab">
+              <i class="bi bi-heart-pulse"></i> Diagnostics
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="cameraDetailTabsContent">
+          <!-- Information Tab -->
+          <div class="tab-pane fade show active" id="info-pane" role="tabpanel">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Camera Name</label>
+                  <div class="info-value" id="modalCameraName">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Status</label>
+                  <div class="info-value">
+                    <span class="badge" id="modalCameraStatus">-</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Location</label>
+                  <div class="info-value" id="modalCameraLocation">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Position</label>
+                  <div class="info-value" id="modalCameraPosition">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">NVR</label>
+                  <div class="info-value" id="modalCameraNVR">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">IP Address</label>
+                  <div class="info-value" id="modalCameraIP">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Model</label>
+                  <div class="info-value" id="modalCameraModel">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Resolution</label>
+                  <div class="info-value" id="modalCameraResolution">-</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Frame Rate</label>
+                  <div class="info-value"><span id="modalCameraFPS">-</span> FPS</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Uptime</label>
+                  <div class="info-value"><span id="modalCameraUptime">-</span>%</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Recording</label>
+                  <div class="info-value">
+                    <span class="badge" id="modalCameraRecording">-</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
+                  <label class="info-label">Motion Detection</label>
+                  <div class="info-value">
+                    <span class="badge" id="modalCameraMotion">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Stream Tab -->
+          <div class="tab-pane fade" id="stream-pane" role="tabpanel">
+            <div class="stream-container">
+              <div class="video-placeholder">
+                <i class="bi bi-camera-video-fill"></i>
+                <p>Live Stream Placeholder</p>
+                <p class="text-muted small">Video player would be integrated here</p>
+              </div>
+              <div class="stream-controls mt-3">
+                <button class="btn btn-primary">
+                  <i class="bi bi-play-fill"></i> Play
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="bi bi-pause-fill"></i> Pause
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="bi bi-camera-fill"></i> Snapshot
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="bi bi-fullscreen"></i> Fullscreen
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recordings Tab -->
+          <div class="tab-pane fade" id="recordings-pane" role="tabpanel">
+            <div class="timeline-header mb-3">
+              <div class="row align-items-center">
+                <div class="col-md-4">
+                  <label class="form-label mb-0">Date</label>
+                  <input type="date" class="form-control" id="recordingDate" value="2024-01-15">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label mb-0">Start Time</label>
+                  <input type="time" class="form-control" id="recordingStartTime" value="00:00">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label mb-0">End Time</label>
+                  <input type="time" class="form-control" id="recordingEndTime" value="23:59">
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeline-container">
+              <div class="timeline-ruler">
+                <div class="timeline-hour" data-hour="00">00:00</div>
+                <div class="timeline-hour" data-hour="04">04:00</div>
+                <div class="timeline-hour" data-hour="08">08:00</div>
+                <div class="timeline-hour" data-hour="12">12:00</div>
+                <div class="timeline-hour" data-hour="16">16:00</div>
+                <div class="timeline-hour" data-hour="20">20:00</div>
+                <div class="timeline-hour" data-hour="24">24:00</div>
+              </div>
+              <div class="timeline-segments">
+                <div class="timeline-segment" data-start="00:00" data-end="08:30" title="Recording 1"></div>
+                <div class="timeline-segment" data-start="09:00" data-end="18:45" title="Recording 2"></div>
+                <div class="timeline-segment" data-start="19:00" data-end="23:59" title="Recording 3"></div>
+              </div>
+            </div>
+
+            <div class="recording-list mt-4">
+              <h6>Available Recordings</h6>
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <i class="bi bi-camera-video text-primary"></i>
+                      <strong>00:00 - 08:30</strong>
+                      <span class="text-muted ms-2">(8h 30m)</span>
+                    </div>
+                    <div>
+                      <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-play-fill"></i> Play
+                      </button>
+                      <button class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-download"></i>
+                      </button>
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <i class="bi bi-camera-video text-primary"></i>
+                      <strong>09:00 - 18:45</strong>
+                      <span class="text-muted ms-2">(9h 45m)</span>
+                    </div>
+                    <div>
+                      <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-play-fill"></i> Play
+                      </button>
+                      <button class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-download"></i>
+                      </button>
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <i class="bi bi-camera-video text-primary"></i>
+                      <strong>19:00 - 23:59</strong>
+                      <span class="text-muted ms-2">(4h 59m)</span>
+                    </div>
+                    <div>
+                      <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-play-fill"></i> Play
+                      </button>
+                      <button class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-download"></i>
+                      </button>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnostics Tab -->
+          <div class="tab-pane fade" id="diagnostics-pane" role="tabpanel">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="diagnostic-card">
+                  <h6><i class="bi bi-diagram-3"></i> Network</h6>
+                  <div class="diagnostic-item">
+                    <span>Ping:</span>
+                    <span class="text-success"><strong id="diagPing">15ms</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Packet Loss:</span>
+                    <span class="text-success"><strong id="diagPacketLoss">0%</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Bandwidth:</span>
+                    <span><strong id="diagBandwidth">2.5 Mbps</strong></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="diagnostic-card">
+                  <h6><i class="bi bi-camera"></i> Stream Quality</h6>
+                  <div class="diagnostic-item">
+                    <span>Bitrate:</span>
+                    <span><strong id="diagBitrate">4096 kbps</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Frame Drop:</span>
+                    <span class="text-success"><strong id="diagFrameDrop">0.2%</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Quality:</span>
+                    <span class="badge bg-success" id="diagQuality">Excellent</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="diagnostic-card">
+                  <h6><i class="bi bi-hdd"></i> Storage</h6>
+                  <div class="diagnostic-item">
+                    <span>Recording Time:</span>
+                    <span><strong id="diagRecTime">15 days</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Space Used:</span>
+                    <span><strong id="diagSpaceUsed">128 GB</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Retention:</span>
+                    <span><strong id="diagRetention">30 days</strong></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="diagnostic-card">
+                  <h6><i class="bi bi-activity"></i> Events</h6>
+                  <div class="diagnostic-item">
+                    <span>Motion Events:</span>
+                    <span><strong id="diagMotion">24 today</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Alerts:</span>
+                    <span class="text-warning"><strong id="diagAlerts">2 pending</strong></span>
+                  </div>
+                  <div class="diagnostic-item">
+                    <span>Last Reboot:</span>
+                    <span><strong id="diagReboot">15 days ago</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="editCameraBtn">
+          <i class="bi bi-pencil"></i> Edit Settings
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

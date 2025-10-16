@@ -1,0 +1,142 @@
+{% extends "layout.njk" %}
+
+{% block title %}Camera Management - CCTV Dashboard{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/camera.css">
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Camera Management</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">Cameras</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="btn-group" role="group" aria-label="View Toggle">
+    <button type="button" class="btn btn-outline-primary active" id="gridViewBtn">
+      <i class="bi bi-grid-3x3-gap"></i> Grid
+    </button>
+    <button type="button" class="btn btn-outline-primary" id="listViewBtn">
+      <i class="bi bi-list-ul"></i> List
+    </button>
+  </div>
+</div>
+
+<!-- Statistics Bar -->
+<div class="row g-3 mb-4" id="cameraStats">
+  <div class="col-6 col-md-3">
+    <div class="stat-badge">
+      <div class="stat-label">Total Cameras</div>
+      <div class="stat-value" id="totalCameras">0</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-badge status-online">
+      <div class="stat-label">Online</div>
+      <div class="stat-value" id="onlineCameras">0</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-badge status-offline">
+      <div class="stat-label">Offline</div>
+      <div class="stat-value" id="offlineCameras">0</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-badge status-maintenance">
+      <div class="stat-label">Maintenance</div>
+      <div class="stat-value" id="maintenanceCameras">0</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters & Search -->
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="searchCamera" placeholder="Search cameras...">
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" id="filterStatus">
+          <option value="">All Status</option>
+          <option value="online">Online</option>
+          <option value="offline">Offline</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" id="filterRegion">
+          <option value="">All Regions</option>
+          <option value="Riyadh">Riyadh</option>
+          <option value="Jeddah">Jeddah</option>
+          <option value="Dammam">Dammam</option>
+          <option value="Mecca">Mecca</option>
+          <option value="Medina">Medina</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" id="filterNVR">
+          <option value="">All NVRs</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-secondary w-100" id="clearFilters">
+          <i class="bi bi-x-circle"></i> Clear
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Grid View -->
+<div id="gridView">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" id="cameraGrid">
+    <!-- Camera cards will be populated here -->
+  </div>
+</div>
+
+<!-- List View -->
+<div id="listView" style="display: none;">
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle" id="cameraTable">
+          <thead>
+            <tr>
+              <th>Camera Name</th>
+              <th>Location</th>
+              <th>Position</th>
+              <th>NVR</th>
+              <th>IP Address</th>
+              <th>Status</th>
+              <th>Recording</th>
+              <th>Motion</th>
+              <th>Uptime</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cameraTableBody">
+            <!-- Table rows will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Camera Detail Modal -->
+{% include "partials/modals/camera-detail.njk" %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/js/pages/camera-management.js"></script>
+{% endblock %}
+
