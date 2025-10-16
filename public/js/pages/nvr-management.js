@@ -263,7 +263,7 @@
       const nvr = this.data.nvrs.find(n => n.id === id);
       if (nvr) {
         console.log('View details for:', nvr);
-        alert(`View details for: ${nvr.name}\n(Modal will be implemented in next task)`);
+        Modal.showNVRDetail(nvr);
       }
     },
 
@@ -274,7 +274,11 @@
       const nvr = this.data.nvrs.find(n => n.id === id);
       if (nvr) {
         console.log('Edit NVR:', nvr);
-        alert(`Edit NVR: ${nvr.name}\n(Edit form will be implemented in next task)`);
+        Modal.showNVRDetail(nvr);
+        // Switch to edit mode after a brief delay
+        setTimeout(() => {
+          document.getElementById('edit-nvr-btn').click();
+        }, 100);
       }
     },
 

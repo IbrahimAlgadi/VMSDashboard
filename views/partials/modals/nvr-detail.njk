@@ -1,0 +1,215 @@
+<!-- NVR Detail Modal -->
+<div class="modal fade" id="nvr-detail-modal" tabindex="-1" aria-labelledby="nvrDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="nvrDetailModalLabel">
+            <i class="bi bi-hdd-rack me-2"></i>
+            <span id="modal-nvr-name">NVR Details</span>
+          </h5>
+          <small class="text-muted" id="modal-nvr-location">Loading...</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Modal Body with Tabs -->
+      <div class="modal-body p-0">
+        
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs px-3 pt-3" id="nvrDetailTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-content" type="button" role="tab">
+              <i class="bi bi-info-circle me-1"></i>
+              Information
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cameras-tab" data-bs-toggle="tab" data-bs-target="#cameras-content" type="button" role="tab">
+              <i class="bi bi-camera-video me-1"></i>
+              Cameras
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="status-tab" data-bs-toggle="tab" data-bs-target="#status-content" type="button" role="tab">
+              <i class="bi bi-speedometer me-1"></i>
+              Status
+            </button>
+          </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content p-3" id="nvrDetailTabContent">
+          
+          <!-- Information Tab -->
+          <div class="tab-pane fade show active" id="info-content" role="tabpanel">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="text-muted small">NVR Name</label>
+                <div class="fw-semibold" id="info-name">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Status</label>
+                <div id="info-status">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Location</label>
+                <div id="info-location">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Region</label>
+                <div id="info-region">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">IP Address</label>
+                <div><code id="info-ip">-</code></div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Firmware Version</label>
+                <div id="info-firmware">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Total Cameras</label>
+                <div id="info-cameras">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted small">Uptime</label>
+                <div id="info-uptime">-</div>
+              </div>
+              <div class="col-12">
+                <label class="text-muted small">Storage</label>
+                <div id="info-storage-text">-</div>
+                <div class="progress mt-2" style="height: 8px;">
+                  <div id="info-storage-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="text-muted small">Last Seen</label>
+                <div id="info-last-seen">-</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Cameras Tab -->
+          <div class="tab-pane fade" id="cameras-content" role="tabpanel">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Connected Cameras</h6>
+                <span class="badge bg-primary" id="cameras-count-badge">0</span>
+              </div>
+            </div>
+            <div id="cameras-list">
+              <!-- Camera list will be populated here -->
+              <div class="text-center py-4 text-muted">
+                <i class="bi bi-camera-video fs-1"></i>
+                <p class="mt-2">Loading camera information...</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Status Tab -->
+          <div class="tab-pane fade" id="status-content" role="tabpanel">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <div class="text-muted small">Connection Status</div>
+                        <div class="h4 mb-0 mt-1" id="status-connection">-</div>
+                      </div>
+                      <i class="bi bi-wifi fs-2 text-primary opacity-25"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <div class="text-muted small">Recording Status</div>
+                        <div class="h4 mb-0 mt-1" id="status-recording">-</div>
+                      </div>
+                      <i class="bi bi-record-circle fs-2 text-danger opacity-25"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <div class="text-muted small mb-2">System Health</div>
+                    <div class="row g-2">
+                      <div class="col-4">
+                        <div class="small text-muted">CPU</div>
+                        <div class="fw-semibold" id="status-cpu">-</div>
+                        <div class="progress mt-1" style="height: 4px;">
+                          <div id="status-cpu-bar" class="progress-bar bg-info" style="width: 0%"></div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="small text-muted">Memory</div>
+                        <div class="fw-semibold" id="status-memory">-</div>
+                        <div class="progress mt-1" style="height: 4px;">
+                          <div id="status-memory-bar" class="progress-bar bg-warning" style="width: 0%"></div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="small text-muted">Disk I/O</div>
+                        <div class="fw-semibold" id="status-disk">-</div>
+                        <div class="progress mt-1" style="height: 4px;">
+                          <div id="status-disk-bar" class="progress-bar bg-success" style="width: 0%"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <div class="text-muted small mb-2">Network Statistics</div>
+                    <div class="row g-2 small">
+                      <div class="col-6">
+                        <div class="text-muted">Bandwidth In</div>
+                        <div class="fw-semibold" id="status-bandwidth-in">-</div>
+                      </div>
+                      <div class="col-6">
+                        <div class="text-muted">Bandwidth Out</div>
+                        <div class="fw-semibold" id="status-bandwidth-out">-</div>
+                      </div>
+                      <div class="col-6">
+                        <div class="text-muted">Packets Sent</div>
+                        <div class="fw-semibold" id="status-packets-sent">-</div>
+                      </div>
+                      <div class="col-6">
+                        <div class="text-muted">Packets Received</div>
+                        <div class="fw-semibold" id="status-packets-received">-</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i> Close
+        </button>
+        <button type="button" class="btn btn-primary" id="edit-nvr-btn">
+          <i class="bi bi-pencil me-1"></i> Edit
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
