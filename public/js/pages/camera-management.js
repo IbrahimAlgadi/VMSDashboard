@@ -37,7 +37,7 @@ function updateStatistics(summary) {
   document.getElementById('totalCameras').textContent = summary.total;
   document.getElementById('onlineCameras').textContent = summary.online;
   document.getElementById('offlineCameras').textContent = summary.offline;
-  document.getElementById('maintenanceCameras').textContent = summary.maintenance;
+  document.getElementById('warningCameras').textContent = summary.warning || summary.maintenance || 0;
 }
 
 // Populate NVR filter dropdown

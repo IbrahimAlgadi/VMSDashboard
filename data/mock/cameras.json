@@ -132,7 +132,7 @@
       "nvr": "NVR-DM-001",
       "location": "Dammam - Corniche Branch",
       "position": "ATM Entrance",
-      "status": "maintenance",
+      "status": "warning",
       "region": "Dammam",
       "branch": "Corniche",
       "ipAddress": "192.168.3.101",
@@ -221,7 +221,7 @@
     "total": 12,
     "online": 9,
     "offline": 2,
-    "maintenance": 1,
+    "warning": 1,
     "recording": 10,
     "motionDetection": 5
   }
