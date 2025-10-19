@@ -10,119 +10,83 @@
 <div class="container-fluid p-4">
   
   <!-- Page Header -->
-  <div class="dashboard-header row mb-4">
-    <div class="col-md-8">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
       <h1><i class="bi bi-speedometer2 me-2"></i>Dashboard</h1>
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item active" aria-current="page">Dashboard Overview</li>
-        </ol>
-      </nav>
+      <p class="text-muted mb-0">Dashboard Overview</p>
     </div>
-    <div class="col-md-4 text-md-end">
-      <button class="btn btn-outline-primary btn-sm" id="refresh-dashboard">
+    <div class="text-end">
+      <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
         <i class="bi bi-arrow-clockwise me-1"></i> Refresh
       </button>
       <small class="text-muted d-block mt-2">
-        Last updated: <span id="last-refresh-time">--:--:--</span>
+        Last updated: <span id="lastUpdate">--:--:--</span>
       </small>
     </div>
   </div>
 
   <!-- KPI Cards -->
-  <div class="row kpi-cards g-3 mb-4">
+  <div class="row g-3 mb-4">
     
     <!-- Total NVRs -->
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card stat-card primary" id="total-nvrs">
+    <div class="col-md-3">
+      <div class="card stat-card">
         <div class="card-body">
-          <div class="stat-card-content">
-            <div class="stat-card-info">
-              <h6 class="text-muted">Total NVRs</h6>
-              <div class="stat-card-value">0</div>
-              <div>
-                <span class="stat-card-change positive">
-                  <i class="bi bi-arrow-up"></i>
-                  <span>+2</span>
-                </span>
-                <small class="text-muted ms-2 stat-card-change-label">this month</small>
-              </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="text-muted mb-2">TOTAL NVRS</h6>
+              <h2 class="mb-0" id="totalNVRs">0</h2>
+              <small class="text-muted" id="totalNVRsChange"></small>
             </div>
-            <div class="stat-card-icon">
-              <i class="bi bi-hdd-rack"></i>
-            </div>
+            <div class="stat-icon bg-primary"><i class="bi bi-hdd-rack"></i></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Total Cameras -->
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card stat-card success" id="total-cameras">
+    <div class="col-md-3">
+      <div class="card stat-card">
         <div class="card-body">
-          <div class="stat-card-content">
-            <div class="stat-card-info">
-              <h6 class="text-muted">Total Cameras</h6>
-              <div class="stat-card-value">0</div>
-              <div>
-                <span class="stat-card-change positive">
-                  <i class="bi bi-check-circle"></i>
-                  <span>98% online</span>
-                </span>
-                <small class="text-muted ms-2 stat-card-change-label">153 of 156</small>
-              </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="text-muted mb-2">TOTAL CAMERAS</h6>
+              <h2 class="mb-0" id="totalCameras">0</h2>
+              <small class="text-muted" id="totalCamerasChange"></small>
             </div>
-            <div class="stat-card-icon">
-              <i class="bi bi-camera-video"></i>
+            <div class="stat-icon bg-success"><i class="bi bi-camera-video"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offline NVRs -->
+    <div class="col-md-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="text-muted mb-2">OFFLINE NVRS</h6>
+              <h2 class="mb-0" id="offlineNVRs">0</h2>
+              <small class="text-muted" id="offlineNVRsChange"></small>
             </div>
+            <div class="stat-icon bg-danger"><i class="bi bi-hdd-rack-fill"></i></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Offline Cameras -->
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card stat-card warning" id="offline-cameras">
+    <div class="col-md-3">
+      <div class="card stat-card">
         <div class="card-body">
-          <div class="stat-card-content">
-            <div class="stat-card-info">
-              <h6 class="text-muted">Offline Cameras</h6>
-              <div class="stat-card-value">0</div>
-              <div>
-                <span class="stat-card-change neutral">
-                  <i class="bi bi-dash"></i>
-                  <span>-1</span>
-                </span>
-                <small class="text-muted ms-2 stat-card-change-label">from yesterday</small>
-              </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="text-muted mb-2">OFFLINE CAMERAS</h6>
+              <h2 class="mb-0" id="offlineCameras">0</h2>
+              <small class="text-muted" id="offlineCamerasChange"></small>
             </div>
-            <div class="stat-card-icon">
-              <i class="bi bi-exclamation-triangle"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Active Alerts -->
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card stat-card danger" id="active-alerts">
-        <div class="card-body">
-          <div class="stat-card-content">
-            <div class="stat-card-info">
-              <h6 class="text-muted">Active Alerts</h6>
-              <div class="stat-card-value">0</div>
-              <div>
-                <span class="stat-card-change negative">
-                  <i class="bi bi-exclamation-circle"></i>
-                  <span>1 critical</span>
-                </span>
-                <small class="text-muted ms-2 stat-card-change-label">2 warning</small>
-              </div>
-            </div>
-            <div class="stat-card-icon">
-              <i class="bi bi-bell"></i>
-            </div>
+            <div class="stat-icon bg-warning"><i class="bi bi-camera-video-off"></i></div>
           </div>
         </div>
       </div>
@@ -132,144 +96,129 @@
 
   <!-- Charts Section -->
   <div class="row g-3 mb-4">
-    <div class="col-12 mb-3">
+    <div class="col-12 mb-2">
       <h5><i class="bi bi-bar-chart me-2"></i>System Analytics</h5>
     </div>
 
-    <!-- System Health Gauge -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h6><i class="bi bi-speedometer me-2"></i>System Health</h6>
-        </div>
+    <!-- System Health -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-heart-pulse"></i> System Health</h6></div>
         <div class="card-body">
-          <div class="chart-container" id="health-gauge-chart"></div>
+          <div id="systemHealthChart" style="height: 250px;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Status Distribution Pie -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h6><i class="bi bi-pie-chart me-2"></i>Camera Status</h6>
-        </div>
+    <!-- Camera Status Trend -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-camera"></i> Camera Status Trends</h6></div>
         <div class="card-body">
-          <div class="chart-container" id="status-pie-chart"></div>
+          <div id="cameraStatusChart" style="height: 250px;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Storage Trends Line -->
-    <div class="col-lg-4 col-md-12">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h6><i class="bi bi-graph-up me-2"></i>Storage Trend (7 Days)</h6>
-        </div>
+    <!-- NVR Status Trend -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-hdd"></i> NVR Status Trends</h6></div>
         <div class="card-body">
-          <div class="chart-container" id="storage-line-chart"></div>
+          <div id="nvrStatusChart" style="height: 250px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Storage Trend -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-database"></i> Storage Trends</h6></div>
+        <div class="card-body">
+          <div id="storageTrendChart" style="height: 250px;"></div>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Quick Actions -->
-  <div class="row quick-actions mb-4">
-    <div class="col-12 mb-3">
-      <h5><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
-    </div>
-    <div class="col-12">
-      <div class="row" id="quick-actions-container">
-        <!-- Populated by JavaScript -->
-        <div class="col-12 text-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Dashboard Details Row -->
-  <div class="row">
+  <!-- Recent Alerts & System Summary -->
+  <div class="row g-3 mb-4">
     
     <!-- Recent Alerts -->
-    <div class="col-lg-6 mb-4">
+    <div class="col-md-6">
       <div class="card">
-        <div class="card-header bg-white">
-          <div class="d-flex justify-content-between align-items-center">
-            <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Recent Alerts</h6>
-            <span class="badge bg-danger">3 Active</span>
-          </div>
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-bell me-2"></i>Recent Alerts</h5>
         </div>
         <div class="card-body p-0">
-          <div class="alerts-timeline p-3" id="recent-alerts">
-            <!-- Populated by JavaScript -->
-            <div class="text-center py-3">
-              <div class="spinner-border spinner-border-sm text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          </div>
-          <div class="view-all-alerts">
-            <a href="/alerts" class="btn btn-sm btn-outline-primary">
-              View All Alerts <i class="bi bi-arrow-right ms-1"></i>
-            </a>
-          </div>
+          <div id="recentAlerts"></div>
         </div>
       </div>
     </div>
 
-    <!-- System Summary & Region Breakdown -->
-    <div class="col-lg-6 mb-4">
-      <div class="row">
-        <!-- System Summary -->
-        <div class="col-12 mb-3">
-          <div class="card">
-            <div class="card-header bg-white">
-              <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>System Summary</h6>
-            </div>
-            <div class="card-body">
-              <div id="dashboard-summary">
-                <!-- Populated by JavaScript -->
-                <div class="text-center py-3">
-                  <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- System Summary -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>System Summary</h5>
         </div>
-
-        <!-- Region Breakdown -->
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header bg-white">
-              <h6 class="mb-0"><i class="bi bi-pin-map me-2"></i>Regional Distribution</h6>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-6 mb-3">
+              <h3 class="text-primary" id="summaryRegions">0</h3>
+              <small class="text-muted">Regions</small>
             </div>
-            <div class="card-body">
-              <div class="region-breakdown" id="region-breakdown">
-                <!-- Populated by JavaScript -->
-                <div class="text-center py-3">
-                  <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
+            <div class="col-6 mb-3">
+              <h3 class="text-success" id="summaryBranches">0</h3>
+              <small class="text-muted">Branches</small>
+            </div>
+            <div class="col-6">
+              <h3 class="text-warning" id="summaryStorage">0</h3>
+              <small class="text-muted">Storage Used</small>
+            </div>
+            <div class="col-6">
+              <h3 class="text-info" id="summaryUptime">0</h3>
+              <small class="text-muted">System Uptime</small>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+  </div>
+
+  <!-- Regional Distribution -->
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Regional Distribution</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Region</th>
+                  <th>NVRs</th>
+                  <th>Cameras</th>
+                  <th>Online</th>
+                  <th>Offline</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="regionalBreakdown"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="/js/components/charts.js"></script>
 <script src="/js/pages/dashboard.js"></script>
 {% endblock %}

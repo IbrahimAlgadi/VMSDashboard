@@ -3,46 +3,56 @@
     "totalNVRs": {
       "value": 24,
       "change": "+2",
-      "changeType": "increase",
       "changeLabel": "this month",
       "icon": "bi-hdd-rack",
-      "color": "primary",
-      "trend": "up"
+      "color": "primary"
     },
     "totalCameras": {
       "value": 156,
-      "onlinePercent": 98,
       "online": 153,
       "offline": 3,
-      "change": "+4",
-      "changeType": "increase",
-      "changeLabel": "since last week",
+      "percentage": 98,
       "icon": "bi-camera-video",
-      "color": "success",
-      "trend": "up"
+      "color": "success"
+    },
+    "offlineNVRs": {
+      "value": 2,
+      "change": "-1",
+      "changeLabel": "from yesterday",
+      "icon": "bi-hdd-rack-fill",
+      "color": "danger"
     },
     "offlineCameras": {
       "value": 3,
-      "percentage": 2,
       "change": "-1",
-      "changeType": "decrease",
       "changeLabel": "from yesterday",
-      "icon": "bi-exclamation-triangle",
-      "color": "warning",
-      "trend": "down"
-    },
-    "activeAlerts": {
-      "value": 3,
-      "critical": 1,
-      "warning": 2,
-      "info": 0,
-      "change": "+1",
-      "changeType": "increase",
-      "changeLabel": "in last hour",
-      "icon": "bi-bell",
-      "color": "danger",
-      "trend": "up"
+      "icon": "bi-camera-video-off",
+      "color": "warning"
     }
+  },
+  "charts": {
+    "systemHealth": {
+      "current": 100,
+      "status": "Excellent"
+    },
+    "cameraStatusTrend": [
+      { "date": "Jan 1", "online": 150, "offline": 6 },
+      { "date": "Jan 5", "online": 152, "offline": 4 },
+      { "date": "Jan 10", "online": 151, "offline": 5 },
+      { "date": "Jan 15", "online": 153, "offline": 3 }
+    ],
+    "nvrStatusTrend": [
+      { "date": "Jan 1", "online": 22, "offline": 2 },
+      { "date": "Jan 5", "online": 23, "offline": 1 },
+      { "date": "Jan 10", "online": 22, "offline": 2 },
+      { "date": "Jan 15", "online": 22, "offline": 2 }
+    ],
+    "storageTrend": [
+      { "date": "Jan 1", "usage": 58 },
+      { "date": "Jan 5", "usage": 60 },
+      { "date": "Jan 10", "usage": 62 },
+      { "date": "Jan 15", "usage": 65 }
+    ]
   },
   "summary": {
     "regions": 5,
@@ -60,40 +70,5 @@
     { "name": "Dammam", "nvrs": 4, "cameras": 28, "online": 28, "offline": 0 },
     { "name": "Mecca", "nvrs": 3, "cameras": 22, "online": 22, "offline": 0 },
     { "name": "Medina", "nvrs": 3, "cameras": 16, "online": 15, "offline": 1 }
-  ],
-  "quickActions": [
-    {
-      "id": 1,
-      "title": "View All NVRs",
-      "description": "Manage and monitor all NVR systems",
-      "icon": "bi-hdd-rack",
-      "link": "/nvr-management",
-      "color": "primary"
-    },
-    {
-      "id": 2,
-      "title": "Camera Status",
-      "description": "Check camera health and connectivity",
-      "icon": "bi-camera-video",
-      "link": "/camera-management",
-      "color": "success"
-    },
-    {
-      "id": 3,
-      "title": "View Map",
-      "description": "Geographic distribution of devices",
-      "icon": "bi-geo-alt",
-      "link": "/map",
-      "color": "info"
-    },
-    {
-      "id": 4,
-      "title": "Alerts",
-      "description": "Review and manage system alerts",
-      "icon": "bi-bell",
-      "link": "/alerts",
-      "color": "warning"
-    }
   ]
 }
-
