@@ -1,0 +1,7 @@
+/* Reports Page Styles */
+.report-template { cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+.report-template:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-color: var(--bs-primary); }
+.report-template.selected { border-color: var(--bs-primary); background: rgba(13, 110, 253, 0.05); }
+.scheduled-item { padding: 1rem; border: 1px solid var(--bs-border-color); border-radius: 8px; margin-bottom: 0.5rem; }
+@media (max-width: 768px) { .btn-group { flex-direction: column; } }
+

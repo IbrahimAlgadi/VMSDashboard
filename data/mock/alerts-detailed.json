@@ -1,0 +1,145 @@
+{
+  "summary": {
+    "total": 127,
+    "critical": 5,
+    "high": 18,
+    "medium": 45,
+    "low": 59,
+    "unread": 23,
+    "acknowledged": 89,
+    "resolved": 15
+  },
+  "alerts": [
+    {
+      "id": 1,
+      "timestamp": "2024-01-15T14:35:22Z",
+      "title": "Multiple Failed Login Attempts Detected",
+      "description": "5 consecutive failed login attempts from IP 192.168.1.245 to access NVR management system.",
+      "severity": "high",
+      "type": "Security",
+      "location": "Riyadh - King Fahd Branch",
+      "source": "NVR-RD-001",
+      "status": "unread",
+      "assignedTo": null,
+      "actions": ["Block IP", "Investigate", "Acknowledge"]
+    },
+    {
+      "id": 2,
+      "timestamp": "2024-01-15T13:22:15Z",
+      "title": "Camera Offline - CAM-03",
+      "description": "Camera ATM-DM-001-CAM-01 has been offline for 15 minutes. Last seen: 13:07:15.",
+      "severity": "critical",
+      "type": "System",
+      "location": "Dammam - Corniche Branch",
+      "source": "CAM-03",
+      "status": "acknowledged",
+      "assignedTo": "Technical Team",
+      "actions": ["Restart Camera", "Check Connection", "Dispatch Technician"]
+    },
+    {
+      "id": 3,
+      "timestamp": "2024-01-15T12:45:33Z",
+      "title": "Storage Capacity Warning",
+      "description": "NVR storage has reached 87% capacity. Estimated time until full: 3 days.",
+      "severity": "medium",
+      "type": "Storage",
+      "location": "Jeddah - Al Hamra Branch",
+      "source": "NVR-JD-001",
+      "status": "acknowledged",
+      "assignedTo": "IT Department",
+      "actions": ["Expand Storage", "Review Retention Policy", "Archive Old Footage"]
+    },
+    {
+      "id": 4,
+      "timestamp": "2024-01-15T11:30:44Z",
+      "title": "Motion Detection - After Hours",
+      "description": "Unexpected motion detected in restricted area during non-business hours.",
+      "severity": "high",
+      "type": "Motion",
+      "location": "Riyadh - Olaya Branch",
+      "source": "CAM-07",
+      "status": "resolved",
+      "assignedTo": "Security Team",
+      "actions": ["Review Footage", "Notify Security", "Mark as False Alarm"]
+    },
+    {
+      "id": 5,
+      "timestamp": "2024-01-15T10:15:28Z",
+      "title": "Network Connectivity Issue",
+      "description": "Intermittent network connectivity affecting camera feeds. Packet loss: 15%.",
+      "severity": "medium",
+      "type": "Network",
+      "location": "Mecca - Ajyad Branch",
+      "source": "Network Monitor",
+      "status": "acknowledged",
+      "assignedTo": "Network Team",
+      "actions": ["Check Router", "Test Connection", "Contact ISP"]
+    },
+    {
+      "id": 6,
+      "timestamp": "2024-01-15T09:42:11Z",
+      "title": "Firmware Update Available",
+      "description": "Critical security update available for NVR-RD-002. Version 4.2.5 released.",
+      "severity": "low",
+      "type": "Maintenance",
+      "location": "Riyadh - Granada Branch",
+      "source": "System",
+      "status": "unread",
+      "assignedTo": null,
+      "actions": ["Schedule Update", "Review Release Notes", "Dismiss"]
+    },
+    {
+      "id": 7,
+      "timestamp": "2024-01-15T08:20:55Z",
+      "title": "Unusual Activity Pattern",
+      "description": "AI-detected anomaly in access patterns. 45% increase in activity during typical low-traffic period.",
+      "severity": "medium",
+      "type": "Analytics",
+      "location": "Medina - Al Haram Branch",
+      "source": "Analytics Engine",
+      "status": "unread",
+      "assignedTo": null,
+      "actions": ["Review Patterns", "Investigate", "Mark Normal"]
+    },
+    {
+      "id": 8,
+      "timestamp": "2024-01-15T07:15:33Z",
+      "title": "Camera Quality Degradation",
+      "description": "Video quality dropped to 720p due to bandwidth constraints. Expected: 4MP.",
+      "severity": "low",
+      "type": "Quality",
+      "location": "Dammam - Corniche Branch",
+      "source": "CAM-08",
+      "status": "acknowledged",
+      "assignedTo": "Technical Team",
+      "actions": ["Check Bandwidth", "Adjust Settings", "Ignore"]
+    },
+    {
+      "id": 9,
+      "timestamp": "2024-01-15T06:30:22Z",
+      "title": "Power Fluctuation Detected",
+      "description": "Voltage irregularity detected. UPS activated to maintain system stability.",
+      "severity": "critical",
+      "type": "Power",
+      "location": "Jeddah - Al Hamra Branch",
+      "source": "UPS Monitor",
+      "status": "resolved",
+      "assignedTo": "Facilities",
+      "actions": ["Check Power Supply", "Inspect UPS", "Contact Electrician"]
+    },
+    {
+      "id": 10,
+      "timestamp": "2024-01-15T05:45:17Z",
+      "title": "Scheduled Maintenance Reminder",
+      "description": "Monthly preventive maintenance due for NVR-MD-001 on January 20, 2024.",
+      "severity": "low",
+      "type": "Maintenance",
+      "location": "Medina - Quba Branch",
+      "source": "Maintenance Schedule",
+      "status": "unread",
+      "assignedTo": null,
+      "actions": ["Schedule Maintenance", "Postpone", "Mark Complete"]
+    }
+  ]
+}
+

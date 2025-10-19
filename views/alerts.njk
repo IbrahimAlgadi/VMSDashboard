@@ -1,0 +1,52 @@
+{% extends "layout.njk" %}
+{% block title %}Alerts Management - CCTV Dashboard{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/css/pages/alerts.css">{% endblock %}
+{% block content %}
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div><h1 class="h3 mb-1">Alerts Management</h1>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">Alerts</li></ol></nav>
+    </div>
+    <button class="btn btn-primary" id="markAllRead"><i class="bi bi-check-all"></i> Mark All Read</button>
+  </div>
+  
+  <!-- Statistics -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card alert-stat critical"><div class="card-body"><i class="bi bi-exclamation-octagon-fill"></i><div><h3 id="criticalCount">0</h3><p>Critical</p></div></div></div></div>
+    <div class="col-md-3"><div class="card alert-stat high"><div class="card-body"><i class="bi bi-exclamation-triangle-fill"></i><div><h3 id="highCount">0</h3><p>High</p></div></div></div></div>
+    <div class="col-md-3"><div class="card alert-stat medium"><div class="card-body"><i class="bi bi-info-circle-fill"></i><div><h3 id="mediumCount">0</h3><p>Medium</p></div></div></div></div>
+    <div class="col-md-3"><div class="card alert-stat low"><div class="card-body"><i class="bi bi-check-circle-fill"></i><div><h3 id="lowCount">0</h3><p>Low</p></div></div></div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3"><input type="text" class="form-control" id="searchAlert" placeholder="Search alerts..."></div>
+        <div class="col-md-2"><select class="form-select" id="filterSeverity"><option value="">All Severities</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
+        <div class="col-md-2"><select class="form-select" id="filterType"><option value="">All Types</option><option value="Security">Security</option><option value="System">System</option><option value="Network">Network</option><option value="Storage">Storage</option><option value="Maintenance">Maintenance</option></select></div>
+        <div class="col-md-2"><select class="form-select" id="filterStatus"><option value="">All Status</option><option value="unread">Unread</option><option value="acknowledged">Acknowledged</option><option value="resolved">Resolved</option></select></div>
+        <div class="col-md-3"><button class="btn btn-secondary w-100" id="clearFilters"><i class="bi bi-x-circle"></i> Clear</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerts List -->
+  <div class="card">
+    <div class="card-header"><h5 class="mb-0">Alerts <span class="badge bg-primary" id="alertsCount">0</span></h5></div>
+    <div class="card-body p-0"><div class="list-group list-group-flush" id="alertsList"></div></div>
+    <div class="card-footer"><nav><ul class="pagination pagination-sm mb-0 justify-content-end" id="pagination"></ul></nav></div>
+  </div>
+</div>
+
+<!-- Alert Detail Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+  <div class="modal-header"><h5 class="modal-title" id="alertModalTitle">Alert Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body" id="alertModalBody"></div>
+  <div class="modal-footer" id="alertModalActions"></div>
+</div></div></div>
+{% endblock %}
+{% block extra_js %}<script src="/js/pages/alerts.js"></script>{% endblock %}
+

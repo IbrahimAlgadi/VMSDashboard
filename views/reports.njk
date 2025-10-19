@@ -1,0 +1,78 @@
+{% extends "layout.njk" %}
+{% block title %}Reports - CCTV Dashboard{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/css/pages/reports.css">{% endblock %}
+{% block content %}
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div><h1 class="h3 mb-1">Reports Generation</h1>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">Reports</li></ol></nav>
+    </div>
+  </div>
+
+  <!-- Report Templates -->
+  <div class="mb-4">
+    <h5 class="mb-3"><i class="bi bi-file-earmark-text"></i> Report Templates</h5>
+    <div class="row g-3">
+      <div class="col-md-3"><div class="card report-template" onclick="selectTemplate('uptime')">
+        <div class="card-body text-center"><i class="bi bi-graph-up fs-1 text-primary"></i><h6 class="mt-2">System Uptime</h6><p class="small text-muted">Camera and NVR uptime statistics</p></div></div></div>
+      <div class="col-md-3"><div class="card report-template" onclick="selectTemplate('compliance')">
+        <div class="card-body text-center"><i class="bi bi-shield-check fs-1 text-success"></i><h6 class="mt-2">Compliance</h6><p class="small text-muted">SAMA compliance status</p></div></div></div>
+      <div class="col-md-3"><div class="card report-template" onclick="selectTemplate('security')">
+        <div class="card-body text-center"><i class="bi bi-shield-exclamation fs-1 text-danger"></i><h6 class="mt-2">Security Incidents</h6><p class="small text-muted">Security events and alerts</p></div></div></div>
+      <div class="col-md-3"><div class="card report-template" onclick="selectTemplate('activity')">
+        <div class="card-body text-center"><i class="bi bi-activity fs-1 text-info"></i><h6 class="mt-2">Activity Log</h6><p class="small text-muted">System activity summary</p></div></div></div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Report Form -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0">Generate Report</h6></div>
+        <div class="card-body">
+          <form id="reportForm">
+            <div class="mb-3"><label class="form-label">Report Type</label>
+              <select class="form-select" id="reportType"><option value="uptime">System Uptime</option><option value="compliance">Compliance</option><option value="security">Security Incidents</option><option value="activity">Activity Log</option></select></div>
+            <div class="row mb-3">
+              <div class="col-md-6"><label class="form-label">Start Date</label><input type="date" class="form-control" id="startDate" value="2024-01-01"></div>
+              <div class="col-md-6"><label class="form-label">End Date</label><input type="date" class="form-control" id="endDate" value="2024-01-15"></div>
+            </div>
+            <div class="mb-3"><label class="form-label">Regions</label>
+              <select class="form-select" id="regions" multiple><option value="riyadh">Riyadh</option><option value="jeddah">Jeddah</option><option value="dammam">Dammam</option><option value="mecca">Mecca</option><option value="medina">Medina</option></select></div>
+            <div class="mb-3"><label class="form-label">Export Format</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="format" id="pdf" value="pdf" checked>
+                <label class="btn btn-outline-primary" for="pdf"><i class="bi bi-file-pdf"></i> PDF</label>
+                <input type="radio" class="btn-check" name="format" id="excel" value="excel">
+                <label class="btn btn-outline-primary" for="excel"><i class="bi bi-file-excel"></i> Excel</label>
+                <input type="radio" class="btn-check" name="format" id="csv" value="csv">
+                <label class="btn btn-outline-primary" for="csv"><i class="bi bi-file-csv"></i> CSV</label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-download"></i> Generate Report</button>
+            <button type="button" class="btn btn-outline-secondary" id="previewBtn"><i class="bi bi-eye"></i> Preview</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scheduled Reports -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0">Scheduled Reports</h6></div>
+        <div class="card-body">
+          <div class="scheduled-list">
+            <div class="scheduled-item"><strong>Weekly Uptime</strong><br><small class="text-muted">Every Monday, 9:00 AM</small><br><button class="btn btn-sm btn-outline-danger mt-1"><i class="bi bi-trash"></i></button></div>
+            <div class="scheduled-item"><strong>Monthly Compliance</strong><br><small class="text-muted">1st of month, 8:00 AM</small><br><button class="btn btn-sm btn-outline-danger mt-1"><i class="bi bi-trash"></i></button></div>
+          </div>
+          <button class="btn btn-sm btn-primary w-100 mt-2" id="addScheduleBtn"><i class="bi bi-plus"></i> Add Schedule</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="/js/pages/reports.js"></script>{% endblock %}
+
