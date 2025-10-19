@@ -1,31 +1,84 @@
 {% extends "layout.njk" %}
+
 {% block title %}Analytics - CCTV Dashboard{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="/css/pages/analytics.css">{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/css/pages/analytics.css">
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid p-4">
+  <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <div><h1 class="h3 mb-1">Analytics Dashboard</h1>
-      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active">Analytics</li></ol></nav>
+    <div>
+      <h1 class="h3 mb-1">Analytics Dashboard</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active">Analytics</li>
+        </ol>
+      </nav>
     </div>
-    <div class="btn-group"><input type="date" class="form-control" id="startDate">
-      <input type="date" class="form-control" id="endDate">
-      <button class="btn btn-primary" id="applyDate"><i class="bi bi-search"></i> Apply</button></div>
+    <div class="d-flex gap-2">
+      <input type="date" class="form-control" id="startDate" value="2024-01-01">
+      <input type="date" class="form-control" id="endDate" value="2024-01-15">
+      <button class="btn btn-primary" id="applyDate">
+        <i class="bi bi-search"></i> Apply
+      </button>
+    </div>
   </div>
+
+  <!-- Charts Row 1 -->
   <div class="row g-3 mb-4">
-    <div class="col-md-6"><div class="card"><div class="card-header"><h6 class="mb-0">Camera Uptime Trend</h6></div>
-      <div class="card-body"><div id="uptimeChart" style="height: 300px;"></div></div></div></div>
-    <div class="col-md-6"><div class="card"><div class="card-header"><h6 class="mb-0">Alerts by Type</h6></div>
-      <div class="card-body"><div id="alertsChart" style="height: 300px;"></div></div></div></div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-graph-up"></i> Camera Uptime Trend</h6>
+        </div>
+        <div class="card-body">
+          <div id="uptimeChart" style="height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-pie-chart"></i> Alerts by Type</h6>
+        </div>
+        <div class="card-body">
+          <div id="alertsChart" style="height: 300px;"></div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Charts Row 2 -->
   <div class="row g-3 mb-4">
-    <div class="col-md-8"><div class="card"><div class="card-header"><h6 class="mb-0">Hourly Activity</h6></div>
-      <div class="card-body"><div id="activityChart" style="height: 300px;"></div></div></div></div>
-    <div class="col-md-4"><div class="card"><div class="card-header"><h6 class="mb-0">Regional Overview</h6></div>
-      <div class="card-body"><div id="regionalTable"></div></div></div></div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Hourly Activity</h6>
+        </div>
+        <div class="card-body">
+          <div id="activityChart" style="height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-geo-alt"></i> Regional Overview</h6>
+        </div>
+        <div class="card-body">
+          <div id="regionalTable"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
-{% block extra_js %}<script src="/js/pages/analytics.js"></script>{% endblock %}
+
+{% block extra_js %}
+<script src="/js/pages/analytics.js"></script>
+{% endblock %}
 
