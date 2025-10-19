@@ -33,16 +33,122 @@ function renderMetrics() {
 
 function renderCharts() {
   // Threat Gauge
-  const gaugeChart = Charts.createGaugeChart('threatGauge', 25, 'Threat Level');
+  renderThreatGauge();
   
   // Threat History
-  const lineChart = echarts.init(document.getElementById('threatChart'));
-  lineChart.setOption({
-    tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: securityData.threatLevelHistory.map(d => d.time) },
-    yAxis: { type: 'value', max: 100 },
-    series: [{ data: securityData.threatLevelHistory.map(d => d.level), type: 'line', smooth: true, areaStyle: { opacity: 0.3 } }]
+  renderThreatHistory();
+}
+
+function renderThreatGauge() {
+  const chart = echarts.init(document.getElementById('threatGauge'));
+  
+  const threatValue = securityData.overview.threatLevel === 'Low' ? 25 : 
+                      securityData.overview.threatLevel === 'Medium' ? 50 : 75;
+  
+  chart.setOption({
+    series: [{
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      min: 0,
+      max: 100,
+      splitNumber: 4,
+      center: ['50%', '75%'],
+      radius: '90%',
+      itemStyle: {
+        color: threatValue < 40 ? '#198754' : threatValue < 70 ? '#ffc107' : '#dc3545'
+      },
+      progress: {
+        show: true,
+        width: 18
+      },
+      pointer: {
+        show: false
+      },
+      axisLine: {
+        lineStyle: {
+          width: 18,
+          color: [[1, '#e9ecef']]
+        }
+      },
+      axisTick: {
+        show: false
+      },
+      splitLine: {
+        show: false
+      },
+      axisLabel: {
+        show: false
+      },
+      detail: {
+        valueAnimation: true,
+        formatter: '{value}%',
+        fontSize: 24,
+        fontWeight: 'bold',
+        offsetCenter: [0, '-10%'],
+        color: 'auto'
+      },
+      data: [{
+        value: threatValue,
+        name: securityData.overview.threatLevel + ' Threat'
+      }],
+      title: {
+        show: true,
+        offsetCenter: [0, '30%'],
+        fontSize: 14
+      }
+    }]
   });
+  
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function renderThreatHistory() {
+  const chart = echarts.init(document.getElementById('threatChart'));
+  
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: '{b}: {c}%'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: securityData.threatLevelHistory.map(d => d.time),
+      boundaryGap: false
+    },
+    yAxis: {
+      type: 'value',
+      min: 0,
+      max: 100,
+      axisLabel: {
+        formatter: '{value}%'
+      }
+    },
+    series: [{
+      name: 'Threat Level',
+      data: securityData.threatLevelHistory.map(d => d.level),
+      type: 'line',
+      smooth: true,
+      areaStyle: {
+        color: 'rgba(220, 53, 69, 0.1)'
+      },
+      lineStyle: {
+        color: '#dc3545',
+        width: 2
+      },
+      itemStyle: {
+        color: '#dc3545'
+      }
+    }]
+  });
+  
+  window.addEventListener('resize', () => chart.resize());
 }
 
 function renderEvents() {
