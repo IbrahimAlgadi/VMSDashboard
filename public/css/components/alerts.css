@@ -9,6 +9,7 @@
 
 .alert-item {
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
   border-radius: 0.375rem;
@@ -78,6 +79,12 @@
 .alert-content {
   flex: 1;
   min-width: 0;
+}
+
+/* Alert Item Badge */
+.alert-item .badge {
+  align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .alert-header {
