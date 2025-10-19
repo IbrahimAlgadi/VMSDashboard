@@ -1,0 +1,319 @@
+/* Compliance Page Styles */
+
+/* Compliance Circle */
+.compliance-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.compliance-circle {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+}
+
+.compliance-circle svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.compliance-bg {
+  fill: none;
+  stroke: var(--bs-gray-200);
+  stroke-width: 8;
+}
+
+.compliance-progress {
+  fill: none;
+  stroke: var(--bs-success);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 283;
+  transition: stroke-dashoffset 1.5s ease, stroke 0.3s ease;
+}
+
+.compliance-progress.warning {
+  stroke: var(--bs-warning);
+}
+
+.compliance-progress.danger {
+  stroke: var(--bs-danger);
+}
+
+.compliance-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.compliance-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--bs-body-color);
+  line-height: 1;
+}
+
+.compliance-label {
+  font-size: 0.9rem;
+  color: var(--bs-secondary-color);
+  margin-top: 0.25rem;
+}
+
+/* Stat Cards */
+.stat-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: white;
+}
+
+/* Category Progress Bars */
+.category-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.category-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.category-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.category-score {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--bs-success);
+}
+
+.category-score.warning {
+  color: var(--bs-warning);
+}
+
+.category-score.danger {
+  color: var(--bs-danger);
+}
+
+.category-meta {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0.5rem;
+}
+
+.progress {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.progress-bar {
+  transition: width 1s ease;
+}
+
+/* Regional Table */
+.regional-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.compliant {
+  background: var(--bs-success);
+}
+
+.status-dot.warning {
+  background: var(--bs-warning);
+}
+
+.status-dot.critical {
+  background: var(--bs-danger);
+}
+
+/* Requirements Accordion */
+.accordion-item {
+  border: 1px solid var(--bs-border-color);
+  margin-bottom: 0.5rem;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.accordion-button {
+  font-weight: 600;
+  background: var(--bs-card-bg);
+}
+
+.accordion-button:not(.collapsed) {
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}
+
+.requirement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 1rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.requirement-item:first-child {
+  border-top: none;
+}
+
+.requirement-info {
+  flex: 1;
+}
+
+.requirement-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.requirement-description {
+  font-size: 0.9rem;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0.5rem;
+}
+
+.requirement-evidence {
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  background: var(--bs-light);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.requirement-meta {
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+}
+
+.requirement-status {
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.status-badge.met {
+  background: var(--bs-success-bg-subtle);
+  color: var(--bs-success);
+  border: 1px solid var(--bs-success);
+}
+
+.status-badge.partial {
+  background: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning-text-emphasis);
+  border: 1px solid var(--bs-warning);
+}
+
+.status-badge.not-met {
+  background: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger);
+  border: 1px solid var(--bs-danger);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-item,
+.requirement-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Dark mode */
+[data-theme="dark"] .compliance-bg {
+  stroke: var(--bs-gray-700);
+}
+
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .compliance-card {
+  background: var(--bs-dark);
+}
+
+[data-theme="dark"] .requirement-evidence {
+  background: var(--bs-gray-800);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .compliance-circle {
+    width: 140px;
+    height: 140px;
+  }
+
+  .compliance-value {
+    font-size: 2rem;
+  }
+
+  .category-header {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+  }
+
+  .requirement-item {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .requirement-status {
+    margin-left: 0;
+  }
+}
+

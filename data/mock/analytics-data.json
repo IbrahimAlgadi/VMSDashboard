@@ -1,0 +1,32 @@
+{
+  "dateRange": { "start": "2024-01-01", "end": "2024-01-15" },
+  "cameraUptime": [
+    { "date": "Jan 1", "uptime": 99.2 },
+    { "date": "Jan 5", "uptime": 99.5 },
+    { "date": "Jan 10", "uptime": 98.8 },
+    { "date": "Jan 15", "uptime": 99.9 }
+  ],
+  "alertsByType": [
+    { "type": "Connection Lost", "count": 45 },
+    { "type": "Motion Detected", "count": 312 },
+    { "type": "Storage Full", "count": 12 },
+    { "type": "Camera Offline", "count": 28 },
+    { "type": "System Error", "count": 8 }
+  ],
+  "regionalActivity": [
+    { "region": "Riyadh", "cameras": 5, "alerts": 145, "uptime": 99.5 },
+    { "region": "Jeddah", "cameras": 2, "alerts": 67, "uptime": 99.2 },
+    { "region": "Dammam", "cameras": 2, "alerts": 89, "uptime": 98.5 },
+    { "region": "Mecca", "cameras": 1, "alerts": 34, "uptime": 99.8 },
+    { "region": "Medina", "cameras": 2, "alerts": 70, "uptime": 99.1 }
+  ],
+  "hourlyTraffic": [
+    { "hour": "00", "events": 12 },
+    { "hour": "04", "events": 8 },
+    { "hour": "08", "events": 45 },
+    { "hour": "12", "events": 78 },
+    { "hour": "16", "events": 92 },
+    { "hour": "20", "events": 65 }
+  ]
+}
+
