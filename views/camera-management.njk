@@ -2,11 +2,12 @@
 
 {% block title %}Camera Management - CCTV Dashboard{% endblock %}
 
-{% block styles %}
+{% block extra_css %}
 <link rel="stylesheet" href="/css/pages/camera.css">
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid p-4">
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
@@ -133,7 +134,7 @@
 
 <!-- Camera Detail Modal -->
 {% include "partials/modals/camera-detail.njk" %}
-
+</div>
 {% endblock %}
 
 {% block extra_js %}
