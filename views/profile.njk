@@ -1,0 +1,230 @@
+{% extends "layout.njk" %}
+
+{% block title %}User Profile - CCTV Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/css/pages/profile.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h1 class="h3 mb-1">User Profile</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">Profile</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row g-4">
+    <!-- Profile Header Card -->
+    <div class="col-md-4">
+      <div class="card profile-card">
+        <div class="card-body text-center">
+          <div class="profile-avatar-wrapper mb-3">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&size=150&background=0d6efd&color=fff" 
+                 alt="User Avatar" 
+                 class="profile-avatar rounded-circle"
+                 id="avatarImage">
+            <button class="avatar-upload-btn" id="uploadAvatarBtn">
+              <i class="bi bi-camera"></i>
+            </button>
+            <input type="file" id="avatarInput" class="d-none" accept="image/*">
+          </div>
+          
+          <h4 class="mb-1">Admin User</h4>
+          <p class="text-muted mb-2">admin@cctv-dashboard.com</p>
+          <span class="badge bg-primary">System Administrator</span>
+          
+          <hr class="my-3">
+          
+          <div class="profile-stats">
+            <div class="stat-item">
+              <h5 class="mb-0">24</h5>
+              <small class="text-muted">Logins</small>
+            </div>
+            <div class="stat-item">
+              <h5 class="mb-0">127</h5>
+              <small class="text-muted">Activities</small>
+            </div>
+            <div class="stat-item">
+              <h5 class="mb-0">98%</h5>
+              <small class="text-muted">Uptime</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <h6 class="mb-3">Quick Actions</h6>
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-download"></i> Export Data
+            </button>
+            <button class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-shield-check"></i> Security Log
+            </button>
+            <button class="btn btn-outline-danger btn-sm" id="deleteAccountBtn">
+              <i class="bi bi-trash"></i> Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Details -->
+    <div class="col-md-8">
+      <!-- Personal Information -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-person"></i> Personal Information</h5>
+        </div>
+        <div class="card-body">
+          <form id="profileForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" value="Admin" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" value="User" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" value="admin@cctv-dashboard.com" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" value="+966 50 123 4567">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Job Title</label>
+              <input type="text" class="form-control" id="jobTitle" value="System Administrator">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Department</label>
+              <select class="form-select" id="department">
+                <option value="it" selected>IT & Security</option>
+                <option value="operations">Operations</option>
+                <option value="management">Management</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Bio</label>
+              <textarea class="form-control" id="bio" rows="3" placeholder="Tell us about yourself...">Responsible for managing CCTV surveillance systems across all branches.</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-lock"></i> Change Password</h5>
+        </div>
+        <div class="card-body">
+          <form id="passwordForm">
+            <div class="mb-3">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="currentPassword" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPassword" required>
+              <div class="form-text">Must be at least 8 characters with letters and numbers</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirmPassword" required>
+            </div>
+
+            <button type="submit" class="btn btn-warning">
+              <i class="bi bi-shield-lock"></i> Update Password
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Activity</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>IP Address</th>
+                  <th>Location</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              <tbody id="activityLog">
+                <tr>
+                  <td><i class="bi bi-box-arrow-in-right text-success"></i> Login</td>
+                  <td><code>192.168.1.100</code></td>
+                  <td>Riyadh, SA</td>
+                  <td>2024-01-15 09:30 AM</td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-gear text-info"></i> Settings Changed</td>
+                  <td><code>192.168.1.100</code></td>
+                  <td>Riyadh, SA</td>
+                  <td>2024-01-15 09:15 AM</td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-file-earmark text-primary"></i> Report Generated</td>
+                  <td><code>192.168.1.100</code></td>
+                  <td>Riyadh, SA</td>
+                  <td>2024-01-14 04:20 PM</td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-shield-check text-success"></i> Password Changed</td>
+                  <td><code>192.168.1.100</code></td>
+                  <td>Riyadh, SA</td>
+                  <td>2024-01-14 02:10 PM</td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-box-arrow-in-right text-success"></i> Login</td>
+                  <td><code>192.168.1.105</code></td>
+                  <td>Riyadh, SA</td>
+                  <td>2024-01-14 08:45 AM</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer text-center">
+          <a href="#" class="text-decoration-none">View All Activity <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/js/pages/profile.js"></script>
+{% endblock %}
+

@@ -6,8 +6,7 @@
       "description": "Create authentication login page",
       "deliverables": [
         "Centered login form",
-        "Email and password fields",
-        "Remember me checkbox",
+        "username and password fields",
         "Forgot password link",
         "Login button",
         "Demo credentials display",

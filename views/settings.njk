@@ -1,0 +1,294 @@
+{% extends "layout.njk" %}
+
+{% block title %}Settings - CCTV Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/css/pages/settings.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">System Settings</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active">Settings</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <button class="btn btn-outline-secondary" id="resetBtn">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset All
+      </button>
+      <button class="btn btn-primary" id="saveBtn">
+        <i class="bi bi-check-lg"></i> Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Settings Tabs -->
+  <div class="card">
+    <div class="card-body">
+      <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">
+            <i class="bi bi-gear"></i> General
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
+            <i class="bi bi-bell"></i> Notifications
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="display-tab" data-bs-toggle="tab" data-bs-target="#display" type="button" role="tab">
+            <i class="bi bi-palette"></i> Display
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab">
+            <i class="bi bi-code-square"></i> Advanced
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-4" id="settingsTabContent">
+        <!-- General Settings Tab -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+          <h5 class="mb-3">General Settings</h5>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Language</label>
+              <select class="form-select" id="language">
+                <option value="en" selected>English</option>
+                <option value="ar">العربية (Arabic)</option>
+                <option value="fr">Français (French)</option>
+              </select>
+              <div class="form-text">Select your preferred language</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Timezone</label>
+              <select class="form-select" id="timezone">
+                <option value="Asia/Riyadh" selected>Asia/Riyadh (GMT+3)</option>
+                <option value="Asia/Dubai">Asia/Dubai (GMT+4)</option>
+                <option value="UTC">UTC (GMT+0)</option>
+              </select>
+              <div class="form-text">Set your local timezone</div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Date Format</label>
+              <select class="form-select" id="dateFormat">
+                <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Time Format</label>
+              <select class="form-select" id="timeFormat">
+                <option value="24h" selected>24-hour</option>
+                <option value="12h">12-hour (AM/PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Session Timeout (minutes)</label>
+            <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="120">
+            <div class="form-text">Auto logout after inactivity</div>
+          </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div class="tab-pane fade" id="notifications" role="tabpanel">
+          <h5 class="mb-3">Notification Preferences</h5>
+
+          <div class="notification-group mb-4">
+            <h6 class="text-muted mb-3">Alert Notifications</h6>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="emailAlerts" checked>
+              <label class="form-check-label" for="emailAlerts">
+                <i class="bi bi-envelope"></i> Email Notifications
+              </label>
+            </div>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="pushAlerts" checked>
+              <label class="form-check-label" for="pushAlerts">
+                <i class="bi bi-app-indicator"></i> Push Notifications
+              </label>
+            </div>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="smsAlerts">
+              <label class="form-check-label" for="smsAlerts">
+                <i class="bi bi-phone"></i> SMS Notifications
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-group mb-4">
+            <h6 class="text-muted mb-3">Notification Types</h6>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="criticalAlerts" checked>
+              <label class="form-check-label" for="criticalAlerts">
+                Critical Alerts
+              </label>
+            </div>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="systemAlerts" checked>
+              <label class="form-check-label" for="systemAlerts">
+                System Alerts
+              </label>
+            </div>
+            
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="maintenanceAlerts">
+              <label class="form-check-label" for="maintenanceAlerts">
+                Maintenance Reminders
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Quiet Hours</label>
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <input type="time" class="form-control" id="quietStart" value="22:00">
+                <div class="form-text">Start time</div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <input type="time" class="form-control" id="quietEnd" value="07:00">
+                <div class="form-text">End time</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Tab -->
+        <div class="tab-pane fade" id="display" role="tabpanel">
+          <h5 class="mb-3">Display Settings</h5>
+
+          <div class="mb-4">
+            <label class="form-label">Theme</label>
+            <div class="btn-group w-100" role="group">
+              <input type="radio" class="btn-check" name="themeOption" id="lightTheme" value="light" checked>
+              <label class="btn btn-outline-primary" for="lightTheme">
+                <i class="bi bi-sun"></i> Light
+              </label>
+              
+              <input type="radio" class="btn-check" name="themeOption" id="darkTheme" value="dark">
+              <label class="btn btn-outline-primary" for="darkTheme">
+                <i class="bi bi-moon"></i> Dark
+              </label>
+              
+              <input type="radio" class="btn-check" name="themeOption" id="autoTheme" value="auto">
+              <label class="btn btn-outline-primary" for="autoTheme">
+                <i class="bi bi-circle-half"></i> Auto
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Table Density</label>
+            <select class="form-select" id="tableDensity">
+              <option value="comfortable">Comfortable</option>
+              <option value="compact" selected>Compact</option>
+              <option value="spacious">Spacious</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Items Per Page</label>
+            <select class="form-select" id="itemsPerPage">
+              <option value="10" selected>10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="showBreadcrumbs" checked>
+            <label class="form-check-label" for="showBreadcrumbs">
+              Show Breadcrumbs Navigation
+            </label>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="compactSidebar">
+            <label class="form-check-label" for="compactSidebar">
+              Compact Sidebar
+            </label>
+          </div>
+        </div>
+
+        <!-- Advanced Tab -->
+        <div class="tab-pane fade" id="advanced" role="tabpanel">
+          <h5 class="mb-3">Advanced Settings</h5>
+
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Warning:</strong> Changing these settings may affect system functionality.
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">API Key</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="apiKey" value="sk_live_1234567890abcdef">
+              <button class="btn btn-outline-secondary" type="button" id="toggleApiKey">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-outline-primary" type="button">
+                <i class="bi bi-arrow-clockwise"></i> Regenerate
+              </button>
+            </div>
+            <div class="form-text">Your API key for integrations</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Webhook URL</label>
+            <input type="url" class="form-control" id="webhookUrl" placeholder="https://your-domain.com/webhook">
+            <div class="form-text">Receive event notifications via webhook</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Data Retention (days)</label>
+            <input type="number" class="form-control" id="dataRetention" value="90" min="30" max="365">
+            <div class="form-text">How long to keep historical data</div>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="enableDebug">
+            <label class="form-check-label" for="enableDebug">
+              Enable Debug Mode
+            </label>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+            <label class="form-check-label" for="autoBackup">
+              Automatic Backups
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/js/pages/settings.js"></script>
+{% endblock %}
+
