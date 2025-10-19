@@ -30,15 +30,17 @@
     
     <!-- Total NVRs -->
     <div class="col-md-3">
-      <div class="card stat-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
               <h6 class="text-muted mb-2">TOTAL NVRS</h6>
-              <h2 class="mb-0" id="totalNVRs">0</h2>
+              <h2 class="mb-1" id="totalNVRs">0</h2>
               <small class="text-muted" id="totalNVRsChange"></small>
             </div>
-            <div class="stat-icon bg-primary"><i class="bi bi-hdd-rack"></i></div>
+            <div class="p-3 rounded-circle bg-primary bg-opacity-10">
+              <i class="bi bi-hdd-rack fs-4 text-primary"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -46,15 +48,17 @@
 
     <!-- Total Cameras -->
     <div class="col-md-3">
-      <div class="card stat-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
               <h6 class="text-muted mb-2">TOTAL CAMERAS</h6>
-              <h2 class="mb-0" id="totalCameras">0</h2>
+              <h2 class="mb-1" id="totalCameras">0</h2>
               <small class="text-muted" id="totalCamerasChange"></small>
             </div>
-            <div class="stat-icon bg-success"><i class="bi bi-camera-video"></i></div>
+            <div class="p-3 rounded-circle bg-success bg-opacity-10">
+              <i class="bi bi-camera-video fs-4 text-success"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -62,15 +66,17 @@
 
     <!-- Offline NVRs -->
     <div class="col-md-3">
-      <div class="card stat-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
               <h6 class="text-muted mb-2">OFFLINE NVRS</h6>
-              <h2 class="mb-0" id="offlineNVRs">0</h2>
+              <h2 class="mb-1" id="offlineNVRs">0</h2>
               <small class="text-muted" id="offlineNVRsChange"></small>
             </div>
-            <div class="stat-icon bg-danger"><i class="bi bi-hdd-rack-fill"></i></div>
+            <div class="p-3 rounded-circle bg-danger bg-opacity-10">
+              <i class="bi bi-hdd-rack-fill fs-4 text-danger"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -78,15 +84,17 @@
 
     <!-- Offline Cameras -->
     <div class="col-md-3">
-      <div class="card stat-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
               <h6 class="text-muted mb-2">OFFLINE CAMERAS</h6>
-              <h2 class="mb-0" id="offlineCameras">0</h2>
+              <h2 class="mb-1" id="offlineCameras">0</h2>
               <small class="text-muted" id="offlineCamerasChange"></small>
             </div>
-            <div class="stat-icon bg-warning"><i class="bi bi-camera-video-off"></i></div>
+            <div class="p-3 rounded-circle bg-warning bg-opacity-10">
+              <i class="bi bi-camera-video-off fs-4 text-warning"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -100,8 +108,8 @@
       <h5><i class="bi bi-bar-chart me-2"></i>System Analytics</h5>
     </div>
 
-    <!-- System Health -->
-    <div class="col-md-3">
+    <!-- Row 1: System Health & Camera Status Trends -->
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header"><h6 class="mb-0"><i class="bi bi-heart-pulse"></i> System Health</h6></div>
         <div class="card-body">
@@ -110,8 +118,7 @@
       </div>
     </div>
 
-    <!-- Camera Status Trend -->
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header"><h6 class="mb-0"><i class="bi bi-camera"></i> Camera Status Trends</h6></div>
         <div class="card-body">
@@ -120,8 +127,11 @@
       </div>
     </div>
 
-    <!-- NVR Status Trend -->
-    <div class="col-md-3">
+  </div>
+
+  <!-- Row 2: NVR Status Trends & Storage Trends -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header"><h6 class="mb-0"><i class="bi bi-hdd"></i> NVR Status Trends</h6></div>
         <div class="card-body">
@@ -130,8 +140,7 @@
       </div>
     </div>
 
-    <!-- Storage Trend -->
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header"><h6 class="mb-0"><i class="bi bi-database"></i> Storage Trends</h6></div>
         <div class="card-body">
