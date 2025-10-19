@@ -1,0 +1,108 @@
+{% extends "layout.njk" %}
+
+{% block title %}Location Map - CCTV Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="/css/pages/map.css">
+<link rel="stylesheet" href="/css/components/map-sidebar.css">
+{% endblock %}
+
+{% block content %}
+<!-- Map Controls Panel -->
+<div class="map-controls">
+  <button class="btn btn-light btn-sm" id="toggleSidebar">
+    <i class="bi bi-list"></i> Locations
+  </button>
+  <div class="btn-group btn-group-sm ms-2" role="group">
+    <button class="btn btn-light active" data-layer="all">
+      <i class="bi bi-geo-alt"></i> All
+    </button>
+    <button class="btn btn-light" data-layer="online">
+      <i class="bi bi-circle-fill text-success"></i> Online
+    </button>
+    <button class="btn btn-light" data-layer="offline">
+      <i class="bi bi-circle-fill text-danger"></i> Offline
+    </button>
+    <button class="btn btn-light" data-layer="maintenance">
+      <i class="bi bi-circle-fill text-warning"></i> Maintenance
+    </button>
+  </div>
+  <button class="btn btn-light btn-sm ms-2" id="centerMap">
+    <i class="bi bi-crosshair"></i> Center
+  </button>
+</div>
+
+<!-- Statistics Bar -->
+<div class="map-stats">
+  <div class="stat-item">
+    <i class="bi bi-geo-alt-fill"></i>
+    <span class="stat-label">Locations:</span>
+    <strong id="totalLocations">0</strong>
+  </div>
+  <div class="stat-item">
+    <i class="bi bi-circle-fill text-success"></i>
+    <span class="stat-label">Online:</span>
+    <strong id="onlineLocations">0</strong>
+  </div>
+  <div class="stat-item">
+    <i class="bi bi-circle-fill text-danger"></i>
+    <span class="stat-label">Offline:</span>
+    <strong id="offlineLocations">0</strong>
+  </div>
+  <div class="stat-item">
+    <i class="bi bi-circle-fill text-warning"></i>
+    <span class="stat-label">Maintenance:</span>
+    <strong id="maintenanceLocations">0</strong>
+  </div>
+</div>
+
+<!-- Map Container -->
+<div id="map" class="map-container"></div>
+
+<!-- Sidebar -->
+<div class="offcanvas offcanvas-start map-sidebar" tabindex="-1" id="mapSidebar">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Locations</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- Search & Filters -->
+    <div class="mb-3">
+      <input type="text" class="form-control form-control-sm mb-2" id="searchLocations" placeholder="Search locations...">
+      <select class="form-select form-select-sm mb-2" id="filterRegion">
+        <option value="">All Regions</option>
+        <option value="Riyadh">Riyadh</option>
+        <option value="Jeddah">Jeddah</option>
+        <option value="Dammam">Dammam</option>
+        <option value="Mecca">Mecca</option>
+        <option value="Medina">Medina</option>
+      </select>
+      <select class="form-select form-select-sm mb-2" id="filterStatus">
+        <option value="">All Status</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+      <button class="btn btn-sm btn-secondary w-100" id="clearFilters">
+        <i class="bi bi-x-circle"></i> Clear Filters
+      </button>
+    </div>
+
+    <!-- Location List -->
+    <div class="location-list" id="locationList">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="/js/components/map.js"></script>
+<script src="/js/pages/map.js"></script>
+{% endblock %}
+

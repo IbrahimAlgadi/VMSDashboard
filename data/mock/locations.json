@@ -1,0 +1,101 @@
+{
+  "locations": [
+    {
+      "id": 1,
+      "name": "King Fahd Branch",
+      "region": "Riyadh",
+      "address": "King Fahd Road, Riyadh",
+      "coordinates": [24.7136, 46.6753],
+      "status": "online",
+      "nvrs": 1,
+      "cameras": 3,
+      "branch_type": "Main Branch"
+    },
+    {
+      "id": 2,
+      "name": "Olaya Branch",
+      "region": "Riyadh",
+      "address": "Olaya Street, Riyadh",
+      "coordinates": [24.7205, 46.6758],
+      "status": "online",
+      "nvrs": 1,
+      "cameras": 1,
+      "branch_type": "ATM"
+    },
+    {
+      "id": 3,
+      "name": "Granada Branch",
+      "region": "Riyadh",
+      "address": "Granada District, Riyadh",
+      "coordinates": [24.7305, 46.6958],
+      "status": "offline",
+      "nvrs": 1,
+      "cameras": 1,
+      "branch_type": "ATM"
+    },
+    {
+      "id": 4,
+      "name": "Al Hamra Branch",
+      "region": "Jeddah",
+      "address": "Al Hamra District, Jeddah",
+      "coordinates": [21.5811, 39.1678],
+      "status": "online",
+      "nvrs": 1,
+      "cameras": 2,
+      "branch_type": "Main Branch"
+    },
+    {
+      "id": 5,
+      "name": "Corniche Branch",
+      "region": "Dammam",
+      "address": "Corniche Road, Dammam",
+      "coordinates": [26.4207, 50.0888],
+      "status": "maintenance",
+      "nvrs": 1,
+      "cameras": 2,
+      "branch_type": "Branch"
+    },
+    {
+      "id": 6,
+      "name": "Ajyad Branch",
+      "region": "Mecca",
+      "address": "Ajyad Street, Mecca",
+      "coordinates": [21.4225, 39.8262],
+      "status": "online",
+      "nvrs": 1,
+      "cameras": 1,
+      "branch_type": "ATM"
+    },
+    {
+      "id": 7,
+      "name": "Al Haram Branch",
+      "region": "Medina",
+      "address": "Al Haram Road, Medina",
+      "coordinates": [24.4672, 39.6111],
+      "status": "online",
+      "nvrs": 1,
+      "cameras": 1,
+      "branch_type": "Main Branch"
+    },
+    {
+      "id": 8,
+      "name": "Quba Branch",
+      "region": "Medina",
+      "address": "Quba District, Medina",
+      "coordinates": [24.4400, 39.6200],
+      "status": "offline",
+      "nvrs": 1,
+      "cameras": 1,
+      "branch_type": "ATM"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "online": 5,
+    "offline": 2,
+    "maintenance": 1,
+    "totalNVRs": 8,
+    "totalCameras": 12
+  }
+}
+

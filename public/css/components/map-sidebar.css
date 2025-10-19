@@ -1,0 +1,128 @@
+/* Map Sidebar Styles */
+
+.map-sidebar {
+  width: 350px !important;
+  max-width: 90vw;
+}
+
+.map-sidebar .offcanvas-body {
+  padding: 1rem;
+}
+
+/* Location list */
+.location-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.location-item {
+  background: var(--bs-card-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.location-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: var(--bs-primary);
+}
+
+.location-item.active {
+  border-color: var(--bs-primary);
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.5rem;
+}
+
+.location-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.location-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.location-status .bi-circle-fill {
+  font-size: 0.6rem;
+}
+
+.location-info {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.location-info i {
+  width: 16px;
+  text-align: center;
+  margin-right: 0.25rem;
+}
+
+.location-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--bs-border-color);
+  font-size: 0.85rem;
+}
+
+.location-stats .stat {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--bs-secondary-color);
+}
+
+.location-stats .stat strong {
+  color: var(--bs-body-color);
+}
+
+/* Empty state */
+.location-list-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--bs-secondary-color);
+}
+
+.location-list-empty i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Filter controls */
+#searchLocations {
+  border-radius: 8px;
+}
+
+#filterRegion,
+#filterStatus {
+  border-radius: 8px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .map-sidebar {
+    width: 100% !important;
+  }
+
+  .location-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
