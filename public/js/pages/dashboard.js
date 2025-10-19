@@ -20,9 +20,13 @@ async function loadDashboard() {
     
     renderKPIs();
     renderCharts();
-    renderRecentAlerts(alertsData);
+    renderRecentAlerts(alertsData.recentAlerts || []);
     renderSystemSummary();
     renderRegionalDistribution();
+    
+    // Update last update time
+    const now = new Date();
+    document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
     
   } catch (error) {
     console.error('Failed to load dashboard:', error);
