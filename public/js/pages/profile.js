@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initAvatarUpload();
   initProfileForm();
   initPasswordForm();
-  initDeleteAccount();
 });
 
 // Initialize avatar upload
@@ -44,8 +43,7 @@ function initProfileForm() {
       email: document.getElementById('email').value,
       phone: document.getElementById('phone').value,
       jobTitle: document.getElementById('jobTitle').value,
-      department: document.getElementById('department').value,
-      bio: document.getElementById('bio').value
+      department: document.getElementById('department').value
     };
     
     // Save to localStorage
@@ -87,25 +85,6 @@ function initPasswordForm() {
     form.reset();
     
     console.log('Password changed');
-  });
-}
-
-// Initialize delete account
-function initDeleteAccount() {
-  document.getElementById('deleteAccountBtn').addEventListener('click', () => {
-    const confirmed = confirm(
-      'Are you sure you want to delete your account?\n\n' +
-      'This action cannot be undone and all your data will be permanently removed.'
-    );
-    
-    if (confirmed) {
-      const doubleConfirmed = confirm('Please confirm one more time. Delete account?');
-      
-      if (doubleConfirmed) {
-        alert('Account deletion request submitted.\n\nIn a real application, this would initiate the account deletion process.');
-        console.log('Account deletion requested');
-      }
-    }
   });
 }
 
