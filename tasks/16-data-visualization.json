@@ -1,0 +1,73 @@
+{
+  "group": "Advanced Data Visualization",
+  "tasks": {
+    "task-39": {
+      "title": "Advanced Chart Types",
+      "description": "Implement additional chart types and visualizations",
+      "deliverables": [
+        "Heatmap chart",
+        "Radar/Spider chart",
+        "Sankey diagram",
+        "Treemap chart",
+        "Candlestick chart",
+        "3D charts (optional)"
+      ],
+      "files": [
+        "public/js/components/advanced-charts.js",
+        "public/css/components/advanced-charts.css",
+        "data/mock/advanced-chart-data.json"
+      ],
+      "ui_elements": [
+        "Chart cards with advanced types",
+        "Chart configuration panel",
+        "Interactive legend",
+        "Zoom and pan controls"
+      ]
+    },
+    "task-40": {
+      "title": "Chart Interactions & Animations",
+      "description": "Add interactive features and animations to charts",
+      "deliverables": [
+        "Click to drill-down functionality",
+        "Tooltip customization",
+        "Chart data brushing/filtering",
+        "Animation on data update",
+        "Chart synchronization",
+        "Export chart as image/SVG"
+      ],
+      "files": [
+        "public/js/components/chart-interactions.js",
+        "public/js/utils/chart-utils.js"
+      ],
+      "ui_elements": [
+        "Custom tooltips with rich content",
+        "Data zoom slider",
+        "Chart toolbar with actions",
+        "Loading animation for charts"
+      ]
+    },
+    "task-41": {
+      "title": "Data Grid Component",
+      "description": "Create advanced data grid with inline editing",
+      "deliverables": [
+        "Editable data grid component",
+        "Inline cell editing",
+        "Column resizing and reordering",
+        "Row grouping and aggregation",
+        "Virtual scrolling for large datasets",
+        "Cell formatting options"
+      ],
+      "files": [
+        "public/js/components/data-grid.js",
+        "public/css/components/data-grid.css"
+      ],
+      "ui_elements": [
+        "Grid with editable cells",
+        "Column resize handles",
+        "Row group headers",
+        "Aggregation footer row"
+      ]
+    }
+  }
+}
+

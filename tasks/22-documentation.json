@@ -1,0 +1,94 @@
+{
+  "group": "Documentation",
+  "tasks": {
+    "task-59": {
+      "title": "Technical Documentation",
+      "description": "Create comprehensive technical documentation",
+      "deliverables": [
+        "Architecture documentation",
+        "API documentation",
+        "Component documentation",
+        "Setup and installation guide",
+        "Configuration guide",
+        "Troubleshooting guide"
+      ],
+      "files": [
+        "docs/ARCHITECTURE.md",
+        "docs/API.md",
+        "docs/COMPONENTS.md",
+        "docs/SETUP.md",
+        "docs/CONFIGURATION.md",
+        "docs/TROUBLESHOOTING.md"
+      ],
+      "ui_elements": []
+    },
+    "task-60": {
+      "title": "User Manual & Help System",
+      "description": "Create user-facing documentation and help",
+      "deliverables": [
+        "User manual",
+        "Help page with searchable articles",
+        "Video tutorials (links/placeholders)",
+        "FAQ section",
+        "Tooltips and contextual help",
+        "Onboarding tour"
+      ],
+      "files": [
+        "views/help.njk",
+        "views/faq.njk",
+        "public/js/components/help-system.js",
+        "public/js/components/onboarding-tour.js",
+        "docs/USER_MANUAL.md"
+      ],
+      "ui_elements": [
+        "Help page with search",
+        "Collapsible FAQ accordion",
+        "Tooltips with question mark icons",
+        "Onboarding overlay tour"
+      ]
+    },
+    "task-61": {
+      "title": "Code Documentation & JSDoc",
+      "description": "Add inline documentation to codebase",
+      "deliverables": [
+        "JSDoc comments for all functions",
+        "Class and method documentation",
+        "Usage examples in comments",
+        "Generated API docs from JSDoc",
+        "Type definitions",
+        "Code examples repository"
+      ],
+      "files": [
+        "jsdoc.config.json",
+        "docs/api-reference (generated)",
+        "examples/component-usage.js"
+      ],
+      "ui_elements": []
+    },
+    "task-62": {
+      "title": "Changelog & Release Notes",
+      "description": "Maintain version history and release notes",
+      "deliverables": [
+        "CHANGELOG.md file",
+        "Release notes template",
+        "Version numbering strategy",
+        "Breaking changes documentation",
+        "Migration guides",
+        "Release notes page in app"
+      ],
+      "files": [
+        "CHANGELOG.md",
+        "docs/RELEASES.md",
+        "docs/MIGRATION.md",
+        "views/whats-new.njk",
+        "public/js/pages/whats-new.js"
+      ],
+      "ui_elements": [
+        "What's New page",
+        "Release notes modal on login (new version)",
+        "Version number in footer"
+      ]
+    }
+  }
+}
+

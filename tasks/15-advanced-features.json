@@ -1,0 +1,99 @@
+{
+  "group": "Advanced Features",
+  "tasks": {
+    "task-35": {
+      "title": "Export & Print Functionality",
+      "description": "Implement export and print features for reports and data",
+      "deliverables": [
+        "Export service for multiple formats (PDF, Excel, CSV, JSON)",
+        "Print stylesheet optimization",
+        "Custom print layouts for different pages",
+        "Export modal with options",
+        "Progress indicator for exports",
+        "Download trigger functionality"
+      ],
+      "files": [
+        "public/js/services/export.service.js",
+        "public/css/print.css",
+        "public/js/utils/print-helper.js"
+      ],
+      "ui_elements": [
+        "Export modal with format selection",
+        "Export progress bar",
+        "Print preview button",
+        "Print-optimized layouts"
+      ]
+    },
+    "task-36": {
+      "title": "Search & Filter System",
+      "description": "Create global search and advanced filtering system",
+      "deliverables": [
+        "Global search component",
+        "Search results page",
+        "Advanced filter builder",
+        "Filter presets/templates",
+        "Search history",
+        "Auto-complete suggestions"
+      ],
+      "files": [
+        "views/search-results.njk",
+        "public/js/components/search.js",
+        "public/js/components/filter-builder.js",
+        "public/css/components/search.css"
+      ],
+      "ui_elements": [
+        "Search bar with autocomplete dropdown",
+        "Search results card layout",
+        "Filter builder modal",
+        "Filter tags/chips",
+        "Saved filters list"
+      ]
+    },
+    "task-37": {
+      "title": "Batch Operations & Bulk Actions",
+      "description": "Implement bulk selection and batch operations",
+      "deliverables": [
+        "Checkbox selection in tables",
+        "Select all/none functionality",
+        "Bulk action toolbar",
+        "Progress tracking for batch operations",
+        "Batch confirmation modals",
+        "Undo/rollback capability"
+      ],
+      "files": [
+        "public/js/components/bulk-actions.js",
+        "public/js/utils/batch-processor.js",
+        "public/css/components/bulk-actions.css"
+      ],
+      "ui_elements": [
+        "Checkbox in table rows",
+        "Floating bulk action toolbar",
+        "Batch progress modal",
+        "Confirmation dialog with preview"
+      ]
+    },
+    "task-38": {
+      "title": "Drag & Drop Functionality",
+      "description": "Add drag and drop for file uploads and organization",
+      "deliverables": [
+        "Drag and drop file upload zones",
+        "Drag to reorder lists/cards",
+        "Drag to organize dashboard widgets",
+        "Visual feedback during drag",
+        "Drop zone highlighting",
+        "Touch device support"
+      ],
+      "files": [
+        "public/js/utils/drag-drop.js",
+        "public/css/components/drag-drop.css"
+      ],
+      "ui_elements": [
+        "Drop zone with dashed border",
+        "Drag handle icons",
+        "Dragging state styling",
+        "Drop target indicators"
+      ]
+    }
+  }
+}
+

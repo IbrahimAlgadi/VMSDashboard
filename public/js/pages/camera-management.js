@@ -158,12 +158,6 @@ function renderGridView() {
               <i class="bi bi-circle-fill"></i> Maintenance
             </span>
           `}
-          ${camera.recording ? `
-            <span class="camera-recording-indicator">
-              <span class="pulse-dot"></span>
-              REC
-            </span>
-          ` : ''}
         </div>
         <div class="card-body">
           <h6 class="camera-name">${camera.name}</h6>
@@ -179,9 +173,9 @@ function renderGridView() {
               <i class="bi bi-display"></i>
               ${camera.resolution}
             </div>
-            <div class="camera-info-item ${camera.motion ? 'active' : ''}">
-              <i class="bi bi-activity"></i>
-              ${camera.motion ? 'Motion' : 'No Motion'}
+            <div class="camera-info-item">
+              <i class="bi bi-hdd"></i>
+              ${camera.nvr}
             </div>
           </div>
         </div>
@@ -205,7 +199,7 @@ function renderListView() {
   const tableBody = document.getElementById('cameraTableBody');
   
   if (filteredCameras.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No cameras found</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No cameras found</td></tr>';
     return;
   }
   
@@ -226,18 +220,6 @@ function renderListView() {
           <span class="status-badge ${statusClass}">
             <i class="bi bi-circle-fill"></i>
             ${camera.status}
-          </span>
-        </td>
-        <td>
-          <span class="recording-status ${camera.recording ? 'active' : ''}">
-            <i class="bi bi-record-circle${camera.recording ? '-fill' : ''}"></i>
-            ${camera.recording ? 'Recording' : 'Stopped'}
-          </span>
-        </td>
-        <td>
-          <span class="motion-status ${camera.motion ? 'active' : ''}">
-            <i class="bi bi-activity"></i>
-            ${camera.motion ? 'Active' : 'Inactive'}
           </span>
         </td>
         <td>
@@ -317,18 +299,6 @@ function showCameraDetail(camera, editMode = false) {
     camera.status === 'offline' ? 'bg-danger' : 'bg-warning'
   );
   statusBadge.innerHTML = `<i class="bi bi-circle-fill"></i> ${camera.status}`;
-  
-  // Recording status
-  const recordingBadge = document.getElementById('modalCameraRecording');
-  recordingBadge.className = 'badge';
-  recordingBadge.classList.add(camera.recording ? 'bg-danger' : 'bg-secondary');
-  recordingBadge.innerHTML = `<i class="bi bi-record-circle${camera.recording ? '-fill' : ''}"></i> ${camera.recording ? 'Recording' : 'Stopped'}`;
-  
-  // Motion detection
-  const motionBadge = document.getElementById('modalCameraMotion');
-  motionBadge.className = 'badge';
-  motionBadge.classList.add(camera.motion ? 'bg-primary' : 'bg-secondary');
-  motionBadge.innerHTML = `<i class="bi bi-activity"></i> ${camera.motion ? 'Active' : 'Inactive'}`;
   
   // Edit button
   const editBtn = document.getElementById('editCameraBtn');

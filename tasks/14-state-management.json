@@ -1,0 +1,49 @@
+{
+  "group": "State Management & Storage",
+  "tasks": {
+    "task-33": {
+      "title": "State Management System",
+      "description": "Implement centralized state management with pub/sub pattern",
+      "deliverables": [
+        "StateManager singleton class",
+        "Observer pattern implementation",
+        "State persistence to localStorage",
+        "State restoration on page load",
+        "State debugging tools",
+        "State change history"
+      ],
+      "files": [
+        "public/js/core/state.js",
+        "public/js/core/storage.js",
+        "public/js/utils/debug.js"
+      ],
+      "ui_elements": [
+        "Debug panel toggle (dev mode)",
+        "State inspector UI",
+        "Clear cache button in settings"
+      ]
+    },
+    "task-34": {
+      "title": "User Preferences & Settings Storage",
+      "description": "Implement user preferences storage and synchronization",
+      "deliverables": [
+        "Preferences object structure",
+        "Save/load preferences methods",
+        "Default preferences configuration",
+        "Preference migration logic",
+        "Export/import preferences",
+        "Reset to defaults functionality"
+      ],
+      "files": [
+        "public/js/core/preferences.js",
+        "public/js/utils/storage-utils.js"
+      ],
+      "ui_elements": [
+        "Import/export buttons in settings",
+        "Reset preferences confirmation modal",
+        "Preferences backup notice"
+      ]
+    }
+  }
+}
+

@@ -1,0 +1,104 @@
+{
+  "group": "Admin & Management Features",
+  "tasks": {
+    "task-63": {
+      "title": "User Management Page",
+      "description": "Create admin panel for user management",
+      "deliverables": [
+        "User list with roles and status",
+        "Add/edit/delete user functionality",
+        "Role assignment",
+        "Permission management",
+        "User activity overview",
+        "Bulk user operations"
+      ],
+      "files": [
+        "views/admin/user-management.njk",
+        "public/js/pages/admin/user-management.js",
+        "public/css/pages/admin.css",
+        "data/mock/users.json"
+      ],
+      "ui_elements": [
+        "User table with filters",
+        "User detail modal",
+        "Role selector dropdown",
+        "Status toggle switches",
+        "Bulk action toolbar"
+      ]
+    },
+    "task-64": {
+      "title": "System Configuration Page",
+      "description": "Create system-wide configuration interface",
+      "deliverables": [
+        "System settings form",
+        "Email/notification configuration",
+        "Integration settings",
+        "Backup and restore",
+        "System maintenance mode",
+        "Configuration validation"
+      ],
+      "files": [
+        "views/admin/system-config.njk",
+        "public/js/pages/admin/system-config.js",
+        "data/mock/system-config.json"
+      ],
+      "ui_elements": [
+        "Configuration sections with tabs",
+        "Test connection buttons",
+        "Backup/restore buttons",
+        "Maintenance mode toggle",
+        "Configuration import/export"
+      ]
+    },
+    "task-65": {
+      "title": "Permissions & Roles Management",
+      "description": "Create role-based access control interface",
+      "deliverables": [
+        "Roles list with permissions matrix",
+        "Create/edit/delete roles",
+        "Permission assignment interface",
+        "Permission groups/categories",
+        "Role inheritance",
+        "Default roles"
+      ],
+      "files": [
+        "views/admin/roles-permissions.njk",
+        "public/js/pages/admin/roles.js",
+        "public/js/core/rbac.js",
+        "data/mock/roles.json"
+      ],
+      "ui_elements": [
+        "Roles table",
+        "Permissions matrix table",
+        "Checkbox grid for permissions",
+        "Role template selector",
+        "Permission search"
+      ]
+    },
+    "task-66": {
+      "title": "System Monitoring Dashboard",
+      "description": "Create admin dashboard for system health",
+      "deliverables": [
+        "System health metrics",
+        "Resource usage charts (CPU, memory, disk)",
+        "Active users count",
+        "API request statistics",
+        "Error rate monitoring",
+        "Service status indicators"
+      ],
+      "files": [
+        "views/admin/system-dashboard.njk",
+        "public/js/pages/admin/system-dashboard.js",
+        "data/mock/system-metrics.json"
+      ],
+      "ui_elements": [
+        "Metric cards with gauges",
+        "Resource usage charts",
+        "Real-time activity feed",
+        "Service status table",
+        "Alert threshold indicators"
+      ]
+    }
+  }
+}
+

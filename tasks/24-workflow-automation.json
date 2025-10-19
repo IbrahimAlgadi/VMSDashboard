@@ -1,0 +1,81 @@
+{
+  "group": "Workflow & Automation",
+  "tasks": {
+    "task-67": {
+      "title": "Scheduled Tasks & Jobs",
+      "description": "Create interface for managing scheduled tasks",
+      "deliverables": [
+        "Scheduled tasks list",
+        "Cron expression builder",
+        "Task history and logs",
+        "Enable/disable tasks",
+        "Manual task trigger",
+        "Task dependency visualization"
+      ],
+      "files": [
+        "views/admin/scheduled-tasks.njk",
+        "public/js/pages/admin/scheduled-tasks.js",
+        "public/js/components/cron-builder.js",
+        "data/mock/scheduled-tasks.json"
+      ],
+      "ui_elements": [
+        "Tasks table with next run time",
+        "Cron expression builder modal",
+        "Task execution history timeline",
+        "Run now button",
+        "Task dependency graph"
+      ]
+    },
+    "task-68": {
+      "title": "Notification Rules Engine",
+      "description": "Create configurable notification rules",
+      "deliverables": [
+        "Notification rules list",
+        "Rule builder with conditions",
+        "Multiple notification channels",
+        "Rule testing/simulation",
+        "Rule templates",
+        "Priority and escalation"
+      ],
+      "files": [
+        "views/admin/notification-rules.njk",
+        "public/js/pages/admin/notification-rules.js",
+        "public/js/components/rule-builder.js",
+        "data/mock/notification-rules.json"
+      ],
+      "ui_elements": [
+        "Rules table with status",
+        "Visual rule builder",
+        "Condition builder with AND/OR logic",
+        "Action selector (email, SMS, push)",
+        "Test rule button"
+      ]
+    },
+    "task-69": {
+      "title": "Workflow Builder",
+      "description": "Create visual workflow automation builder",
+      "deliverables": [
+        "Drag-and-drop workflow canvas",
+        "Workflow nodes library",
+        "Connection logic",
+        "Workflow testing",
+        "Workflow templates",
+        "Version control for workflows"
+      ],
+      "files": [
+        "views/admin/workflow-builder.njk",
+        "public/js/pages/admin/workflow-builder.js",
+        "public/js/components/workflow-canvas.js",
+        "public/css/components/workflow.css"
+      ],
+      "ui_elements": [
+        "Workflow canvas with grid",
+        "Node palette sidebar",
+        "Node connection lines",
+        "Node configuration modals",
+        "Workflow preview/test button"
+      ]
+    }
+  }
+}
+

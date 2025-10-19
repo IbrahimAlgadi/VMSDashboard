@@ -1,0 +1,75 @@
+{
+  "group": "Accessibility & Internationalization",
+  "tasks": {
+    "task-45": {
+      "title": "Accessibility (A11y) Enhancements",
+      "description": "Ensure WCAG 2.1 AA compliance",
+      "deliverables": [
+        "ARIA labels and roles",
+        "Keyboard navigation support",
+        "Focus indicators",
+        "Screen reader optimizations",
+        "Color contrast compliance",
+        "Skip navigation links",
+        "Accessible modals and dropdowns"
+      ],
+      "files": [
+        "public/js/utils/accessibility.js",
+        "public/css/accessibility.css"
+      ],
+      "ui_elements": [
+        "Skip to main content link",
+        "Focus visible styles",
+        "ARIA live regions",
+        "Accessible form labels"
+      ]
+    },
+    "task-46": {
+      "title": "Internationalization (i18n)",
+      "description": "Add multi-language support",
+      "deliverables": [
+        "i18n library integration",
+        "Translation files (EN, AR)",
+        "Language switcher in settings",
+        "RTL support for Arabic",
+        "Date/time localization",
+        "Number formatting per locale"
+      ],
+      "files": [
+        "public/js/core/i18n.js",
+        "public/locales/en.json",
+        "public/locales/ar.json",
+        "public/css/rtl.css"
+      ],
+      "ui_elements": [
+        "Language selector dropdown",
+        "RTL layout toggle",
+        "Translated UI elements"
+      ]
+    },
+    "task-47": {
+      "title": "High Contrast & Text Size Options",
+      "description": "Add accessibility display options",
+      "deliverables": [
+        "High contrast theme",
+        "Text size adjustment controls",
+        "Reduced motion mode",
+        "Dyslexic-friendly font option",
+        "Color blind friendly palette",
+        "Settings persistence"
+      ],
+      "files": [
+        "public/css/themes/high-contrast.css",
+        "public/css/themes/reduced-motion.css",
+        "public/js/utils/display-settings.js"
+      ],
+      "ui_elements": [
+        "Text size controls (A, A+, A++)",
+        "High contrast toggle",
+        "Reduced motion toggle",
+        "Font family selector"
+      ]
+    }
+  }
+}
+

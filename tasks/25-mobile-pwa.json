@@ -1,0 +1,75 @@
+{
+  "group": "Mobile & PWA",
+  "tasks": {
+    "task-70": {
+      "title": "Progressive Web App (PWA) Setup",
+      "description": "Convert application to PWA",
+      "deliverables": [
+        "Web app manifest",
+        "Service worker for offline support",
+        "App icons for all platforms",
+        "Splash screens",
+        "Install prompt",
+        "PWA update notification"
+      ],
+      "files": [
+        "public/manifest.json",
+        "public/service-worker.js",
+        "public/images/icons/icon-*.png",
+        "public/js/core/pwa-installer.js"
+      ],
+      "ui_elements": [
+        "Install app banner",
+        "Update available toast",
+        "Offline mode indicator"
+      ]
+    },
+    "task-71": {
+      "title": "Mobile-Optimized UI",
+      "description": "Create mobile-specific optimizations",
+      "deliverables": [
+        "Touch-optimized controls",
+        "Swipe gestures",
+        "Bottom navigation for mobile",
+        "Pull-to-refresh",
+        "Mobile-specific modals (full screen)",
+        "Simplified mobile layouts"
+      ],
+      "files": [
+        "public/css/mobile.css",
+        "public/js/utils/touch-gestures.js",
+        "public/js/components/mobile-nav.js"
+      ],
+      "ui_elements": [
+        "Bottom tab bar for mobile",
+        "Swipeable cards",
+        "Full-screen mobile modals",
+        "Pull-to-refresh indicator"
+      ]
+    },
+    "task-72": {
+      "title": "Push Notifications",
+      "description": "Implement push notification system",
+      "deliverables": [
+        "Push notification permission request",
+        "Notification preferences in settings",
+        "Push notification service worker",
+        "Notification click handlers",
+        "Rich notifications with actions",
+        "Notification history"
+      ],
+      "files": [
+        "public/js/core/push-notifications.js",
+        "views/notification-settings.njk",
+        "server-push-handler.js"
+      ],
+      "ui_elements": [
+        "Permission request modal",
+        "Notification preferences form",
+        "Notification history page",
+        "Test notification button"
+      ]
+    }
+  }
+}
+

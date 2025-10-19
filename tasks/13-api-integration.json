@@ -1,0 +1,56 @@
+{
+  "group": "API Integration Layer",
+  "tasks": {
+    "task-31": {
+      "title": "API Client & Service Layer",
+      "description": "Create API client and service layer for backend integration",
+      "deliverables": [
+        "API client class with fetch wrapper",
+        "Authentication token management",
+        "Request interceptors",
+        "Error handling middleware",
+        "Response caching layer",
+        "Mock API fallback"
+      ],
+      "files": [
+        "public/js/core/api.js",
+        "public/js/core/config.js",
+        "public/js/services/auth.service.js",
+        "public/js/services/nvr.service.js",
+        "public/js/services/camera.service.js",
+        "public/js/services/alert.service.js",
+        "public/js/services/analytics.service.js"
+      ],
+      "ui_elements": [
+        "Loading indicators during API calls",
+        "Error toast notifications",
+        "Retry mechanism UI",
+        "Offline mode indicator"
+      ]
+    },
+    "task-32": {
+      "title": "WebSocket Real-Time Updates",
+      "description": "Implement WebSocket connection for real-time data updates",
+      "deliverables": [
+        "WebSocket manager class",
+        "Connection status indicator",
+        "Auto-reconnection logic",
+        "Event handlers for real-time updates",
+        "Heartbeat mechanism",
+        "Mock WebSocket server for testing"
+      ],
+      "files": [
+        "public/js/core/websocket.js",
+        "public/js/utils/events.js",
+        "server-mock-ws.js"
+      ],
+      "ui_elements": [
+        "Connection status badge in navbar",
+        "Reconnecting spinner",
+        "Real-time update animations",
+        "toast for connection events"
+      ]
+    }
+  }
+}
+

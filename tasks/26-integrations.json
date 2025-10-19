@@ -1,0 +1,100 @@
+{
+  "group": "Third-Party Integrations",
+  "tasks": {
+    "task-73": {
+      "title": "Email Integration",
+      "description": "Setup email notifications and reports",
+      "deliverables": [
+        "Email templates (HTML/text)",
+        "Email sending configuration",
+        "Email preview in UI",
+        "Scheduled email reports",
+        "Email attachment support",
+        "Email delivery tracking"
+      ],
+      "files": [
+        "views/email-templates/*.njk",
+        "public/js/services/email.service.js",
+        "views/admin/email-settings.njk"
+      ],
+      "ui_elements": [
+        "Email template editor",
+        "Email preview modal",
+        "Email settings form",
+        "Test email button"
+      ]
+    },
+    "task-74": {
+      "title": "SMS/WhatsApp Integration",
+      "description": "Setup SMS and WhatsApp notifications",
+      "deliverables": [
+        "SMS provider configuration",
+        "WhatsApp Business API integration",
+        "Message templates",
+        "Contact management",
+        "Delivery status tracking",
+        "Cost estimation"
+      ],
+      "files": [
+        "public/js/services/sms.service.js",
+        "public/js/services/whatsapp.service.js",
+        "views/admin/messaging-settings.njk"
+      ],
+      "ui_elements": [
+        "Messaging provider selector",
+        "Message template editor",
+        "Contact import interface",
+        "Delivery status dashboard"
+      ]
+    },
+    "task-75": {
+      "title": "Webhook Integration",
+      "description": "Create webhook management system",
+      "deliverables": [
+        "Webhook endpoints configuration",
+        "Webhook event types",
+        "Webhook testing interface",
+        "Webhook delivery logs",
+        "Retry mechanism",
+        "Webhook security (signatures)"
+      ],
+      "files": [
+        "views/admin/webhooks.njk",
+        "public/js/pages/admin/webhooks.js",
+        "data/mock/webhooks.json"
+      ],
+      "ui_elements": [
+        "Webhooks list with status",
+        "Add/edit webhook modal",
+        "Event type selector",
+        "Test webhook button",
+        "Delivery log table"
+      ]
+    },
+    "task-76": {
+      "title": "External API Integration",
+      "description": "Setup connections to external APIs",
+      "deliverables": [
+        "API connection configuration",
+        "OAuth 2.0 flow support",
+        "API key management",
+        "Rate limiting display",
+        "API health monitoring",
+        "Data synchronization"
+      ],
+      "files": [
+        "views/admin/api-integrations.njk",
+        "public/js/services/external-api.service.js",
+        "public/js/core/oauth-handler.js"
+      ],
+      "ui_elements": [
+        "Integration cards (Slack, Teams, etc.)",
+        "Connect/disconnect buttons",
+        "OAuth authorization flow",
+        "API usage statistics",
+        "Sync status indicators"
+      ]
+    }
+  }
+}
+
