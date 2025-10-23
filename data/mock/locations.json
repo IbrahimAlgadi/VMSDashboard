@@ -9,7 +9,15 @@
       "status": "online",
       "nvrs": 1,
       "cameras": 3,
-      "branch_type": "Main Branch"
+      "branch_type": "Main Branch",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 3,
+        "offline": 0
+      }
     },
     {
       "id": 2,
@@ -20,7 +28,15 @@
       "status": "online",
       "nvrs": 1,
       "cameras": 1,
-      "branch_type": "ATM"
+      "branch_type": "ATM",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 1,
+        "offline": 0
+      }
     },
     {
       "id": 3,
@@ -31,7 +47,15 @@
       "status": "offline",
       "nvrs": 1,
       "cameras": 1,
-      "branch_type": "ATM"
+      "branch_type": "ATM",
+      "nvrStatus": {
+        "online": 0,
+        "offline": 1
+      },
+      "cameraStatus": {
+        "online": 0,
+        "offline": 1
+      }
     },
     {
       "id": 4,
@@ -42,7 +66,15 @@
       "status": "online",
       "nvrs": 1,
       "cameras": 2,
-      "branch_type": "Main Branch"
+      "branch_type": "Main Branch",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 2,
+        "offline": 0
+      }
     },
     {
       "id": 5,
@@ -50,10 +82,18 @@
       "region": "Dammam",
       "address": "Corniche Road, Dammam",
       "coordinates": [26.4207, 50.0888],
-      "status": "maintenance",
+      "status": "warning",
       "nvrs": 1,
       "cameras": 2,
-      "branch_type": "Branch"
+      "branch_type": "Branch",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 1,
+        "offline": 1
+      }
     },
     {
       "id": 6,
@@ -64,7 +104,15 @@
       "status": "online",
       "nvrs": 1,
       "cameras": 1,
-      "branch_type": "ATM"
+      "branch_type": "ATM",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 1,
+        "offline": 0
+      }
     },
     {
       "id": 7,
@@ -75,7 +123,15 @@
       "status": "online",
       "nvrs": 1,
       "cameras": 1,
-      "branch_type": "Main Branch"
+      "branch_type": "Main Branch",
+      "nvrStatus": {
+        "online": 1,
+        "offline": 0
+      },
+      "cameraStatus": {
+        "online": 1,
+        "offline": 0
+      }
     },
     {
       "id": 8,
@@ -86,14 +142,22 @@
       "status": "offline",
       "nvrs": 1,
       "cameras": 1,
-      "branch_type": "ATM"
+      "branch_type": "ATM",
+      "nvrStatus": {
+        "online": 0,
+        "offline": 1
+      },
+      "cameraStatus": {
+        "online": 0,
+        "offline": 1
+      }
     }
   ],
   "summary": {
     "total": 8,
     "online": 5,
     "offline": 2,
-    "maintenance": 1,
+    "warning": 1,
     "totalNVRs": 8,
     "totalCameras": 12
   }

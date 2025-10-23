@@ -1,6 +1,6 @@
 {% extends "layout.njk" %}
 
-{% block title %}Compliance - CCTV Dashboard{% endblock %}
+{% block title %}Compliance Dashboard - CCTV Dashboard{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/css/pages/compliance.css">
@@ -8,10 +8,11 @@
 
 {% block content %}
 <div class="container-fluid p-4">
+  
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h1 class="h3 mb-1">SAMA Compliance Dashboard</h1>
+      <h1><i class="bi bi-shield-check me-2"></i>Compliance Dashboard</h1>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -19,143 +20,88 @@
         </ol>
       </nav>
     </div>
-    <button class="btn btn-primary" id="exportReport">
-      <i class="bi bi-file-earmark-pdf"></i> Export Report
+    <button class="btn btn-primary" id="refreshBtn">
+      <i class="bi bi-arrow-clockwise"></i> Refresh
     </button>
   </div>
 
-  <!-- Overview Cards -->
+  <!-- Overall Compliance Card -->
   <div class="row g-3 mb-4">
     <div class="col-md-3">
-      <div class="card compliance-card">
-        <div class="card-body text-center">
-          <div class="compliance-circle" id="overallComplianceCircle">
-            <svg viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" class="compliance-bg"></circle>
-              <circle cx="50" cy="50" r="45" class="compliance-progress" id="complianceProgressCircle"></circle>
-            </svg>
-            <div class="compliance-text">
-              <div class="compliance-value" id="overallCompliance">0%</div>
-              <div class="compliance-label">Overall</div>
-            </div>
-          </div>
-          <h6 class="mt-3 mb-0">Compliance Score</h6>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card stat-card">
+      <div class="card text-center">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <p class="text-muted mb-1">Met Requirements</p>
-              <h3 class="mb-0" id="metRequirements">0</h3>
-            </div>
-            <div class="stat-icon bg-success">
-              <i class="bi bi-check-circle-fill"></i>
-            </div>
+          <h6 class="text-muted mb-2">Overall Compliance</h6>
+          <h1 class="display-4 mb-0" id="overallCompliance">0%</h1>
+          <div class="progress mt-3" style="height: 8px;">
+            <div class="progress-bar" id="overallProgress" role="progressbar" style="width: 0%"></div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card stat-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <p class="text-muted mb-1">Partial Compliance</p>
-              <h3 class="mb-0" id="partialRequirements">0</h3>
-            </div>
-            <div class="stat-icon bg-warning">
-              <i class="bi bi-exclamation-triangle-fill"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card stat-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <p class="text-muted mb-1">Not Met</p>
-              <h3 class="mb-0" id="notMetRequirements">0</h3>
-            </div>
-            <div class="stat-icon bg-danger">
-              <i class="bi bi-x-circle-fill"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Audit Information -->
-  <div class="row g-3 mb-4">
-    <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <h6 class="card-title"><i class="bi bi-calendar-check"></i> Last Audit</h6>
-          <p class="mb-0 fs-5" id="lastAudit">-</p>
+          <h6 class="text-muted mb-2">Total Checks</h6>
+          <h2 id="totalChecks">0</h2>
+          <small class="text-muted">Across all systems</small>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <div class="card">
         <div class="card-body">
-          <h6 class="card-title"><i class="bi bi-calendar-event"></i> Next Audit</h6>
-          <p class="mb-0 fs-5" id="nextAudit">-</p>
+          <h6 class="text-muted mb-2">Passed</h6>
+          <h2 class="text-success" id="passedChecks">0</h2>
+          <small class="text-muted">Requirements met</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Failed</h6>
+          <h2 class="text-danger" id="failedChecks">0</h2>
+          <small class="text-muted">Need attention</small>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Compliance by Category -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0"><i class="bi bi-bar-chart-fill"></i> Compliance by Category</h5>
-    </div>
-    <div class="card-body">
-      <div id="categoriesContainer"></div>
-    </div>
-  </div>
-
-  <!-- Regional Compliance -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Compliance by Region</h5>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Region</th>
-              <th>Branches</th>
-              <th>Compliance %</th>
-              <th>Status</th>
-              <th>Progress</th>
-            </tr>
-          </thead>
-          <tbody id="regionalTableBody"></tbody>
-        </table>
+  <div class="row g-3">
+    
+    <!-- Requirements Checklist -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-list-check"></i> Requirements Checklist</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="requirementsList">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Compliance by Region -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-geo-alt"></i> Compliance by Region</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="regionalCompliance">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Requirements Checklist -->
-  <div class="card">
-    <div class="card-header">
-      <h5 class="mb-0"><i class="bi bi-list-check"></i> Requirements Checklist</h5>
-    </div>
-    <div class="card-body">
-      <div class="accordion" id="requirementsAccordion"></div>
-    </div>
-  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="/js/pages/compliance.js"></script>
 {% endblock %}
-

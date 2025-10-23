@@ -1,0 +1,1161 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Database schema for VMS (Video Management System) Dashboard - ATM CCTV Monitoring System",
+    "createdDate": "2024-01-15",
+    "system": "Bootstrap VMS Dashboard",
+    "purpose": "Monitoring ATM cameras and NVRs across bank branches in Saudi Arabia"
+  },
+  "database_schema": {
+    "users": {
+      "description": "System users with authentication and profile information",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique user identifier"
+        },
+        "username": {
+          "type": "VARCHAR(50)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "User login name"
+        },
+        "email": {
+          "type": "VARCHAR(100)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "User email address"
+        },
+        "password_hash": {
+          "type": "VARCHAR(255)",
+          "constraints": ["NOT NULL"],
+          "description": "Encrypted password"
+        },
+        "full_name": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "User's full name"
+        },
+        "role": {
+          "type": "ENUM('admin', 'operator', 'viewer', 'technician')",
+          "constraints": ["NOT NULL"],
+          "description": "User access level"
+        },
+        "department": {
+          "type": "VARCHAR(50)",
+          "description": "User's department"
+        },
+        "phone": {
+          "type": "VARCHAR(20)",
+          "description": "Contact phone number"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Account status"
+        },
+        "last_login": {
+          "type": "TIMESTAMP",
+          "description": "Last login timestamp"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP",
+          "description": "Account creation timestamp"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "description": "Last update timestamp"
+        }
+      },
+      "related_to": ["audit_logs", "alerts"],
+      "dashboard_usage": ["profile", "settings", "authentication"]
+    },
+    "regions": {
+      "description": "Geographic regions for organizing branches",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique region identifier"
+        },
+        "name": {
+          "type": "VARCHAR(50)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Region name (e.g., Riyadh, Jeddah)"
+        },
+        "code": {
+          "type": "VARCHAR(10)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Region abbreviation code"
+        },
+        "description": {
+          "type": "TEXT",
+          "description": "Region description"
+        },
+        "coordinates": {
+          "type": "JSON",
+          "description": "Geographic center coordinates [lat, lng]"
+        },
+        "timezone": {
+          "type": "VARCHAR(50)",
+          "default": "Asia/Riyadh",
+          "description": "Region timezone"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Region status"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "related_to": ["branches", "nvrs", "cameras"],
+      "dashboard_usage": ["dashboard", "map", "analytics", "compliance", "security"]
+    },
+    "branches": {
+      "description": "Bank branch locations with ATM surveillance systems",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique branch identifier"
+        },
+        "name": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "Branch name"
+        },
+        "region_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES regions(id)"],
+          "description": "Associated region"
+        },
+        "branch_code": {
+          "type": "VARCHAR(20)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Unique branch code"
+        },
+        "branch_type": {
+          "type": "ENUM('Main Branch', 'Branch', 'ATM')",
+          "constraints": ["NOT NULL"],
+          "description": "Type of branch facility"
+        },
+        "address": {
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Full branch address"
+        },
+        "coordinates": {
+          "type": "JSON",
+          "constraints": ["NOT NULL"],
+          "description": "GPS coordinates [latitude, longitude]"
+        },
+        "contact_phone": {
+          "type": "VARCHAR(20)",
+          "description": "Branch contact phone"
+        },
+        "manager_name": {
+          "type": "VARCHAR(100)",
+          "description": "Branch manager name"
+        },
+        "operating_hours": {
+          "type": "JSON",
+          "description": "Branch operating schedule"
+        },
+        "status": {
+          "type": "ENUM('online', 'offline', 'warning', 'maintenance')",
+          "default": "offline",
+          "description": "Overall branch system status"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Branch operational status"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_region_id (region_id)",
+        "INDEX idx_branch_code (branch_code)",
+        "INDEX idx_status (status)"
+      ],
+      "related_to": ["regions", "nvrs", "cameras", "alerts"],
+      "dashboard_usage": ["dashboard", "map", "nvr-management", "camera-management", "alerts"]
+    },
+    "nvrs": {
+      "description": "Network Video Recorders managing camera feeds",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique NVR identifier"
+        },
+        "name": {
+          "type": "VARCHAR(50)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "NVR device name"
+        },
+        "branch_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES branches(id)"],
+          "description": "Associated branch"
+        },
+        "ip_address": {
+          "type": "VARCHAR(15)",
+          "constraints": ["NOT NULL"],
+          "description": "NVR IP address"
+        },
+        "mac_address": {
+          "type": "VARCHAR(17)",
+          "description": "NVR MAC address"
+        },
+        "model": {
+          "type": "VARCHAR(100)",
+          "description": "NVR device model"
+        },
+        "manufacturer": {
+          "type": "VARCHAR(50)",
+          "description": "Device manufacturer"
+        },
+        "firmware_version": {
+          "type": "VARCHAR(20)",
+          "description": "Current firmware version"
+        },
+        "serial_number": {
+          "type": "VARCHAR(50)",
+          "constraints": ["UNIQUE"],
+          "description": "Device serial number"
+        },
+        "max_cameras": {
+          "type": "INTEGER",
+          "default": 16,
+          "description": "Maximum supported cameras"
+        },
+        "current_cameras": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Currently connected cameras"
+        },
+        "storage_total_gb": {
+          "type": "INTEGER",
+          "description": "Total storage capacity in GB"
+        },
+        "storage_used_gb": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Used storage in GB"
+        },
+        "storage_percent": {
+          "type": "DECIMAL(5,2)",
+          "default": 0.00,
+          "description": "Storage usage percentage"
+        },
+        "status": {
+          "type": "ENUM('online', 'offline', 'warning', 'error')",
+          "default": "offline",
+          "description": "NVR operational status"
+        },
+        "uptime_percent": {
+          "type": "DECIMAL(5,2)",
+          "default": 0.00,
+          "description": "System uptime percentage"
+        },
+        "last_seen": {
+          "type": "TIMESTAMP",
+          "description": "Last communication timestamp"
+        },
+        "installation_date": {
+          "type": "DATE",
+          "description": "NVR installation date"
+        },
+        "warranty_expiry": {
+          "type": "DATE",
+          "description": "Warranty expiration date"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "NVR active status"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_branch_id (branch_id)",
+        "INDEX idx_ip_address (ip_address)",
+        "INDEX idx_status (status)",
+        "INDEX idx_last_seen (last_seen)"
+      ],
+      "related_to": ["branches", "cameras", "alerts", "compliance_results", "security_events"],
+      "dashboard_usage": ["dashboard", "nvr-management", "map", "compliance", "security", "analytics"]
+    },
+    "cameras": {
+      "description": "Individual surveillance cameras",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique camera identifier"
+        },
+        "name": {
+          "type": "VARCHAR(50)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Camera device name"
+        },
+        "nvr_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES nvrs(id)"],
+          "description": "Associated NVR"
+        },
+        "branch_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES branches(id)"],
+          "description": "Associated branch"
+        },
+        "channel_number": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL"],
+          "description": "Channel number on NVR"
+        },
+        "position": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "Camera position/location description"
+        },
+        "ip_address": {
+          "type": "VARCHAR(15)",
+          "constraints": ["NOT NULL"],
+          "description": "Camera IP address"
+        },
+        "mac_address": {
+          "type": "VARCHAR(17)",
+          "description": "Camera MAC address"
+        },
+        "model": {
+          "type": "VARCHAR(100)",
+          "description": "Camera model"
+        },
+        "manufacturer": {
+          "type": "VARCHAR(50)",
+          "description": "Camera manufacturer"
+        },
+        "resolution": {
+          "type": "VARCHAR(20)",
+          "description": "Video resolution (e.g., 4MP, 1080p)"
+        },
+        "fps": {
+          "type": "INTEGER",
+          "default": 25,
+          "description": "Frames per second"
+        },
+        "lens_size": {
+          "type": "VARCHAR(10)",
+          "description": "Lens size specification"
+        },
+        "ptz_capable": {
+          "type": "BOOLEAN",
+          "default": false,
+          "description": "Pan-Tilt-Zoom capability"
+        },
+        "night_vision": {
+          "type": "BOOLEAN",
+          "default": false,
+          "description": "Night vision capability"
+        },
+        "audio_recording": {
+          "type": "BOOLEAN",
+          "default": false,
+          "description": "Audio recording capability"
+        },
+        "motion_detection": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Motion detection enabled"
+        },
+        "recording_enabled": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Recording functionality enabled"
+        },
+        "status": {
+          "type": "ENUM('online', 'offline', 'warning', 'error')",
+          "default": "offline",
+          "description": "Camera operational status"
+        },
+        "uptime_percent": {
+          "type": "DECIMAL(5,2)",
+          "default": 0.00,
+          "description": "Camera uptime percentage"
+        },
+        "last_seen": {
+          "type": "TIMESTAMP",
+          "description": "Last communication timestamp"
+        },
+        "installation_date": {
+          "type": "DATE",
+          "description": "Camera installation date"
+        },
+        "warranty_expiry": {
+          "type": "DATE",
+          "description": "Warranty expiration date"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Camera active status"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_nvr_id (nvr_id)",
+        "INDEX idx_branch_id (branch_id)",
+        "INDEX idx_ip_address (ip_address)",
+        "INDEX idx_status (status)",
+        "INDEX idx_last_seen (last_seen)",
+        "UNIQUE KEY uk_nvr_channel (nvr_id, channel_number)"
+      ],
+      "related_to": ["nvrs", "branches", "alerts", "compliance_results", "security_events"],
+      "dashboard_usage": ["dashboard", "camera-management", "map", "compliance", "security", "analytics"]
+    },
+    "alerts": {
+      "description": "System alerts and notifications",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique alert identifier"
+        },
+        "title": {
+          "type": "VARCHAR(200)",
+          "constraints": ["NOT NULL"],
+          "description": "Alert title"
+        },
+        "message": {
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Detailed alert message"
+        },
+        "type": {
+          "type": "ENUM('camera_offline', 'nvr_offline', 'storage_warning', 'motion_detected', 'network_issue', 'maintenance', 'security', 'system_error', 'power_issue', 'firmware_update')",
+          "constraints": ["NOT NULL"],
+          "description": "Alert category type"
+        },
+        "severity": {
+          "type": "ENUM('critical', 'high', 'medium', 'low', 'info')",
+          "constraints": ["NOT NULL"],
+          "description": "Alert severity level"
+        },
+        "source_type": {
+          "type": "ENUM('camera', 'nvr', 'system', 'network', 'user')",
+          "constraints": ["NOT NULL"],
+          "description": "Source that generated the alert"
+        },
+        "source_id": {
+          "type": "INTEGER",
+          "description": "ID of the source entity"
+        },
+        "branch_id": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES branches(id)"],
+          "description": "Associated branch"
+        },
+        "status": {
+          "type": "ENUM('active', 'acknowledged', 'resolved', 'dismissed')",
+          "default": "active",
+          "description": "Alert status"
+        },
+        "acknowledged_by": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who acknowledged the alert"
+        },
+        "acknowledged_at": {
+          "type": "TIMESTAMP",
+          "description": "Alert acknowledgment timestamp"
+        },
+        "resolved_by": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who resolved the alert"
+        },
+        "resolved_at": {
+          "type": "TIMESTAMP",
+          "description": "Alert resolution timestamp"
+        },
+        "resolution_notes": {
+          "type": "TEXT",
+          "description": "Resolution details and notes"
+        },
+        "auto_resolve": {
+          "type": "BOOLEAN",
+          "default": false,
+          "description": "Whether alert can be auto-resolved"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP",
+          "description": "Alert creation timestamp"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_type (type)",
+        "INDEX idx_severity (severity)",
+        "INDEX idx_status (status)",
+        "INDEX idx_branch_id (branch_id)",
+        "INDEX idx_created_at (created_at)",
+        "INDEX idx_source (source_type, source_id)"
+      ],
+      "related_to": ["users", "branches", "cameras", "nvrs"],
+      "dashboard_usage": ["dashboard", "alerts", "analytics"]
+    },
+    "compliance_requirements": {
+      "description": "Regulatory compliance requirements and standards",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique requirement identifier"
+        },
+        "code": {
+          "type": "VARCHAR(20)",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Requirement code identifier"
+        },
+        "name": {
+          "type": "VARCHAR(200)",
+          "constraints": ["NOT NULL"],
+          "description": "Requirement name"
+        },
+        "description": {
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Detailed requirement description"
+        },
+        "category": {
+          "type": "ENUM('camera', 'nvr', 'storage', 'network', 'security', 'maintenance')",
+          "constraints": ["NOT NULL"],
+          "description": "Requirement category"
+        },
+        "applies_to": {
+          "type": "ENUM('camera', 'nvr', 'both')",
+          "constraints": ["NOT NULL"],
+          "description": "What devices this requirement applies to"
+        },
+        "required_value": {
+          "type": "TEXT",
+          "description": "Expected/required value or configuration"
+        },
+        "check_method": {
+          "type": "ENUM('automatic', 'manual', 'hybrid')",
+          "default": "automatic",
+          "description": "How compliance is verified"
+        },
+        "check_frequency": {
+          "type": "ENUM('realtime', 'hourly', 'daily', 'weekly', 'monthly')",
+          "default": "daily",
+          "description": "How often to check compliance"
+        },
+        "severity": {
+          "type": "ENUM('critical', 'high', 'medium', 'low')",
+          "default": "medium",
+          "description": "Non-compliance severity"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Requirement active status"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_code (code)",
+        "INDEX idx_category (category)",
+        "INDEX idx_applies_to (applies_to)"
+      ],
+      "related_to": ["compliance_results"],
+      "dashboard_usage": ["compliance"]
+    },
+    "compliance_results": {
+      "description": "Compliance check results for devices",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique result identifier"
+        },
+        "requirement_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES compliance_requirements(id)"],
+          "description": "Associated compliance requirement"
+        },
+        "device_type": {
+          "type": "ENUM('camera', 'nvr')",
+          "constraints": ["NOT NULL"],
+          "description": "Type of device being checked"
+        },
+        "device_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL"],
+          "description": "ID of the device (camera or NVR)"
+        },
+        "branch_id": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES branches(id)"],
+          "description": "Associated branch"
+        },
+        "status": {
+          "type": "ENUM('passed', 'failed', 'warning', 'not_applicable')",
+          "constraints": ["NOT NULL"],
+          "description": "Compliance check result"
+        },
+        "actual_value": {
+          "type": "TEXT",
+          "description": "Actual measured/detected value"
+        },
+        "expected_value": {
+          "type": "TEXT",
+          "description": "Expected/required value"
+        },
+        "details": {
+          "type": "TEXT",
+          "description": "Additional details about the check"
+        },
+        "check_timestamp": {
+          "type": "TIMESTAMP",
+          "constraints": ["NOT NULL"],
+          "description": "When the check was performed"
+        },
+        "next_check": {
+          "type": "TIMESTAMP",
+          "description": "When the next check is scheduled"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_requirement_id (requirement_id)",
+        "INDEX idx_device (device_type, device_id)",
+        "INDEX idx_branch_id (branch_id)",
+        "INDEX idx_status (status)",
+        "INDEX idx_check_timestamp (check_timestamp)"
+      ],
+      "related_to": ["compliance_requirements", "branches", "cameras", "nvrs"],
+      "dashboard_usage": ["compliance", "analytics"]
+    },
+    "security_events": {
+      "description": "Security-related events and incidents",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique security event identifier"
+        },
+        "event_type": {
+          "type": "ENUM('weak_password', 'http_access', 'rtsp_tls', 'srtp_encryption', 'firmware_outdated', 'audit_logging', 'unauthorized_access', 'tls_missing', 'audit_disabled')",
+          "constraints": ["NOT NULL"],
+          "description": "Type of security event"
+        },
+        "severity": {
+          "type": "ENUM('critical', 'high', 'medium', 'low')",
+          "constraints": ["NOT NULL"],
+          "description": "Security event severity"
+        },
+        "device_type": {
+          "type": "ENUM('camera', 'nvr', 'system')",
+          "constraints": ["NOT NULL"],
+          "description": "Affected device type"
+        },
+        "device_id": {
+          "type": "INTEGER",
+          "description": "ID of affected device"
+        },
+        "device_name": {
+          "type": "VARCHAR(100)",
+          "description": "Name of affected device"
+        },
+        "branch_id": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES branches(id)"],
+          "description": "Associated branch"
+        },
+        "title": {
+          "type": "VARCHAR(200)",
+          "constraints": ["NOT NULL"],
+          "description": "Event title"
+        },
+        "message": {
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Detailed event description"
+        },
+        "source_ip": {
+          "type": "VARCHAR(15)",
+          "description": "Source IP address if applicable"
+        },
+        "detection_method": {
+          "type": "ENUM('automatic', 'manual', 'external')",
+          "default": "automatic",
+          "description": "How the event was detected"
+        },
+        "status": {
+          "type": "ENUM('active', 'investigating', 'resolved', 'false_positive')",
+          "default": "active",
+          "description": "Event status"
+        },
+        "assigned_to": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User assigned to handle the event"
+        },
+        "resolved_by": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who resolved the event"
+        },
+        "resolved_at": {
+          "type": "TIMESTAMP",
+          "description": "Event resolution timestamp"
+        },
+        "resolution_notes": {
+          "type": "TEXT",
+          "description": "Resolution details"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP",
+          "description": "Event detection timestamp"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_event_type (event_type)",
+        "INDEX idx_severity (severity)",
+        "INDEX idx_device (device_type, device_id)",
+        "INDEX idx_branch_id (branch_id)",
+        "INDEX idx_status (status)",
+        "INDEX idx_created_at (created_at)"
+      ],
+      "related_to": ["users", "branches", "cameras", "nvrs"],
+      "dashboard_usage": ["security", "analytics", "alerts"]
+    },
+    "analytics_data": {
+      "description": "Performance analytics and trend data",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique analytics record identifier"
+        },
+        "metric_type": {
+          "type": "ENUM('uptime', 'alerts', 'storage', 'network', 'performance', 'compliance')",
+          "constraints": ["NOT NULL"],
+          "description": "Type of metric being tracked"
+        },
+        "metric_name": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "Specific metric name"
+        },
+        "entity_type": {
+          "type": "ENUM('system', 'region', 'branch', 'nvr', 'camera')",
+          "constraints": ["NOT NULL"],
+          "description": "Entity type this metric applies to"
+        },
+        "entity_id": {
+          "type": "INTEGER",
+          "description": "ID of the entity (if applicable)"
+        },
+        "value": {
+          "type": "DECIMAL(10,4)",
+          "constraints": ["NOT NULL"],
+          "description": "Metric value"
+        },
+        "unit": {
+          "type": "VARCHAR(20)",
+          "description": "Unit of measurement"
+        },
+        "timestamp": {
+          "type": "TIMESTAMP",
+          "constraints": ["NOT NULL"],
+          "description": "When the metric was recorded"
+        },
+        "aggregation_period": {
+          "type": "ENUM('minute', 'hour', 'day', 'week', 'month')",
+          "default": "hour",
+          "description": "Time period this metric represents"
+        },
+        "metadata": {
+          "type": "JSON",
+          "description": "Additional metric metadata"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_metric (metric_type, metric_name)",
+        "INDEX idx_entity (entity_type, entity_id)",
+        "INDEX idx_timestamp (timestamp)",
+        "INDEX idx_aggregation (aggregation_period)"
+      ],
+      "related_to": ["regions", "branches", "nvrs", "cameras"],
+      "dashboard_usage": ["dashboard", "analytics", "reports"]
+    },
+    "system_settings": {
+      "description": "System configuration and settings",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique setting identifier"
+        },
+        "category": {
+          "type": "VARCHAR(50)",
+          "constraints": ["NOT NULL"],
+          "description": "Setting category"
+        },
+        "key": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "Setting key name"
+        },
+        "value": {
+          "type": "TEXT",
+          "description": "Setting value"
+        },
+        "data_type": {
+          "type": "ENUM('string', 'integer', 'float', 'boolean', 'json')",
+          "default": "string",
+          "description": "Data type of the value"
+        },
+        "description": {
+          "type": "TEXT",
+          "description": "Setting description"
+        },
+        "is_public": {
+          "type": "BOOLEAN",
+          "default": false,
+          "description": "Whether setting is visible to non-admin users"
+        },
+        "is_editable": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Whether setting can be modified"
+        },
+        "updated_by": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who last updated this setting"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      ],
+      "indexes": [
+        "UNIQUE KEY uk_category_key (category, key)",
+        "INDEX idx_category (category)"
+      ],
+      "related_to": ["users"],
+      "dashboard_usage": ["settings"]
+    },
+    "reports": {
+      "description": "Generated reports and their metadata",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique report identifier"
+        },
+        "name": {
+          "type": "VARCHAR(200)",
+          "constraints": ["NOT NULL"],
+          "description": "Report name"
+        },
+        "type": {
+          "type": "ENUM('uptime', 'compliance', 'security', 'analytics', 'maintenance', 'custom')",
+          "constraints": ["NOT NULL"],
+          "description": "Report type"
+        },
+        "format": {
+          "type": "ENUM('pdf', 'excel', 'csv', 'json')",
+          "default": "pdf",
+          "description": "Report output format"
+        },
+        "parameters": {
+          "type": "JSON",
+          "description": "Report generation parameters"
+        },
+        "date_range_start": {
+          "type": "DATE",
+          "constraints": ["NOT NULL"],
+          "description": "Report data start date"
+        },
+        "date_range_end": {
+          "type": "DATE",
+          "constraints": ["NOT NULL"],
+          "description": "Report data end date"
+        },
+        "status": {
+          "type": "ENUM('pending', 'generating', 'completed', 'failed')",
+          "default": "pending",
+          "description": "Report generation status"
+        },
+        "file_path": {
+          "type": "VARCHAR(500)",
+          "description": "Path to generated report file"
+        },
+        "file_size": {
+          "type": "INTEGER",
+          "description": "Report file size in bytes"
+        },
+        "generated_by": {
+          "type": "INTEGER",
+          "constraints": ["NOT NULL", "FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who requested the report"
+        },
+        "generated_at": {
+          "type": "TIMESTAMP",
+          "description": "Report generation completion timestamp"
+        },
+        "expires_at": {
+          "type": "TIMESTAMP",
+          "description": "Report expiration timestamp"
+        },
+        "download_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of times report was downloaded"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": [
+        "INDEX idx_type (type)",
+        "INDEX idx_status (status)",
+        "INDEX idx_generated_by (generated_by)",
+        "INDEX idx_date_range (date_range_start, date_range_end)",
+        "INDEX idx_created_at (created_at)"
+      ],
+      "related_to": ["users"],
+      "dashboard_usage": ["reports"]
+    },
+    "audit_logs": {
+      "description": "System access and activity audit trail",
+      "primary_key": "id",
+      "fields": {
+        "id": {
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTO_INCREMENT"],
+          "description": "Unique audit log identifier"
+        },
+        "user_id": {
+          "type": "INTEGER",
+          "constraints": ["FOREIGN KEY REFERENCES users(id)"],
+          "description": "User who performed the action"
+        },
+        "action": {
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"],
+          "description": "Action performed"
+        },
+        "entity_type": {
+          "type": "VARCHAR(50)",
+          "description": "Type of entity affected"
+        },
+        "entity_id": {
+          "type": "INTEGER",
+          "description": "ID of affected entity"
+        },
+        "old_values": {
+          "type": "JSON",
+          "description": "Previous values before change"
+        },
+        "new_values": {
+          "type": "JSON",
+          "description": "New values after change"
+        },
+        "ip_address": {
+          "type": "VARCHAR(15)",
+          "description": "Client IP address"
+        },
+        "user_agent": {
+          "type": "TEXT",
+          "description": "Client user agent string"
+        },
+        "session_id": {
+          "type": "VARCHAR(100)",
+          "description": "Session identifier"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "CURRENT_TIMESTAMP",
+          "description": "Action timestamp"
+        }
+      },
+      "indexes": [
+        "INDEX idx_user_id (user_id)",
+        "INDEX idx_action (action)",
+        "INDEX idx_entity (entity_type, entity_id)",
+        "INDEX idx_created_at (created_at)"
+      ],
+      "related_to": ["users"],
+      "dashboard_usage": ["settings", "reports"]
+    }
+  },
+  "dashboard_tabs": {
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "System overview with KPIs and summary charts",
+      "primary_data_sources": ["nvrs", "cameras", "branches", "regions", "analytics_data"],
+      "key_metrics": ["total_nvrs", "total_cameras", "online_status", "storage_usage", "uptime", "regional_breakdown"]
+    },
+    "nvr-management": {
+      "title": "NVR Management",
+      "description": "Network Video Recorder monitoring and management",
+      "primary_data_sources": ["nvrs", "branches", "cameras", "alerts"],
+      "key_fields": ["name", "status", "ip_address", "firmware_version", "storage_percent", "camera_count", "uptime_percent"]
+    },
+    "camera-management": {
+      "title": "Camera Management",
+      "description": "Individual camera monitoring and configuration",
+      "primary_data_sources": ["cameras", "nvrs", "branches", "alerts"],
+      "key_fields": ["name", "status", "position", "resolution", "fps", "recording_enabled", "motion_detection", "uptime_percent"]
+    },
+    "map": {
+      "title": "Location Map",
+      "description": "Geographic view of branches and device status",
+      "primary_data_sources": ["branches", "regions", "nvrs", "cameras"],
+      "key_fields": ["coordinates", "branch_type", "status", "nvr_count", "camera_count"]
+    },
+    "compliance": {
+      "title": "Compliance",
+      "description": "Regulatory compliance monitoring and reporting",
+      "primary_data_sources": ["compliance_requirements", "compliance_results", "branches", "cameras", "nvrs"],
+      "key_fields": ["requirement_name", "compliance_percent", "passed_count", "failed_count", "status"]
+    },
+    "security": {
+      "title": "Security Monitoring",
+      "description": "Security assessment and threat monitoring",
+      "primary_data_sources": ["security_events", "cameras", "nvrs", "branches"],
+      "key_fields": ["event_type", "severity", "device_name", "status", "detection_method"]
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Performance analytics and trend analysis",
+      "primary_data_sources": ["analytics_data", "alerts", "cameras", "nvrs", "branches"],
+      "key_fields": ["metric_name", "value", "timestamp", "trend_data", "regional_comparison"]
+    },
+    "alerts": {
+      "title": "Alerts",
+      "description": "System alerts and notification management",
+      "primary_data_sources": ["alerts", "branches", "cameras", "nvrs", "users"],
+      "key_fields": ["title", "message", "type", "severity", "status", "created_at", "source"]
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Report generation and download management",
+      "primary_data_sources": ["reports", "users"],
+      "key_fields": ["name", "type", "format", "date_range", "status", "generated_at"]
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "System configuration and preferences",
+      "primary_data_sources": ["system_settings", "users"],
+      "key_fields": ["category", "key", "value", "description", "is_editable"]
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "User profile and account management",
+      "primary_data_sources": ["users", "audit_logs"],
+      "key_fields": ["username", "full_name", "email", "role", "department", "last_login"]
+    }
+  },
+  "relationships": {
+    "region_branches": "One region can have many branches",
+    "branch_nvrs": "One branch can have multiple NVRs",
+    "nvr_cameras": "One NVR can manage multiple cameras",
+    "branch_cameras": "Cameras belong to specific branches",
+    "device_alerts": "Devices (cameras/NVRs) can generate multiple alerts",
+    "user_actions": "Users can acknowledge/resolve alerts and generate reports",
+    "compliance_devices": "Compliance requirements apply to cameras and NVRs",
+    "security_devices": "Security events are associated with specific devices",
+    "analytics_entities": "Analytics data can be tracked for various entity types"
+  },
+  "data_flow": {
+    "device_monitoring": "Cameras and NVRs report status → Generate alerts if issues → Update analytics data",
+    "compliance_checking": "Automated checks run on schedule → Generate compliance results → Alert on failures",
+    "security_monitoring": "Continuous security scans → Generate security events → Alert on threats",
+    "user_interaction": "Users view dashboards → Take actions → Generate audit logs → Update entity status"
+  }
+}

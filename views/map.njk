@@ -26,8 +26,8 @@
     <button class="btn btn-light" data-layer="offline">
       <i class="bi bi-circle-fill text-danger"></i> Offline
     </button>
-    <button class="btn btn-light" data-layer="maintenance">
-      <i class="bi bi-circle-fill text-warning"></i> Maintenance
+    <button class="btn btn-light" data-layer="warning">
+      <i class="bi bi-circle-fill text-warning"></i> Warning
     </button>
   </div>
   <button class="btn btn-light btn-sm ms-2" id="centerMap">
@@ -54,8 +54,8 @@
   </div>
   <div class="stat-item">
     <i class="bi bi-circle-fill text-warning"></i>
-    <span class="stat-label">Maintenance:</span>
-    <strong id="maintenanceLocations">0</strong>
+    <span class="stat-label">Warning:</span>
+    <strong id="warningLocations">0</strong>
   </div>
 </div>
 
@@ -84,7 +84,7 @@
         <option value="">All Status</option>
         <option value="online">Online</option>
         <option value="offline">Offline</option>
-        <option value="maintenance">Maintenance</option>
+        <option value="warning">Warning</option>
       </select>
       <button class="btn btn-sm btn-secondary w-100" id="clearFilters">
         <i class="bi bi-x-circle"></i> Clear Filters

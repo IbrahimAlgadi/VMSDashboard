@@ -17,7 +17,7 @@ class MapComponent {
       all: L.layerGroup(),
       online: L.layerGroup(),
       offline: L.layerGroup(),
-      maintenance: L.layerGroup()
+      warning: L.layerGroup()
     };
     this.currentLayer = 'all';
   }
@@ -57,7 +57,7 @@ class MapComponent {
     const colors = {
       online: '#198754',
       offline: '#dc3545',
-      maintenance: '#ffc107'
+      warning: '#ffc107'
     };
 
     const iconHtml = `
@@ -114,7 +114,7 @@ class MapComponent {
     const statusColors = {
       online: 'success',
       offline: 'danger',
-      maintenance: 'warning'
+      warning: 'warning'
     };
 
     return `
@@ -135,12 +135,18 @@ class MapComponent {
             <span class="info-value">${location.branch_type}</span>
           </div>
           <div class="info-row">
-            <span class="info-label"><i class="bi bi-hdd"></i> NVRs:</span>
-            <span class="info-value">${location.nvrs}</span>
+            <span class="info-label"><i class="bi bi-hdd-rack"></i> NVRs:</span>
+            <span class="info-value">
+              <span class="text-success"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> ${location.nvrStatus?.online || 0}</span>
+              <span class="text-danger ms-2"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> ${location.nvrStatus?.offline || 0}</span>
+            </span>
           </div>
           <div class="info-row">
-            <span class="info-label"><i class="bi bi-camera"></i> Cameras:</span>
-            <span class="info-value">${location.cameras}</span>
+            <span class="info-label"><i class="bi bi-camera-video"></i> Cameras:</span>
+            <span class="info-value">
+              <span class="text-success"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> ${location.cameraStatus?.online || 0}</span>
+              <span class="text-danger ms-2"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> ${location.cameraStatus?.offline || 0}</span>
+            </span>
           </div>
         </div>
         <div class="popup-actions">

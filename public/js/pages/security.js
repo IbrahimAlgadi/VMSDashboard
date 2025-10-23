@@ -1,191 +1,193 @@
 // Security Monitoring Page JavaScript
+
 let securityData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSecurityData();
-  initButtons();
+  initRefresh();
 });
 
+// Load security data
 async function loadSecurityData() {
   try {
     const response = await fetch('/data/mock/security-data.json');
     securityData = await response.json();
-    renderMetrics();
-    renderCharts();
-    renderEvents();
-    renderFailedAccess();
+    
+    renderOverview();
+    renderCameraSecurityChecks();
+    renderNVRSecurityChecks();
+    renderSecurityEvents();
+    
   } catch (error) {
     console.error('Failed to load security data:', error);
   }
 }
 
-function renderMetrics() {
-  const { overview, securityMetrics } = securityData;
-  document.getElementById('failedLogins').textContent = overview.failedAccessAttempts;
-  document.getElementById('activeIncidents').textContent = overview.activeIncidents;
-  document.getElementById('resolvedToday').textContent = overview.resolvedToday;
-  document.getElementById('systemHealth').textContent = overview.systemHealth + '%';
-  document.getElementById('threatLevelText').textContent = overview.threatLevel;
+// Render overview cards
+function renderOverview() {
+  const { overview } = securityData;
   
-  const threatAlert = document.getElementById('threatAlert');
-  threatAlert.className = `alert alert-${overview.threatLevel === 'Low' ? 'success' : overview.threatLevel === 'Medium' ? 'warning' : 'danger'} alert-dismissible fade show`;
+  document.getElementById('securityScore').textContent = overview.securityScore;
+  document.getElementById('threatLevel').textContent = `Threat Level: ${overview.threatLevel}`;
+  document.getElementById('totalChecks').textContent = overview.totalChecks;
+  document.getElementById('passedChecks').textContent = overview.passed;
+  document.getElementById('failedChecks').textContent = overview.failed;
 }
 
-function renderCharts() {
-  // Threat Gauge
-  renderThreatGauge();
+// Render camera security checks
+function renderCameraSecurityChecks() {
+  const container = document.getElementById('cameraSecurityList');
   
-  // Threat History
-  renderThreatHistory();
-}
-
-function renderThreatGauge() {
-  const chart = echarts.init(document.getElementById('threatGauge'));
-  
-  const threatValue = securityData.overview.threatLevel === 'Low' ? 25 : 
-                      securityData.overview.threatLevel === 'Medium' ? 50 : 75;
-  
-  chart.setOption({
-    series: [{
-      type: 'gauge',
-      startAngle: 180,
-      endAngle: 0,
-      min: 0,
-      max: 100,
-      splitNumber: 4,
-      center: ['50%', '75%'],
-      radius: '90%',
-      itemStyle: {
-        color: threatValue < 40 ? '#198754' : threatValue < 70 ? '#ffc107' : '#dc3545'
-      },
-      progress: {
-        show: true,
-        width: 18
-      },
-      pointer: {
-        show: false
-      },
-      axisLine: {
-        lineStyle: {
-          width: 18,
-          color: [[1, '#e9ecef']]
-        }
-      },
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      axisLabel: {
-        show: false
-      },
-      detail: {
-        valueAnimation: true,
-        formatter: '{value}%',
-        fontSize: 24,
-        fontWeight: 'bold',
-        offsetCenter: [0, '-10%'],
-        color: 'auto'
-      },
-      data: [{
-        value: threatValue,
-        name: securityData.overview.threatLevel + ' Threat'
-      }],
-      title: {
-        show: true,
-        offsetCenter: [0, '30%'],
-        fontSize: 14
-      }
-    }]
-  });
-  
-  window.addEventListener('resize', () => chart.resize());
-}
-
-function renderThreatHistory() {
-  const chart = echarts.init(document.getElementById('threatChart'));
-  
-  chart.setOption({
-    tooltip: {
-      trigger: 'axis',
-      formatter: '{b}: {c}%'
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: securityData.threatLevelHistory.map(d => d.time),
-      boundaryGap: false
-    },
-    yAxis: {
-      type: 'value',
-      min: 0,
-      max: 100,
-      axisLabel: {
-        formatter: '{value}%'
-      }
-    },
-    series: [{
-      name: 'Threat Level',
-      data: securityData.threatLevelHistory.map(d => d.level),
-      type: 'line',
-      smooth: true,
-      areaStyle: {
-        color: 'rgba(220, 53, 69, 0.1)'
-      },
-      lineStyle: {
-        color: '#dc3545',
-        width: 2
-      },
-      itemStyle: {
-        color: '#dc3545'
-      }
-    }]
-  });
-  
-  window.addEventListener('resize', () => chart.resize());
-}
-
-function renderEvents() {
-  const timeline = document.getElementById('eventsTimeline');
-  timeline.innerHTML = securityData.recentEvents.map(event => `
-    <div class="timeline-item">
-      <div class="timeline-dot ${event.severity}"></div>
-      <div class="event-header">
-        <h6 class="event-title">${event.type}</h6>
-        <span class="badge bg-${event.severity === 'critical' ? 'danger' : event.severity === 'high' ? 'warning' : event.severity === 'medium' ? 'info' : 'success'}">${event.severity}</span>
+  container.innerHTML = securityData.cameraSecurityChecks.map(check => {
+    const statusColor = getSeverityColor(check.severity);
+    const iconClass = check.compliance >= 90 ? 'check-circle-fill text-success' : 
+                     check.compliance >= 70 ? 'exclamation-triangle-fill text-warning' : 
+                     'x-circle-fill text-danger';
+    
+    return `
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div class="flex-grow-1">
+            <h6 class="mb-1">
+              <i class="bi bi-${iconClass}"></i>
+              ${check.name}
+              <span class="badge bg-${statusColor} ms-2">${check.severity}</span>
+            </h6>
+            <p class="mb-2 text-muted small">${check.description}</p>
+          </div>
+          <span class="badge ${check.compliance >= 90 ? 'bg-success' : check.compliance >= 70 ? 'bg-warning' : 'bg-danger'} ms-2">
+            ${check.compliance}%
+          </span>
+        </div>
+        
+        <div class="row g-2 small mb-2">
+          <div class="col-4">
+            <i class="bi bi-check-circle text-success"></i> ${check.passed} passed
+          </div>
+          <div class="col-4">
+            <i class="bi bi-x-circle text-danger"></i> ${check.failed} failed
+          </div>
+          <div class="col-4">
+            <i class="bi bi-hash"></i> ${check.total} total
+          </div>
+        </div>
+        
+        <div class="progress" style="height: 6px;">
+          <div class="progress-bar ${check.compliance >= 90 ? 'bg-success' : check.compliance >= 70 ? 'bg-warning' : 'bg-danger'}" 
+               style="width: ${check.compliance}%"></div>
+        </div>
       </div>
-      <div class="event-meta">
-        <i class="bi bi-clock"></i> ${new Date(event.timestamp).toLocaleString()} | 
-        <i class="bi bi-geo-alt"></i> ${event.location}
+    `;
+  }).join('');
+}
+
+// Render NVR security checks
+function renderNVRSecurityChecks() {
+  const container = document.getElementById('nvrSecurityList');
+  
+  container.innerHTML = securityData.nvrSecurityChecks.map(check => {
+    const statusColor = getSeverityColor(check.severity);
+    const iconClass = check.compliance >= 90 ? 'check-circle-fill text-success' : 
+                     check.compliance >= 70 ? 'exclamation-triangle-fill text-warning' : 
+                     'x-circle-fill text-danger';
+    
+    return `
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div class="flex-grow-1">
+            <h6 class="mb-1">
+              <i class="bi bi-${iconClass}"></i>
+              ${check.name}
+              <span class="badge bg-${statusColor} ms-2">${check.severity}</span>
+            </h6>
+            <p class="mb-2 text-muted small">${check.description}</p>
+          </div>
+          <span class="badge ${check.compliance >= 90 ? 'bg-success' : check.compliance >= 70 ? 'bg-warning' : 'bg-danger'} ms-2">
+            ${check.compliance}%
+          </span>
+        </div>
+        
+        <div class="row g-2 small mb-2">
+          <div class="col-4">
+            <i class="bi bi-check-circle text-success"></i> ${check.passed} passed
+          </div>
+          <div class="col-4">
+            <i class="bi bi-x-circle text-danger"></i> ${check.failed} failed
+          </div>
+          <div class="col-4">
+            <i class="bi bi-hash"></i> ${check.total} total
+          </div>
+        </div>
+        
+        <div class="progress" style="height: 6px;">
+          <div class="progress-bar ${check.compliance >= 90 ? 'bg-success' : check.compliance >= 70 ? 'bg-warning' : 'bg-danger'}" 
+               style="width: ${check.compliance}%"></div>
+        </div>
       </div>
-      <div class="event-description">${event.description}</div>
-      <div><span class="badge bg-secondary">${event.status}</span></div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
-function renderFailedAccess() {
-  const table = document.getElementById('failedAccessTable');
-  table.innerHTML = securityData.failedAccess.map(access => `
-    <tr>
-      <td>${new Date(access.timestamp).toLocaleString()}</td>
-      <td><code>${access.username}</code></td>
-      <td><code>${access.ipAddress}</code></td>
-      <td>${access.location}</td>
-      <td><span class="badge bg-danger">${access.attempts}</span></td>
-      <td>${access.reason}</td>
-    </tr>
-  `).join('');
+// Render security events table
+function renderSecurityEvents() {
+  const container = document.getElementById('securityEventsTable');
+  
+  container.innerHTML = securityData.recentSecurityEvents.map(event => {
+    const severityColor = getSeverityColor(event.severity);
+    const deviceTypeIcon = event.deviceType === 'camera' ? 'camera' : 'hdd';
+    const timeAgo = getTimeAgo(event.timestamp);
+    const statusBadge = event.status === 'active' ? 
+      '<span class="badge bg-danger">Active</span>' : 
+      '<span class="badge bg-success">Resolved</span>';
+    
+    return `
+      <tr>
+        <td>
+          <span class="badge bg-${severityColor}">${event.severity}</span>
+        </td>
+        <td>
+          <i class="bi bi-${deviceTypeIcon}"></i> ${event.device}
+        </td>
+        <td>${formatEventType(event.type)}</td>
+        <td>${event.message}</td>
+        <td><small class="text-muted">${timeAgo}</small></td>
+        <td>${statusBadge}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
-function initButtons() {
-  document.getElementById('refreshBtn').addEventListener('click', () => location.reload());
-  document.getElementById('exportBtn').addEventListener('click', () => alert('Exporting security report...'));
+// Helper functions
+function getSeverityColor(severity) {
+  const colors = {
+    'critical': 'danger',
+    'high': 'warning',
+    'medium': 'info',
+    'low': 'secondary'
+  };
+  return colors[severity] || 'secondary';
 }
 
+function formatEventType(type) {
+  return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+function getTimeAgo(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
+}
+
+// Initialize refresh button
+function initRefresh() {
+  document.getElementById('refreshBtn')?.addEventListener('click', () => {
+    location.reload();
+  });
+}

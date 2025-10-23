@@ -1,271 +1,98 @@
 {
   "overview": {
-    "overallCompliance": 87.5,
-    "lastAudit": "2024-01-10",
-    "nextAudit": "2024-04-10",
-    "status": "compliant",
-    "totalRequirements": 48,
-    "metRequirements": 42,
-    "partialRequirements": 4,
-    "notMetRequirements": 2
+    "overallCompliance": 85,
+    "totalChecks": 156,
+    "passed": 132,
+    "failed": 24
   },
-  "categories": [
+  "requirements": [
     {
-      "id": 1,
-      "name": "Physical Security",
-      "compliance": 95,
-      "requirements": 12,
-      "met": 11,
-      "partial": 1,
-      "notMet": 0,
-      "status": "compliant"
+      "id": "cam_resolution",
+      "name": "Camera Resolution (5 MP)",
+      "description": "All cameras must have 5MP resolution",
+      "passed": 142,
+      "failed": 14,
+      "total": 156,
+      "compliance": 91
     },
     {
-      "id": 2,
-      "name": "Access Control",
-      "compliance": 90,
-      "requirements": 10,
-      "met": 9,
-      "partial": 1,
-      "notMet": 0,
-      "status": "compliant"
+      "id": "nvr_version",
+      "name": "NVR Firmware Version",
+      "description": "NVR firmware must be v4.2.1 or higher",
+      "requiredVersion": "v4.2.1",
+      "passed": 22,
+      "failed": 2,
+      "total": 24,
+      "compliance": 92
     },
     {
-      "id": 3,
-      "name": "Video Recording",
-      "compliance": 85,
-      "requirements": 8,
-      "met": 7,
-      "partial": 1,
-      "notMet": 0,
-      "status": "compliant"
+      "id": "nvr_storage",
+      "name": "NVR Storage Size (16TB)",
+      "description": "NVR storage must be at least 16TB",
+      "passed": 18,
+      "failed": 6,
+      "total": 24,
+      "compliance": 75
     },
     {
-      "id": 4,
-      "name": "Data Retention",
-      "compliance": 75,
-      "requirements": 6,
-      "met": 4,
-      "partial": 1,
-      "notMet": 1,
-      "status": "warning"
+      "id": "nvr_uptime",
+      "name": "NVR Uptime (≥99%)",
+      "description": "NVR uptime must be 99% or higher",
+      "passed": 20,
+      "failed": 4,
+      "total": 24,
+      "compliance": 83
     },
     {
-      "id": 5,
-      "name": "System Monitoring",
-      "compliance": 92,
-      "requirements": 7,
-      "met": 6,
-      "partial": 1,
-      "notMet": 0,
-      "status": "compliant"
-    },
-    {
-      "id": 6,
-      "name": "Incident Response",
-      "compliance": 70,
-      "requirements": 5,
-      "met": 3,
-      "partial": 1,
-      "notMet": 1,
-      "status": "warning"
+      "id": "cam_uptime",
+      "name": "Camera Uptime (≥99%)",
+      "description": "Camera uptime must be 99% or higher",
+      "passed": 138,
+      "failed": 18,
+      "total": 156,
+      "compliance": 88
     }
   ],
-  "regionCompliance": [
+  "complianceByRegion": [
     {
       "region": "Riyadh",
-      "branches": 3,
-      "compliance": 92,
-      "status": "compliant"
+      "nvrs": 8,
+      "cameras": 52,
+      "compliance": 88,
+      "passed": 46,
+      "failed": 6
     },
     {
       "region": "Jeddah",
-      "branches": 1,
-      "compliance": 88,
-      "status": "compliant"
+      "nvrs": 6,
+      "cameras": 38,
+      "compliance": 84,
+      "passed": 32,
+      "failed": 6
     },
     {
       "region": "Dammam",
-      "branches": 1,
-      "compliance": 75,
-      "status": "warning"
+      "nvrs": 4,
+      "cameras": 28,
+      "compliance": 82,
+      "passed": 23,
+      "failed": 5
     },
     {
       "region": "Mecca",
-      "branches": 1,
-      "compliance": 90,
-      "status": "compliant"
+      "nvrs": 3,
+      "cameras": 22,
+      "compliance": 86,
+      "passed": 19,
+      "failed": 3
     },
     {
       "region": "Medina",
-      "branches": 2,
-      "compliance": 85,
-      "status": "compliant"
-    }
-  ],
-  "requirements": [
-    {
-      "id": 1,
-      "category": "Physical Security",
-      "title": "Camera Coverage - Entry/Exit Points",
-      "description": "All entry and exit points must be covered by CCTV cameras",
-      "status": "met",
-      "evidence": "All 8 locations have full coverage",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 2,
-      "category": "Physical Security",
-      "title": "Camera Coverage - ATM Areas",
-      "description": "ATM areas must have 360-degree camera coverage",
-      "status": "met",
-      "evidence": "Multiple camera angles confirmed",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 3,
-      "category": "Physical Security",
-      "title": "Camera Resolution Standard",
-      "description": "Minimum 4MP resolution required for all cameras",
-      "status": "partial",
-      "evidence": "2 cameras at 2MP (scheduled for upgrade)",
-      "lastChecked": "2024-01-08"
-    },
-    {
-      "id": 4,
-      "category": "Access Control",
-      "title": "User Authentication",
-      "description": "Multi-factor authentication for system access",
-      "status": "met",
-      "evidence": "MFA enabled for all administrators",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 5,
-      "category": "Access Control",
-      "title": "Role-Based Access",
-      "description": "Implement role-based access control (RBAC)",
-      "status": "met",
-      "evidence": "RBAC system active with 5 roles",
-      "lastChecked": "2024-01-09"
-    },
-    {
-      "id": 6,
-      "category": "Access Control",
-      "title": "Access Audit Logs",
-      "description": "Maintain detailed logs of all system access",
-      "status": "partial",
-      "evidence": "Logs available but retention period needs extension",
-      "lastChecked": "2024-01-07"
-    },
-    {
-      "id": 7,
-      "category": "Video Recording",
-      "title": "Continuous Recording",
-      "description": "24/7 continuous recording for all cameras",
-      "status": "met",
-      "evidence": "All cameras recording continuously",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 8,
-      "category": "Video Recording",
-      "title": "Recording Quality",
-      "description": "Maintain minimum 15 FPS recording rate",
-      "status": "met",
-      "evidence": "All cameras at 25 FPS",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 9,
-      "category": "Video Recording",
-      "title": "Backup Recording",
-      "description": "Redundant recording storage required",
-      "status": "partial",
-      "evidence": "2 locations lack backup NVR",
-      "lastChecked": "2024-01-05"
-    },
-    {
-      "id": 10,
-      "category": "Data Retention",
-      "title": "Retention Period - Standard",
-      "description": "Minimum 90 days retention for all footage",
-      "status": "met",
-      "evidence": "Average retention: 120 days",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 11,
-      "category": "Data Retention",
-      "title": "Retention Period - Critical Areas",
-      "description": "180 days retention for ATM and vault areas",
-      "status": "not-met",
-      "evidence": "Currently at 90 days, upgrade in progress",
-      "lastChecked": "2024-01-08"
-    },
-    {
-      "id": 12,
-      "category": "Data Retention",
-      "title": "Data Encryption",
-      "description": "Stored footage must be encrypted",
-      "status": "partial",
-      "evidence": "6 of 8 locations have encryption enabled",
-      "lastChecked": "2024-01-06"
-    },
-    {
-      "id": 13,
-      "category": "System Monitoring",
-      "title": "Health Monitoring",
-      "description": "Real-time monitoring of all system components",
-      "status": "met",
-      "evidence": "Central monitoring dashboard active",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 14,
-      "category": "System Monitoring",
-      "title": "Uptime Requirements",
-      "description": "Minimum 99.5% system uptime",
-      "status": "met",
-      "evidence": "Current uptime: 99.8%",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 15,
-      "category": "System Monitoring",
-      "title": "Alert Notifications",
-      "description": "Automated alerts for system failures",
-      "status": "partial",
-      "evidence": "Email alerts active, SMS pending",
-      "lastChecked": "2024-01-09"
-    },
-    {
-      "id": 16,
-      "category": "Incident Response",
-      "title": "Response Time",
-      "description": "Maximum 15-minute response time for critical alerts",
-      "status": "met",
-      "evidence": "Average response time: 8 minutes",
-      "lastChecked": "2024-01-10"
-    },
-    {
-      "id": 17,
-      "category": "Incident Response",
-      "title": "Incident Documentation",
-      "description": "All incidents must be documented within 24 hours",
-      "status": "not-met",
-      "evidence": "3 incidents pending documentation",
-      "lastChecked": "2024-01-09"
-    },
-    {
-      "id": 18,
-      "category": "Incident Response",
-      "title": "Recovery Procedures",
-      "description": "Documented disaster recovery procedures",
-      "status": "partial",
-      "evidence": "Procedures exist but need annual testing",
-      "lastChecked": "2024-01-05"
+      "nvrs": 3,
+      "cameras": 16,
+      "compliance": 81,
+      "passed": 13,
+      "failed": 3
     }
   ]
 }
-

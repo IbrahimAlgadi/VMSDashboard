@@ -67,7 +67,7 @@
   height: 12px;
 }
 
-.marker-maintenance {
+.marker-warning {
   background-color: var(--bs-warning);
   border-radius: 50%;
   width: 12px;
@@ -97,7 +97,7 @@
   color: var(--bs-danger);
 }
 
-.custom-marker.status-maintenance {
+.custom-marker.status-warning {
   border-color: var(--bs-warning);
   color: var(--bs-warning);
 }

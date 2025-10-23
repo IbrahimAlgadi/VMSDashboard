@@ -1,140 +1,165 @@
 {
   "overview": {
-    "threatLevel": "Low",
-    "activeIncidents": 2,
-    "resolvedToday": 15,
-    "failedAccessAttempts": 8,
-    "systemHealth": 98.5
+    "securityScore": 78,
+    "totalChecks": 180,
+    "passed": 140,
+    "failed": 40,
+    "threatLevel": "Medium"
   },
-  "securityMetrics": [
+  "cameraSecurityChecks": [
     {
-      "title": "Failed Login Attempts",
-      "value": 8,
-      "change": -15,
-      "status": "good",
-      "icon": "shield-x"
+      "id": "cam_weak_passwords",
+      "name": "Weak Passwords",
+      "description": "Cameras using weak or default passwords",
+      "severity": "critical",
+      "passed": 138,
+      "failed": 18,
+      "total": 156,
+      "compliance": 88
     },
     {
-      "title": "Active Incidents",
-      "value": 2,
-      "change": 0,
-      "status": "warning",
-      "icon": "exclamation-triangle"
+      "id": "cam_http_access",
+      "name": "Insecure HTTP Access",
+      "description": "Cameras accessible over insecure HTTP protocol",
+      "severity": "high",
+      "passed": 142,
+      "failed": 14,
+      "total": 156,
+      "compliance": 91
     },
     {
-      "title": "Resolved Today",
-      "value": 15,
-      "change": 12,
-      "status": "good",
-      "icon": "check-circle"
+      "id": "cam_rtsp_tls",
+      "name": "RTSP over TLS",
+      "description": "Cameras using RTSP over TLS for secure streaming",
+      "severity": "high",
+      "passed": 128,
+      "failed": 28,
+      "total": 156,
+      "compliance": 82
     },
     {
-      "title": "System Health",
-      "value": 98.5,
-      "change": 1.2,
-      "status": "excellent",
-      "icon": "heart-pulse"
+      "id": "cam_srtp",
+      "name": "SRTP Encryption",
+      "description": "Cameras using SRTP for encrypted video streams",
+      "severity": "high",
+      "passed": 125,
+      "failed": 31,
+      "total": 156,
+      "compliance": 80
+    },
+    {
+      "id": "cam_firmware",
+      "name": "Camera Firmware Version",
+      "description": "Cameras running latest secure firmware version",
+      "severity": "medium",
+      "passed": 145,
+      "failed": 11,
+      "total": 156,
+      "compliance": 93
+    },
+    {
+      "id": "cam_audit_logging",
+      "name": "Camera Audit Logging",
+      "description": "Cameras with audit logging enabled",
+      "severity": "medium",
+      "passed": 132,
+      "failed": 24,
+      "total": 156,
+      "compliance": 85
     }
   ],
-  "recentEvents": [
+  "nvrSecurityChecks": [
+    {
+      "id": "nvr_weak_passwords",
+      "name": "Weak Passwords",
+      "description": "NVRs using weak or default passwords",
+      "severity": "critical",
+      "passed": 22,
+      "failed": 2,
+      "total": 24,
+      "compliance": 92
+    },
+    {
+      "id": "nvr_tls_transfer",
+      "name": "TLS 1.2+ Data Transfer",
+      "description": "NVRs using TLS 1.2 or higher for data transfer",
+      "severity": "high",
+      "passed": 20,
+      "failed": 4,
+      "total": 24,
+      "compliance": 83
+    },
+    {
+      "id": "nvr_ntp_tls",
+      "name": "Secure NTP Sync",
+      "description": "NVRs using NTP over TLS for time synchronization",
+      "severity": "medium",
+      "passed": 18,
+      "failed": 6,
+      "total": 24,
+      "compliance": 75
+    },
+    {
+      "id": "nvr_audit_logging",
+      "name": "NVR Audit Logging",
+      "description": "NVRs with comprehensive audit logging enabled",
+      "severity": "high",
+      "passed": 21,
+      "failed": 3,
+      "total": 24,
+      "compliance": 88
+    }
+  ],
+  "recentSecurityEvents": [
     {
       "id": 1,
-      "timestamp": "2024-01-15T14:35:00Z",
-      "type": "Failed Access",
-      "severity": "medium",
-      "user": "unknown",
-      "ipAddress": "192.168.1.245",
-      "location": "Riyadh - King Fahd Branch",
-      "description": "Multiple failed login attempts detected",
-      "status": "investigating"
+      "type": "weak_password",
+      "severity": "critical",
+      "device": "ATM-RD-003-CAM-01",
+      "deviceType": "camera",
+      "message": "Weak password detected on camera",
+      "timestamp": "2024-01-15T10:15:00Z",
+      "status": "active"
     },
     {
       "id": 2,
-      "timestamp": "2024-01-15T13:22:00Z",
-      "type": "Unauthorized Access Attempt",
+      "type": "http_access",
       "severity": "high",
-      "user": "ext_contractor",
-      "ipAddress": "192.168.2.110",
-      "location": "Jeddah - Al Hamra Branch",
-      "description": "Attempted access to restricted camera feeds",
-      "status": "blocked"
+      "device": "NVR-JD-001",
+      "deviceType": "nvr",
+      "message": "Insecure HTTP access detected",
+      "timestamp": "2024-01-15T09:30:00Z",
+      "status": "active"
     },
     {
       "id": 3,
-      "timestamp": "2024-01-15T12:15:00Z",
-      "type": "Camera Tampering",
-      "severity": "critical",
-      "user": "N/A",
-      "ipAddress": "N/A",
-      "location": "Dammam - Corniche Branch",
-      "description": "Physical tampering detected on CAM-03",
+      "type": "firmware_outdated",
+      "severity": "medium",
+      "device": "ATM-DM-001-CAM-02",
+      "deviceType": "camera",
+      "message": "Outdated firmware version detected",
+      "timestamp": "2024-01-15T08:45:00Z",
       "status": "resolved"
     },
     {
       "id": 4,
-      "timestamp": "2024-01-15T11:45:00Z",
-      "type": "Failed Access",
-      "severity": "low",
-      "user": "admin_temp",
-      "ipAddress": "192.168.1.101",
-      "location": "Riyadh - Olaya Branch",
-      "description": "Incorrect password entry",
-      "status": "resolved"
+      "type": "tls_missing",
+      "severity": "high",
+      "device": "NVR-MD-002",
+      "deviceType": "nvr",
+      "message": "TLS 1.2 not enabled for data transfer",
+      "timestamp": "2024-01-15T07:20:00Z",
+      "status": "active"
     },
     {
       "id": 5,
-      "timestamp": "2024-01-15T10:30:00Z",
-      "type": "System Alert",
+      "type": "audit_disabled",
       "severity": "medium",
-      "user": "system",
-      "ipAddress": "N/A",
-      "location": "Mecca - Ajyad Branch",
-      "description": "NVR storage capacity exceeded 85%",
-      "status": "acknowledged"
+      "device": "ATM-MC-001-CAM-01",
+      "deviceType": "camera",
+      "message": "Audit logging is disabled",
+      "timestamp": "2024-01-15T06:00:00Z",
+      "status": "active"
     }
-  ],
-  "failedAccess": [
-    {
-      "timestamp": "2024-01-15T14:35:22Z",
-      "username": "unknown",
-      "ipAddress": "192.168.1.245",
-      "location": "Riyadh - King Fahd Branch",
-      "attempts": 5,
-      "reason": "Invalid credentials"
-    },
-    {
-      "timestamp": "2024-01-15T13:22:15Z",
-      "username": "ext_contractor",
-      "ipAddress": "192.168.2.110",
-      "location": "Jeddah - Al Hamra Branch",
-      "attempts": 3,
-      "reason": "Insufficient privileges"
-    },
-    {
-      "timestamp": "2024-01-15T11:45:33Z",
-      "username": "admin_temp",
-      "ipAddress": "192.168.1.101",
-      "location": "Riyadh - Olaya Branch",
-      "attempts": 2,
-      "reason": "Expired password"
-    },
-    {
-      "timestamp": "2024-01-15T09:12:44Z",
-      "username": "backup_user",
-      "ipAddress": "192.168.3.150",
-      "location": "Dammam - Corniche Branch",
-      "attempts": 1,
-      "reason": "Account locked"
-    }
-  ],
-  "threatLevelHistory": [
-    { "time": "00:00", "level": 20 },
-    { "time": "04:00", "level": 15 },
-    { "time": "08:00", "level": 25 },
-    { "time": "12:00", "level": 35 },
-    { "time": "16:00", "level": 28 },
-    { "time": "20:00", "level": 22 },
-    { "time": "23:59", "level": 18 }
   ]
 }
-

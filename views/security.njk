@@ -8,170 +8,128 @@
 
 {% block content %}
 <div class="container-fluid p-4">
+  
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h1 class="h3 mb-1">Security Monitoring</h1>
+      <h1><i class="bi bi-lock me-2"></i>Security Monitoring</h1>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item active">Security</li>
+          <li class="breadcrumb-item active">Security Monitoring</li>
         </ol>
       </nav>
     </div>
-    <div class="btn-group">
-      <button class="btn btn-outline-primary" id="refreshBtn">
-        <i class="bi bi-arrow-clockwise"></i> Refresh
-      </button>
-      <button class="btn btn-primary" id="exportBtn">
-        <i class="bi bi-download"></i> Export Report
-      </button>
-    </div>
+    <button class="btn btn-primary" id="refreshBtn">
+      <i class="bi bi-arrow-clockwise"></i> Refresh
+    </button>
   </div>
 
-  <!-- Threat Level Alert -->
-  <div class="alert alert-success alert-dismissible fade show" role="alert" id="threatAlert">
-    <div class="d-flex align-items-center">
-      <i class="bi bi-shield-check fs-3 me-3"></i>
-      <div>
-        <strong>Threat Level: <span id="threatLevelText">Low</span></strong>
-        <p class="mb-0">System is operating normally with minimal security risks</p>
-      </div>
-    </div>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
-
-  <!-- Security Metrics -->
+  <!-- Security Overview Cards -->
   <div class="row g-3 mb-4">
     <div class="col-md-3">
-      <div class="card metric-card">
+      <div class="card text-center">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <p class="text-muted mb-1 small">Failed Login Attempts</p>
-              <h3 class="mb-0" id="failedLogins">0</h3>
-              <small class="text-success" id="failedLoginsChange"><i class="bi bi-arrow-down"></i> 0%</small>
-            </div>
-            <div class="metric-icon bg-danger">
-              <i class="bi bi-shield-x"></i>
-            </div>
-          </div>
+          <h6 class="text-muted mb-2">Security Score</h6>
+          <h1 class="display-4 mb-0" id="securityScore">0</h1>
+          <small class="text-muted" id="threatLevel">-</small>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card metric-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <p class="text-muted mb-1 small">Active Incidents</p>
-              <h3 class="mb-0" id="activeIncidents">0</h3>
-              <small class="text-muted" id="activeIncidentsChange"><i class="bi bi-dash"></i> 0%</small>
-            </div>
-            <div class="metric-icon bg-warning">
-              <i class="bi bi-exclamation-triangle"></i>
-            </div>
-          </div>
+          <h6 class="text-muted mb-2">Total Checks</h6>
+          <h2 id="totalChecks">0</h2>
+          <small class="text-muted">Security validations</small>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card metric-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <p class="text-muted mb-1 small">Resolved Today</p>
-              <h3 class="mb-0" id="resolvedToday">0</h3>
-              <small class="text-success" id="resolvedTodayChange"><i class="bi bi-arrow-up"></i> 0%</small>
-            </div>
-            <div class="metric-icon bg-success">
-              <i class="bi bi-check-circle"></i>
-            </div>
-          </div>
+          <h6 class="text-muted mb-2">Passed</h6>
+          <h2 class="text-success" id="passedChecks">0</h2>
+          <small class="text-muted">Secure configurations</small>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card metric-card">
+      <div class="card">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <p class="text-muted mb-1 small">System Health</p>
-              <h3 class="mb-0" id="systemHealth">0%</h3>
-              <small class="text-success" id="systemHealthChange"><i class="bi bi-arrow-up"></i> 0%</small>
-            </div>
-            <div class="metric-icon bg-info">
-              <i class="bi bi-heart-pulse"></i>
-            </div>
-          </div>
+          <h6 class="text-muted mb-2">Failed</h6>
+          <h2 class="text-danger" id="failedChecks">0</h2>
+          <small class="text-muted">Require attention</small>
         </div>
       </div>
     </div>
   </div>
 
   <div class="row g-3 mb-4">
-    <!-- Threat Level Gauge -->
-    <div class="col-md-4">
+    
+    <!-- Camera Security Checks -->
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h6 class="mb-0"><i class="bi bi-speedometer2"></i> Threat Level Gauge</h6>
+          <h5 class="mb-0"><i class="bi bi-camera"></i> Camera Security Checks</h5>
         </div>
-        <div class="card-body">
-          <div id="threatGauge" style="height: 250px;"></div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="cameraSecurityList">
+            <!-- Populated by JavaScript -->
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Threat History Chart -->
-    <div class="col-md-8">
+    <!-- NVR Security Checks -->
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h6 class="mb-0"><i class="bi bi-graph-up"></i> Threat Level - Last 24 Hours</h6>
+          <h5 class="mb-0"><i class="bi bi-hdd"></i> NVR Security Checks</h5>
         </div>
-        <div class="card-body">
-          <div id="threatChart" style="height: 250px;"></div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="nvrSecurityList">
+            <!-- Populated by JavaScript -->
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- Recent Security Events -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Security Events</h5>
-    </div>
-    <div class="card-body">
-      <div class="timeline" id="eventsTimeline"></div>
-    </div>
-  </div>
-
-  <!-- Failed Access Attempts -->
-  <div class="card">
-    <div class="card-header">
-      <h5 class="mb-0"><i class="bi bi-shield-exclamation"></i> Failed Access Attempts</h5>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Username</th>
-              <th>IP Address</th>
-              <th>Location</th>
-              <th>Attempts</th>
-              <th>Reason</th>
-            </tr>
-          </thead>
-          <tbody id="failedAccessTable"></tbody>
-        </table>
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Recent Security Events</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Device</th>
+                  <th>Type</th>
+                  <th>Message</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="securityEventsTable">
+                <!-- Populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="/js/pages/security.js"></script>
 {% endblock %}
-

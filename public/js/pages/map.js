@@ -96,7 +96,7 @@ function updateStatistics(summary) {
   document.getElementById('totalLocations').textContent = summary.total;
   document.getElementById('onlineLocations').textContent = summary.online;
   document.getElementById('offlineLocations').textContent = summary.offline;
-  document.getElementById('maintenanceLocations').textContent = summary.maintenance;
+  document.getElementById('warningLocations').textContent = summary.warning || summary.maintenance || 0;
 }
 
 // Switch map layer

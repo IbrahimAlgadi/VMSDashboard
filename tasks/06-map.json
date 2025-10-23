@@ -4,13 +4,14 @@
     "task-13": {
       "title": "Map Page - Leaflet Integration",
       "description": "Create interactive map page with location markers",
+      "status": "completed",
       "deliverables": [
         "Leaflet library integration",
         "Full-height map container",
         "Map controls panel",
-        "Custom marker icons by status",
+        "Custom marker icons by status (online, offline, warning)",
         "Marker clustering",
-        "Mock location data"
+        "Mock location data with NVR and camera status breakdown"
       ],
       "files": [
         "views/map.njk",
@@ -23,18 +24,31 @@
         "div#map.map-container",
         "position-absolute controls panel",
         "leaflet marker popup styling",
-        "layer control widget"
-      ]
+        "layer control widget (All, Online, Offline, Warning)"
+      ],
+      "enhancements": [
+        "Changed 'maintenance' status to 'warning' throughout",
+        "Added nvrStatus (online/offline) to location data",
+        "Added cameraStatus (online/offline) to location data",
+        "Updated popup to show NVR status with green/red indicators",
+        "Updated popup to show Camera status with green/red indicators",
+        "Fixed warning marker icon color (yellow/orange)",
+        "Fixed warning filter functionality",
+        "Warning status indicates at least one camera offline while NVR is online"
+      ],
+      "completed_date": "2025-01-15"
     },
     "task-14": {
       "title": "Map Page - Sidebar & Filters",
       "description": "Add sidebar with location list and filters",
+      "status": "completed",
       "deliverables": [
         "Collapsible sidebar overlay",
         "Location list with status",
         "Filter options (region, branch, status)",
         "Search locations",
-        "Click to center map on location"
+        "Click to center map on location",
+        "Status filter updated to use 'warning' instead of 'maintenance'"
       ],
       "files": [
         "views/map.njk (extend)",
@@ -45,8 +59,20 @@
         "list-group for locations",
         "form controls for filters",
         "btn-sm for location items"
-      ]
+      ],
+      "enhancements": [
+        "Updated filter dropdown to include 'warning' status",
+        "Updated statistics display to show warning count",
+        "Fixed layer switching to work with warning markers"
+      ],
+      "completed_date": "2025-01-15"
     }
-  }
+  },
+  "notes": [
+    "Map component now provides complete visibility into device status",
+    "Warning locations clearly indicate partial system failures",
+    "Popup shows detailed breakdown: NVR (online/offline) and Cameras (online/offline)",
+    "All three status types working: online (all operational), offline (all down), warning (partial failure)"
+  ]
 }
 
