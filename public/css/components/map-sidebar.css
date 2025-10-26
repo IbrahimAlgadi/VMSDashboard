@@ -60,6 +60,15 @@
   font-size: 0.6rem;
 }
 
+/* Ensure warning status shows yellow color */
+.location-status .bi-circle-fill.text-warning {
+  color: var(--bs-warning) !important;
+}
+
+.location-status span {
+  color: var(--bs-body-color);
+}
+
 .location-info {
   font-size: 0.85rem;
   color: var(--bs-secondary-color);

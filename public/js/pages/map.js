@@ -67,8 +67,19 @@ function initControls() {
 // Load locations data
 async function loadLocations() {
   try {
-    const response = await fetch('/data/mock/locations.json');
-    const data = await response.json();
+    // Use server-rendered data if available, otherwise use mock
+    let data;
+    if (window.mapDataFromServer) {
+      data = {
+        locations: window.mapDataFromServer.locations,
+        summary: window.mapDataFromServer.summary
+      };
+    } else {
+      // Fallback to mock data
+      const response = await fetch('/data/mock/locations.json');
+      data = await response.json();
+    }
+
     locations = data.locations;
     filteredLocations = [...locations];
 
@@ -148,6 +159,7 @@ function renderLocationList() {
     const statusColors = {
       online: 'success',
       offline: 'danger',
+      warning: 'warning',
       maintenance: 'warning'
     };
 

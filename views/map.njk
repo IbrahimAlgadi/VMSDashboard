@@ -102,6 +102,13 @@
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+  // Pass server-rendered data to JavaScript
+  window.mapDataFromServer = {
+    locations: {{ locations | stringify | safe }},
+    summary: {{ summary | stringify | safe }}
+  };
+</script>
 <script src="/js/components/map.js"></script>
 <script src="/js/pages/map.js"></script>
 {% endblock %}
