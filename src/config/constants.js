@@ -20,6 +20,26 @@ const MOCK_DATA = {
       { id: 1, message: 'Camera NVR-001-01-05 offline', severity: 'critical', time: '2m ago' },
       { id: 2, message: 'Storage at 85% on NVR-001', severity: 'high', time: '15m ago' },
       { id: 3, message: 'Network latency detected', severity: 'medium', time: '1h ago' }
+    ],
+    charts: {
+      systemHealth: [98, 99, 98, 99, 98, 99, 98],
+      cameraStatus: [1420, 1415, 1418, 1420, 1419, 1420, 1420],
+      nvrStatus: [118, 120, 118, 119, 118, 120, 118],
+      storageTrend: [62, 63, 64, 63, 62, 61, 62]
+    },
+    summary: {
+      regions: 8,
+      branches: 45,
+      usedStorage: '8.1 TB',
+      totalStorage: '12.5 TB',
+      systemUptime: 99.8
+    },
+    regionBreakdown: [
+      { region: 'Riyadh', nvrs: 35, cameras: 420, online: 398, offline: 22, status: 'good' },
+      { region: 'Jeddah', nvrs: 28, cameras: 336, online: 330, offline: 6, status: 'excellent' },
+      { region: 'Dammam', nvrs: 25, cameras: 300, online: 298, offline: 2, status: 'excellent' },
+      { region: 'Khobar', nvrs: 22, cameras: 264, online: 250, offline: 14, status: 'warning' },
+      { region: 'Mecca', nvrs: 17, cameras: 204, online: 200, offline: 4, status: 'good' }
     ]
   },
 

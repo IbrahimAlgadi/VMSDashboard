@@ -229,5 +229,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+  // Pass server-rendered data to JavaScript
+  window.dashboardDataFromServer = {{ data | stringify | safe }};
+</script>
 <script src="/js/pages/dashboard.js"></script>
 {% endblock %}

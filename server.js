@@ -6,11 +6,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configure Nunjucks
-nunjucks.configure('views', {
+const env = nunjucks.configure('views', {
   autoescape: true,
   express: app,
   watch: true,
   noCache: true
+});
+
+// Add stringify filter for JSON output
+env.addFilter('stringify', function(obj) {
+  return JSON.stringify(obj);
 });
 
 // Set view engine
@@ -63,11 +68,31 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📊 CCTV Dashboard ready!`);
-});
+// Database connection and server start
+const { sequelize } = require('./src/models');
+
+async function startServer() {
+  try {
+    // Test database connection
+    await sequelize.authenticate();
+    console.log('✅ Database connection established');
+    
+    // Sync models - only create if they don't exist (development mode)
+    await sequelize.sync({ force: false });
+    console.log('📊 Database tables ready');
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📊 VMS Dashboard ready with Sequelize!`);
+      console.log('💡 Using mock data for now - database tables will be created');
+    });
+  } catch (error) {
+    console.error('❌ Unable to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;
 
