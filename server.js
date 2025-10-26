@@ -24,84 +24,13 @@ app.use('/data', express.static('data'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.get('/', (req, res) => {
-  res.render('dashboard', {
-    title: 'Dashboard',
-    currentPage: 'dashboard'
-  });
-});
+// Import routes
+const routes = require('./src/routes');
 
-app.get('/nvr-management', (req, res) => {
-  res.render('nvr-management', {
-    title: 'NVR Management',
-    currentPage: 'nvr-management'
-  });
-});
+// Use routes
+app.use('/', routes);
 
-app.get('/camera-management', (req, res) => {
-  res.render('camera-management', {
-    title: 'Camera Management',
-    currentPage: 'camera-management'
-  });
-});
-
-app.get('/map', (req, res) => {
-  res.render('map', {
-    title: 'Location Map',
-    currentPage: 'map'
-  });
-});
-
-app.get('/compliance', (req, res) => {
-  res.render('compliance', {
-    title: 'Compliance',
-    currentPage: 'compliance'
-  });
-});
-
-app.get('/security', (req, res) => {
-  res.render('security', {
-    title: 'Security',
-    currentPage: 'security'
-  });
-});
-
-app.get('/analytics', (req, res) => {
-  res.render('analytics', {
-    title: 'Analytics',
-    currentPage: 'analytics'
-  });
-});
-
-app.get('/alerts', (req, res) => {
-  res.render('alerts', {
-    title: 'Alerts',
-    currentPage: 'alerts'
-  });
-});
-
-app.get('/reports', (req, res) => {
-  res.render('reports', {
-    title: 'Reports',
-    currentPage: 'reports'
-  });
-});
-
-app.get('/settings', (req, res) => {
-  res.render('settings', {
-    title: 'Settings',
-    currentPage: 'settings'
-  });
-});
-
-app.get('/profile', (req, res) => {
-  res.render('profile', {
-    title: 'Profile',
-    currentPage: 'profile'
-  });
-});
-
+// Keep login and styleguide routes (no controller needed yet)
 app.get('/login', (req, res) => {
   res.render('login', {
     title: 'Login',
