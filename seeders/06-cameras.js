@@ -109,6 +109,7 @@ class CamerasSeeder {
           bitrate: bitrate * 1000, // Convert to Kbps
           edge_storage_size: edgeStorageSize,
           uptime_percent: generateUptime(),
+          status: status, // Add status field
           ...generateTimestamps(45)
         };
 
