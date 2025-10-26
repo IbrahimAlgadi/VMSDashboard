@@ -47,6 +47,11 @@ const Camera = sequelize.define('Camera', {
   uptime_percent: {
     type: DataTypes.DECIMAL(5, 2),
     defaultValue: 0.00
+  },
+  status: {
+    type: DataTypes.ENUM('online', 'offline', 'warning', 'maintenance'),
+    defaultValue: 'offline',
+    allowNull: false
   }
 }, {
   tableName: 'cameras',

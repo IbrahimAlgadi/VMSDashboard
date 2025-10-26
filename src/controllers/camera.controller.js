@@ -10,6 +10,8 @@ class CameraController {
           { model: NVR, as: 'nvr', attributes: ['id', 'device_name'] },
           { model: Branch, as: 'branch', attributes: ['id', 'name'] }
         ],
+        attributes: ['id', 'name', 'position', 'nvr_id', 'branch_id', 'ip_address', 
+                     'model', 'manufacturer', 'resolution', 'fps', 'uptime_percent', 'status'],
         order: [['name', 'ASC']]
       }).catch(() => []);
 
@@ -22,7 +24,7 @@ class CameraController {
         branch: camera.branch?.name || 'Unknown',
         location: camera.branch?.name || 'Unknown', // Add for frontend compatibility
         region: 'Unknown', // Will be populated from branch region if needed
-        status: camera.uptime_percent > 95 ? 'online' : (camera.uptime_percent > 50 ? 'warning' : 'offline'),
+        status: camera.status || 'offline', // Use database status field
         uptime: parseFloat(camera.uptime_percent) || 0,
         ipAddress: camera.ip_address,
         model: camera.model || 'Unknown',
