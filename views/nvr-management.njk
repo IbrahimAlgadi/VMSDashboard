@@ -165,6 +165,7 @@
               <tr>
                 <th>Name</th>
                 <th>Location</th>
+                <th>IP Address</th>
                 <th>Status</th>
                 <th>Cameras</th>
                 <th>Uptime</th>
@@ -197,6 +198,13 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+  // Pass server-rendered data to JavaScript
+  window.nvrDataFromServer = {
+    nvrs: {{ nvrs | stringify | safe }},
+    summary: {{ summary | stringify | safe }}
+  };
+</script>
 <script src="/js/pages/nvr-management.js"></script>
 {% endblock %}
 

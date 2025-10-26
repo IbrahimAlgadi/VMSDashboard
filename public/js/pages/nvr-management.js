@@ -33,10 +33,19 @@
         document.getElementById('nvr-table-container').style.display = 'none';
         document.getElementById('empty-state').style.display = 'none';
 
-        const response = await fetch('/data/mock/nvrs.json');
-        const result = await response.json();
-        this.data = result;
-        this.filteredData = result.nvrs;
+        // Use server-rendered data if available, otherwise use mock
+        if (window.nvrDataFromServer) {
+          this.data = {
+            nvrs: window.nvrDataFromServer.nvrs,
+            summary: window.nvrDataFromServer.summary
+          };
+        } else {
+          // Fallback to mock data
+          const response = await fetch('/data/mock/nvrs.json');
+          this.data = await response.json();
+        }
+
+        this.filteredData = this.data.nvrs;
         
         return this.data;
       } catch (error) {
@@ -100,39 +109,20 @@
               <span class="status-badge ${statusClass}">
                 <span class="status-dot"></span>
                 ${statusClass.charAt(0).toUpperCase() + statusClass.slice(1)}
-              </span>
-            </td>
-            <td>
-              <div class="camera-count">
-                <span class="online">${nvr.camerasOnline}</span>
-                /
-                <span>${nvr.cameras}</span>
-                <i class="bi bi-camera-video text-muted"></i>
-              </div>
-            </td>
-            <td>
-              <div class="storage-progress">
-                <div class="storage-info">
-                  <span>${nvr.storage.used}</span>
-                  <span>${nvr.storage.percent}%</span>
-                </div>
-                <div class="progress">
-                  <div class="progress-bar bg-${storageClass}" role="progressbar" 
-                       style="width: ${nvr.storage.percent}%" 
-                       aria-valuenow="${nvr.storage.percent}" 
-                       aria-valuemin="0" 
-                       aria-valuemax="100">
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <span class="uptime-value ${uptimeClass}">${nvr.uptime}%</span>
-            </td>
-            <td>
-              <small class="last-seen">${timeAgo}</small>
-            </td>
-            <td>
+                           </span>
+             </td>
+             <td>
+               <div class="camera-count">
+                 <span class="online">${nvr.cameras.current || nvr.camerasOnline || 0}</span>
+                 /
+                 <span>${nvr.cameras.max || nvr.cameras || 0}</span>
+                 <i class="bi bi-camera-video text-muted"></i>
+               </div>
+             </td>
+             <td>
+               <span class="uptime-value ${uptimeClass}">${nvr.uptime}%</span>
+             </td>
+             <td>
               <div class="action-buttons">
                 <button class="btn btn-sm btn-outline-primary action-btn" 
                         onclick="NVRManagement.viewDetails(${nvr.id})" 
@@ -311,7 +301,7 @@
         return;
       }
 
-      const headers = ['Name', 'Location', 'IP Address', 'Status', 'Cameras Online', 'Total Cameras', 'Storage Used', 'Storage Total', 'Uptime', 'Firmware', 'Last Seen'];
+      const headers = ['Name', 'Location', 'IP Address', 'Status', 'Cameras Online', 'Total Cameras', 'Storage Used', 'Storage Total', 'Uptime', 'Last Seen'];
       
       const csvContent = [
         headers.join(','),
@@ -320,13 +310,12 @@
           `"${nvr.location}"`,
           nvr.ipAddress,
           nvr.status,
-          nvr.camerasOnline,
-          nvr.cameras,
+          nvr.cameras?.current || nvr.camerasOnline || 0,
+          nvr.cameras?.max || nvr.cameras || 0,
           `"${nvr.storage.used}"`,
           `"${nvr.storage.total}"`,
-          nvr.uptime,
-          nvr.firmware,
-          nvr.lastSeen
+          nvr.uptime || 0,
+          nvr.lastSeen || 'N/A'
         ].join(','))
       ].join('\n');
 
