@@ -136,6 +136,13 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+  // Pass server-rendered data to JavaScript
+  window.cameraDataFromServer = {
+    cameras: {{ cameras | stringify | safe }},
+    summary: {{ summary | stringify | safe }}
+  };
+</script>
 <script src="/js/pages/camera-management.js"></script>
 {% endblock %}
 

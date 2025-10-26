@@ -14,8 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load camera data
 async function loadCameras() {
   try {
-    const response = await fetch('/data/mock/cameras.json');
-    const data = await response.json();
+    // Use server-rendered data if available, otherwise use mock
+    let data;
+    if (window.cameraDataFromServer) {
+      data = {
+        cameras: window.cameraDataFromServer.cameras,
+        summary: window.cameraDataFromServer.summary
+      };
+    } else {
+      // Fallback to mock data
+      const response = await fetch('/data/mock/cameras.json');
+      data = await response.json();
+    }
+
     cameras = data.cameras;
     filteredCameras = [...cameras];
     
