@@ -103,5 +103,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+  // Pass server-rendered data to JavaScript
+  window.complianceDataFromServer = {{ data | stringify | safe }};
+</script>
 <script src="/js/pages/compliance.js"></script>
 {% endblock %}

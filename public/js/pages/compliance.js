@@ -10,8 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load compliance data
 async function loadComplianceData() {
   try {
-    const response = await fetch('/data/mock/compliance-data.json');
-    complianceData = await response.json();
+    // Use server-rendered data if available, otherwise use mock
+    if (window.complianceDataFromServer) {
+      complianceData = window.complianceDataFromServer;
+    } else {
+      // Fallback to mock data
+      const response = await fetch('/data/mock/compliance-data.json');
+      complianceData = await response.json();
+    }
     
     renderOverview();
     renderRequirements();
