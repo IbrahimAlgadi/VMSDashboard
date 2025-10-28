@@ -11,11 +11,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadAlerts() {
-  const response = await fetch('/data/mock/alerts-detailed.json');
-  alertsData = await response.json();
-  filteredAlerts = [...alertsData.alerts];
-  renderStats();
-  renderAlerts();
+  try {
+    // Use server-rendered data if available, otherwise use mock
+    if (window.alertsDataFromServer) {
+      alertsData = window.alertsDataFromServer;
+    } else {
+      // Fallback to mock data
+      const response = await fetch('/data/mock/alerts-detailed.json');
+      alertsData = await response.json();
+    }
+    
+    filteredAlerts = [...alertsData.alerts];
+    renderStats();
+    renderAlerts();
+  } catch (error) {
+    console.error('Failed to load alerts:', error);
+  }
 }
 
 function renderStats() {

@@ -48,5 +48,11 @@
   <div class="modal-footer" id="alertModalActions"></div>
 </div></div></div>
 {% endblock %}
-{% block extra_js %}<script src="/js/pages/alerts.js"></script>{% endblock %}
+{% block extra_js %}
+<script>
+  // Pass server-rendered data to JavaScript
+  window.alertsDataFromServer = {{ data | stringify | safe }};
+</script>
+<script src="/js/pages/alerts.js"></script>
+{% endblock %}
 
