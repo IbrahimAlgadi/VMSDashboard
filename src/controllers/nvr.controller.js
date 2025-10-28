@@ -52,8 +52,8 @@ class NVRController {
         }).catch(() => null);
         
         // Calculate storage percentage
-        const storageUsed = healthMetrics?.storage_used_gb || 0;
-        const storageTotal = healthMetrics?.storage_total_gb || 0;
+        const storageUsed = parseFloat(healthMetrics?.storage_used_gb) || 0;
+        const storageTotal = parseFloat(healthMetrics?.storage_total_gb) || 0;
         const storagePercent = storageTotal > 0 ? Math.round((storageUsed / storageTotal) * 100) : 0;
 
         return {
