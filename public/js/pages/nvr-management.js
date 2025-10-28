@@ -244,6 +244,11 @@
       document.getElementById('add-nvr-btn').addEventListener('click', () => {
         this.addNVR();
       });
+
+      // Save NVR
+      document.getElementById('save-nvr-btn').addEventListener('click', () => {
+        this.saveNVR();
+      });
     },
 
     /**
@@ -289,7 +294,231 @@
      * Add NVR
      */
     addNVR() {
-      alert('Add NVR form will be implemented in next task');
+      this.showAddNVRModal();
+    },
+
+    /**
+     * Show Add NVR Modal
+     */
+    async showAddNVRModal() {
+      try {
+        // Load branches for the dropdown
+        await this.loadBranchesForModal();
+        
+        // Reset form
+        this.resetAddNVRForm();
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('add-nvr-modal'));
+        modal.show();
+        
+      } catch (error) {
+        console.error('Error showing add NVR modal:', error);
+        alert('Error loading form data. Please try again.');
+      }
+    },
+
+    /**
+     * Load branches for the modal dropdown
+     */
+    async loadBranchesForModal() {
+      try {
+        // Get branches from the existing data or fetch from server
+        const branches = this.data?.nvrs?.map(nvr => nvr.branch).filter((branch, index, self) => 
+          index === self.findIndex(b => b.id === branch.id)
+        ) || [];
+
+        const branchSelect = document.getElementById('branch-id');
+        branchSelect.innerHTML = '<option value="">Select a branch...</option>';
+        
+        branches.forEach(branch => {
+          const option = document.createElement('option');
+          option.value = branch.id;
+          option.textContent = branch.name;
+          branchSelect.appendChild(option);
+        });
+
+        // If no branches from data, try to fetch from server
+        if (branches.length === 0) {
+          const response = await fetch('/api/branches');
+          if (response.ok) {
+            const serverBranches = await response.json();
+            serverBranches.forEach(branch => {
+              const option = document.createElement('option');
+              option.value = branch.id;
+              option.textContent = branch.name;
+              branchSelect.appendChild(option);
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error loading branches:', error);
+      }
+    },
+
+    /**
+     * Reset Add NVR Form
+     */
+    resetAddNVRForm() {
+      const form = document.getElementById('add-nvr-form');
+      form.reset();
+      
+      // Reset validation classes
+      form.querySelectorAll('.form-control, .form-select').forEach(input => {
+        input.classList.remove('is-valid', 'is-invalid');
+      });
+      
+      // Set default values
+      document.getElementById('max-cameras').value = '16';
+      document.getElementById('current-cameras').value = '0';
+      document.getElementById('maintenance-period-days').value = '90';
+      document.getElementById('uptime-percent').value = '0.00';
+      document.getElementById('status').value = 'offline';
+    },
+
+    /**
+     * Save NVR
+     */
+    async saveNVR() {
+      const form = document.getElementById('add-nvr-form');
+      
+      // Validate form
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+      }
+
+      try {
+        // Show loading state
+        const saveBtn = document.getElementById('save-nvr-btn');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Adding...';
+        saveBtn.disabled = true;
+
+        // Collect form data
+        const formData = new FormData(form);
+        const nvrData = Object.fromEntries(formData.entries());
+
+        // Convert numeric fields
+        nvrData.max_cameras = parseInt(nvrData.max_cameras);
+        nvrData.current_cameras = parseInt(nvrData.current_cameras);
+        nvrData.maintenance_period_days = parseInt(nvrData.maintenance_period_days);
+        nvrData.uptime_percent = parseFloat(nvrData.uptime_percent);
+
+        // Send to server
+        const response = await fetch('/api/nvrs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(nvrData)
+        });
+
+        if (response.ok) {
+          // Success
+          const newNVR = await response.json();
+          
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('add-nvr-modal'));
+          modal.hide();
+          
+          // Show success message
+          this.showSuccessMessage(`NVR "${newNVR.device_name}" has been added successfully!`);
+          
+          // Refresh data
+          await this.loadData();
+          this.renderStatistics();
+          this.renderTable();
+          
+        } else {
+          // Error
+          const error = await response.json();
+          throw new Error(error.message || 'Failed to add NVR');
+        }
+
+      } catch (error) {
+        console.error('Error saving NVR:', error);
+        this.showErrorMessage(`Error adding NVR: ${error.message}`);
+      } finally {
+        // Reset button
+        const saveBtn = document.getElementById('save-nvr-btn');
+        saveBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Add NVR';
+        saveBtn.disabled = false;
+      }
+    },
+
+    /**
+     * Show success message
+     */
+    showSuccessMessage(message) {
+      // Create toast notification
+      const toastContainer = document.getElementById('toast-container') || this.createToastContainer();
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast align-items-center text-white bg-success border-0';
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-check-circle me-2"></i>
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+      
+      // Remove toast element after it's hidden
+      toast.addEventListener('hidden.bs.toast', () => {
+        toast.remove();
+      });
+    },
+
+    /**
+     * Show error message
+     */
+    showErrorMessage(message) {
+      // Create toast notification
+      const toastContainer = document.getElementById('toast-container') || this.createToastContainer();
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast align-items-center text-white bg-danger border-0';
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+      
+      // Remove toast element after it's hidden
+      toast.addEventListener('hidden.bs.toast', () => {
+        toast.remove();
+      });
+    },
+
+    /**
+     * Create toast container
+     */
+    createToastContainer() {
+      const container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container position-fixed top-0 end-0 p-3';
+      container.style.zIndex = '9999';
+      document.body.appendChild(container);
+      return container;
     },
 
     /**

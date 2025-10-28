@@ -1,0 +1,235 @@
+<!-- Add NVR Modal -->
+<div class="modal fade" id="add-nvr-modal" tabindex="-1" aria-labelledby="addNVRModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="addNVRModalLabel">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New NVR
+          </h5>
+          <small class="text-muted">Configure and add a new NVR to the system</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form id="add-nvr-form" novalidate>
+          
+          <!-- Basic Information Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-info-circle me-2"></i>
+                Basic Information
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <!-- Device Name -->
+                <div class="col-md-6">
+                  <label for="device-name" class="form-label">
+                    Device Name <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" id="device-name" name="device_name" 
+                         placeholder="e.g., NVR-RD-001-05" required>
+                  <div class="form-text">Unique identifier for the NVR device</div>
+                  <div class="invalid-feedback">Please provide a valid device name.</div>
+                </div>
+
+                <!-- IP Address -->
+                <div class="col-md-6">
+                  <label for="ip-address" class="form-label">
+                    IP Address <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" id="ip-address" name="ip_address" 
+                         placeholder="192.168.1.100" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+                  <div class="form-text">Network IP address of the NVR</div>
+                  <div class="invalid-feedback">Please provide a valid IP address.</div>
+                </div>
+
+                <!-- Branch Location -->
+                <div class="col-md-6">
+                  <label for="branch-id" class="form-label">
+                    Branch Location <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="branch-id" name="branch_id" required>
+                    <option value="">Select a branch...</option>
+                  </select>
+                  <div class="form-text">Select the branch where this NVR will be installed</div>
+                  <div class="invalid-feedback">Please select a branch.</div>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-6">
+                  <label for="status" class="form-label">
+                    Initial Status <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="status" name="status" required>
+                    <option value="offline">Offline</option>
+                    <option value="online">Online</option>
+                    <option value="warning">Warning</option>
+                  </select>
+                  <div class="form-text">Initial status of the NVR</div>
+                  <div class="invalid-feedback">Please select a status.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hardware Specifications Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-cpu me-2"></i>
+                Hardware Specifications
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <!-- Processor -->
+                <div class="col-md-6">
+                  <label for="processor" class="form-label">Processor</label>
+                  <input type="text" class="form-control" id="processor" name="processor" 
+                         placeholder="e.g., Intel i5-8400">
+                  <div class="form-text">CPU processor model</div>
+                </div>
+
+                <!-- RAM -->
+                <div class="col-md-6">
+                  <label for="ram" class="form-label">RAM</label>
+                  <input type="text" class="form-control" id="ram" name="ram" 
+                         placeholder="e.g., 16GB DDR4">
+                  <div class="form-text">Memory specification</div>
+                </div>
+
+                <!-- Device ID -->
+                <div class="col-md-6">
+                  <label for="device-id" class="form-label">Device ID</label>
+                  <input type="text" class="form-control" id="device-id" name="device_id" 
+                         placeholder="e.g., HIK-352228">
+                  <div class="form-text">Manufacturer device identifier</div>
+                </div>
+
+                <!-- Product ID -->
+                <div class="col-md-6">
+                  <label for="product-id" class="form-label">Product ID</label>
+                  <input type="text" class="form-control" id="product-id" name="product_id" 
+                         placeholder="e.g., NVR4216-16P-4KS2">
+                  <div class="form-text">Product model number</div>
+                </div>
+
+                <!-- System Type -->
+                <div class="col-md-6">
+                  <label for="system-type" class="form-label">System Type</label>
+                  <input type="text" class="form-control" id="system-type" name="system_type" 
+                         placeholder="e.g., Hikvision NVR System">
+                  <div class="form-text">NVR system type/manufacturer</div>
+                </div>
+
+                <!-- Securos Version -->
+                <div class="col-md-6">
+                  <label for="securos-version" class="form-label">Securos Version</label>
+                  <input type="text" class="form-control" id="securos-version" name="securos_version" 
+                         placeholder="e.g., v4.3.3">
+                  <div class="form-text">Firmware/software version</div>
+                </div>
+
+                <!-- Max Cameras -->
+                <div class="col-md-6">
+                  <label for="max-cameras" class="form-label">
+                    Max Cameras <span class="text-danger">*</span>
+                  </label>
+                  <input type="number" class="form-control" id="max-cameras" name="max_cameras" 
+                         min="1" max="64" value="16" required>
+                  <div class="form-text">Maximum number of cameras supported</div>
+                  <div class="invalid-feedback">Please provide a valid number of cameras.</div>
+                </div>
+
+                <!-- Current Cameras -->
+                <div class="col-md-6">
+                  <label for="current-cameras" class="form-label">Current Cameras</label>
+                  <input type="number" class="form-control" id="current-cameras" name="current_cameras" 
+                         min="0" max="64" value="0">
+                  <div class="form-text">Number of cameras currently connected</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Installation & Maintenance Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-calendar-check me-2"></i>
+                Installation & Maintenance
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <!-- Installation Date -->
+                <div class="col-md-6">
+                  <label for="installation-date" class="form-label">Installation Date</label>
+                  <input type="date" class="form-control" id="installation-date" name="installation_date">
+                  <div class="form-text">Date when the NVR was installed</div>
+                </div>
+
+                <!-- Warranty Expiry -->
+                <div class="col-md-6">
+                  <label for="warranty-expiry" class="form-label">Warranty Expiry</label>
+                  <input type="date" class="form-control" id="warranty-expiry" name="warranty_expiry">
+                  <div class="form-text">Warranty expiration date</div>
+                </div>
+
+                <!-- Previous Maintenance Date -->
+                <div class="col-md-6">
+                  <label for="previous-maintenance-date" class="form-label">Previous Maintenance Date</label>
+                  <input type="date" class="form-control" id="previous-maintenance-date" name="previous_maintenance_date">
+                  <div class="form-text">Last maintenance performed</div>
+                </div>
+
+                <!-- Maintenance Period -->
+                <div class="col-md-6">
+                  <label for="maintenance-period-days" class="form-label">Maintenance Period (Days)</label>
+                  <input type="number" class="form-control" id="maintenance-period-days" name="maintenance_period_days" 
+                         min="30" max="365" value="90">
+                  <div class="form-text">Days between maintenance cycles</div>
+                </div>
+
+                <!-- Next Maintenance Date -->
+                <div class="col-md-6">
+                  <label for="next-maintenance-date" class="form-label">Next Maintenance Date</label>
+                  <input type="date" class="form-control" id="next-maintenance-date" name="next_maintenance_date">
+                  <div class="form-text">Scheduled next maintenance</div>
+                </div>
+
+                <!-- Uptime Percentage -->
+                <div class="col-md-6">
+                  <label for="uptime-percent" class="form-label">Uptime Percentage</label>
+                  <input type="number" class="form-control" id="uptime-percent" name="uptime_percent" 
+                         min="0" max="100" step="0.01" value="0.00">
+                  <div class="form-text">Current uptime percentage</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="save-nvr-btn">
+          <i class="bi bi-check-circle me-1"></i> Add NVR
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</div>
