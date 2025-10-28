@@ -10,8 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load security data
 async function loadSecurityData() {
   try {
-    const response = await fetch('/data/mock/security-data.json');
-    securityData = await response.json();
+    // Use server-rendered data if available, otherwise use mock
+    if (window.securityDataFromServer) {
+      securityData = window.securityDataFromServer;
+    } else {
+      // Fallback to mock data
+      const response = await fetch('/data/mock/security-data.json');
+      securityData = await response.json();
+    }
     
     renderOverview();
     renderCameraSecurityChecks();
