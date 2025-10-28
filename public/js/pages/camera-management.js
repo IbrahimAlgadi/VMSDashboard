@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCameras();
   initViewToggle();
   initFilters();
+  initAddCameraModal();
 });
 
 // Load camera data
@@ -311,6 +312,67 @@ function showCameraDetail(camera, editMode = false) {
   );
   statusBadge.innerHTML = `<i class="bi bi-circle-fill"></i> ${camera.status}`;
   
+  // Populate diagnostic data if available
+  if (camera.healthMetrics) {
+    // Network diagnostics
+    document.getElementById('diagPing').textContent = `${camera.healthMetrics.pingMs.toFixed(1)}ms`;
+    document.getElementById('diagPacketLoss').textContent = `${camera.healthMetrics.packetLoss.toFixed(1)}%`;
+    document.getElementById('diagBandwidth').textContent = `${camera.healthMetrics.bandwidthMbps.toFixed(1)} Mbps`;
+    
+    // Stream quality
+    document.getElementById('diagBitrate').textContent = `${camera.healthMetrics.bitrateKbps} kbps`;
+    document.getElementById('diagFrameDrop').textContent = `${camera.healthMetrics.frameDropPercent.toFixed(1)}%`;
+    
+    // Quality badge
+    const qualityBadge = document.getElementById('diagQuality');
+    qualityBadge.className = 'badge';
+    if (camera.healthMetrics.qualityScore >= 90) {
+      qualityBadge.classList.add('bg-success');
+      qualityBadge.textContent = 'Excellent';
+    } else if (camera.healthMetrics.qualityScore >= 70) {
+      qualityBadge.classList.add('bg-warning');
+      qualityBadge.textContent = 'Good';
+    } else if (camera.healthMetrics.qualityScore >= 50) {
+      qualityBadge.classList.add('bg-warning');
+      qualityBadge.textContent = 'Fair';
+    } else {
+      qualityBadge.classList.add('bg-danger');
+      qualityBadge.textContent = 'Poor';
+    }
+    
+    // Storage
+    document.getElementById('diagRecTime').textContent = `${camera.healthMetrics.recordingTimeDays} days`;
+    document.getElementById('diagSpaceUsed').textContent = `${camera.healthMetrics.spaceUsedGb.toFixed(0)} GB`;
+    document.getElementById('diagRetention').textContent = `${camera.healthMetrics.retentionDays} days`;
+    
+    // Events
+    document.getElementById('diagMotion').textContent = `${camera.healthMetrics.motionEventsToday} today`;
+    document.getElementById('diagAlerts').textContent = `${camera.healthMetrics.alertsPending} pending`;
+    
+    // Last reboot
+    if (camera.healthMetrics.lastRebootDate) {
+      const rebootDate = new Date(camera.healthMetrics.lastRebootDate);
+      const daysAgo = Math.floor((new Date() - rebootDate) / (1000 * 60 * 60 * 24));
+      document.getElementById('diagReboot').textContent = `${daysAgo} days ago`;
+    } else {
+      document.getElementById('diagReboot').textContent = 'Unknown';
+    }
+  } else {
+    // Fallback to default values for cameras without health metrics
+    document.getElementById('diagPing').textContent = 'N/A';
+    document.getElementById('diagPacketLoss').textContent = 'N/A';
+    document.getElementById('diagBandwidth').textContent = 'N/A';
+    document.getElementById('diagBitrate').textContent = 'N/A';
+    document.getElementById('diagFrameDrop').textContent = 'N/A';
+    document.getElementById('diagQuality').textContent = 'Unknown';
+    document.getElementById('diagRecTime').textContent = 'N/A';
+    document.getElementById('diagSpaceUsed').textContent = 'N/A';
+    document.getElementById('diagRetention').textContent = 'N/A';
+    document.getElementById('diagMotion').textContent = 'N/A';
+    document.getElementById('diagAlerts').textContent = 'N/A';
+    document.getElementById('diagReboot').textContent = 'Unknown';
+  }
+  
   // Edit button
   const editBtn = document.getElementById('editCameraBtn');
   if (editMode) {
@@ -355,5 +417,258 @@ function exportToCSV() {
   a.download = `cameras-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   window.URL.revokeObjectURL(url);
+}
+
+// Add Camera Modal Functions
+function initAddCameraModal() {
+  const addCameraBtn = document.getElementById('add-camera-btn');
+  if (addCameraBtn) {
+    addCameraBtn.addEventListener('click', showAddCameraModal);
+  }
+
+  const saveCameraBtn = document.getElementById('save-camera-btn');
+  if (saveCameraBtn) {
+    saveCameraBtn.addEventListener('click', saveCamera);
+  }
+
+  // Branch change handler to update NVR dropdown
+  const branchSelect = document.getElementById('branch-id');
+  if (branchSelect) {
+    branchSelect.addEventListener('change', loadNVRsForBranch);
+  }
+}
+
+async function showAddCameraModal() {
+  try {
+    // Load branches and NVRs for the dropdowns
+    await loadBranchesForModal();
+    await loadNVRsForModal();
+    
+    // Reset form
+    resetAddCameraForm();
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('add-camera-modal'));
+    modal.show();
+    
+  } catch (error) {
+    console.error('Error showing add camera modal:', error);
+    alert('Error loading form data. Please try again.');
+  }
+}
+
+async function loadBranchesForModal() {
+  try {
+    const response = await fetch('/api/branches');
+    if (response.ok) {
+      const result = await response.json();
+      const branchSelect = document.getElementById('branch-id');
+      branchSelect.innerHTML = '<option value="">Select a branch...</option>';
+      
+      result.data.forEach(branch => {
+        const option = document.createElement('option');
+        option.value = branch.id;
+        option.textContent = `${branch.name} (${branch.region})`;
+        branchSelect.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading branches:', error);
+  }
+}
+
+async function loadNVRsForModal() {
+  try {
+    const response = await fetch('/api/nvrs');
+    if (response.ok) {
+      const result = await response.json();
+      const nvrSelect = document.getElementById('nvr-id');
+      nvrSelect.innerHTML = '<option value="">Select an NVR...</option>';
+      
+      result.data.forEach(nvr => {
+        const option = document.createElement('option');
+        option.value = nvr.id;
+        option.textContent = `${nvr.device_name} (${nvr.branch_name}) - ${nvr.available_slots} slots available`;
+        nvrSelect.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading NVRs:', error);
+  }
+}
+
+async function loadNVRsForBranch() {
+  const branchId = document.getElementById('branch-id').value;
+  const nvrSelect = document.getElementById('nvr-id');
+  
+  if (!branchId) {
+    nvrSelect.innerHTML = '<option value="">Select an NVR...</option>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/nvrs/by-branch/${branchId}`);
+    if (response.ok) {
+      const result = await response.json();
+      nvrSelect.innerHTML = '<option value="">Select an NVR...</option>';
+      
+      result.data.forEach(nvr => {
+        const option = document.createElement('option');
+        option.value = nvr.id;
+        option.textContent = `${nvr.device_name} - ${nvr.available_slots} slots available`;
+        nvrSelect.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading NVRs for branch:', error);
+  }
+}
+
+function resetAddCameraForm() {
+  const form = document.getElementById('add-camera-form');
+  form.reset();
+  
+  // Reset validation classes
+  form.querySelectorAll('.form-control, .form-select').forEach(input => {
+    input.classList.remove('is-valid', 'is-invalid');
+  });
+  
+  // Set default values
+  document.getElementById('camera-fps').value = '25';
+  document.getElementById('camera-status').value = 'offline';
+  document.getElementById('camera-uptime').value = '0.00';
+}
+
+async function saveCamera(event) {
+  event.preventDefault();
+  
+  const form = document.getElementById('add-camera-form');
+  
+  // Validate form
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return;
+  }
+
+  try {
+    // Show loading state
+    const saveBtn = document.getElementById('save-camera-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Adding...';
+    saveBtn.disabled = true;
+
+    // Collect form data
+    const formData = new FormData(form);
+    const cameraData = Object.fromEntries(formData.entries());
+
+    // Convert numeric fields
+    cameraData.fps = parseInt(cameraData.fps);
+    cameraData.bitrate = cameraData.bitrate ? parseInt(cameraData.bitrate) : null;
+    cameraData.edge_storage_size = cameraData.edge_storage_size ? parseInt(cameraData.edge_storage_size) : null;
+    cameraData.uptime_percent = parseFloat(cameraData.uptime_percent);
+
+    // Send to server
+    const response = await fetch('/api/cameras', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cameraData)
+    });
+
+    if (response.ok) {
+      // Success
+      const newCamera = await response.json();
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('add-camera-modal'));
+      modal.hide();
+      
+      // Show success message
+      showSuccessMessage(`Camera "${newCamera.data.name}" has been added successfully!`);
+      
+      // Refresh data
+      await loadCameras();
+      
+    } else {
+      // Error
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to add camera');
+    }
+
+  } catch (error) {
+    console.error('Error saving camera:', error);
+    showErrorMessage(error.message || 'Failed to add camera. Please try again.');
+  } finally {
+    // Reset button
+    const saveBtn = document.getElementById('save-camera-btn');
+    saveBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Add Camera';
+    saveBtn.disabled = false;
+  }
+}
+
+function showSuccessMessage(message) {
+  // Create toast notification
+  const toastContainer = document.getElementById('toast-container') || createToastContainer();
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast align-items-center text-white bg-success border-0';
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="bi bi-check-circle me-2"></i>
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  
+  const bsToast = new bootstrap.Toast(toast);
+  bsToast.show();
+  
+  // Remove toast element after it's hidden
+  toast.addEventListener('hidden.bs.toast', () => {
+    toast.remove();
+  });
+}
+
+function showErrorMessage(message) {
+  // Create toast notification
+  const toastContainer = document.getElementById('toast-container') || createToastContainer();
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast align-items-center text-white bg-danger border-0';
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  
+  const bsToast = new bootstrap.Toast(toast);
+  bsToast.show();
+  
+  // Remove toast element after it's hidden
+  toast.addEventListener('hidden.bs.toast', () => {
+    toast.remove();
+  });
+}
+
+function createToastContainer() {
+  const container = document.createElement('div');
+  container.id = 'toast-container';
+  container.className = 'toast-container position-fixed top-0 end-0 p-3';
+  container.style.zIndex = '9999';
+  document.body.appendChild(container);
+  return container;
 }
 

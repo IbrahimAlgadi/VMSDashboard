@@ -19,13 +19,18 @@
       </ol>
     </nav>
   </div>
-  <div class="btn-group" role="group" aria-label="View Toggle">
-    <button type="button" class="btn btn-outline-primary active" id="gridViewBtn">
-      <i class="bi bi-grid-3x3-gap"></i> Grid
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-primary" id="add-camera-btn">
+      <i class="bi bi-plus-circle me-1"></i> Add Camera
     </button>
-    <button type="button" class="btn btn-outline-primary" id="listViewBtn">
-      <i class="bi bi-list-ul"></i> List
-    </button>
+    <div class="btn-group" role="group" aria-label="View Toggle">
+      <button type="button" class="btn btn-outline-primary active" id="gridViewBtn">
+        <i class="bi bi-grid-3x3-gap"></i> Grid
+      </button>
+      <button type="button" class="btn btn-outline-primary" id="listViewBtn">
+        <i class="bi bi-list-ul"></i> List
+      </button>
+    </div>
   </div>
 </div>
 
@@ -132,6 +137,9 @@
 
 <!-- Camera Detail Modal -->
 {% include "partials/modals/camera-detail.njk" %}
+
+<!-- Add Camera Modal -->
+{% include "partials/modals/add-camera.njk" %}
 </div>
 {% endblock %}
 

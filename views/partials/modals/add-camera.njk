@@ -1,0 +1,157 @@
+<!-- Add Camera Modal -->
+<div class="modal fade" id="add-camera-modal" tabindex="-1" aria-labelledby="add-camera-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="add-camera-modal-label">
+          <i class="bi bi-plus-circle me-2"></i>Add New Camera
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="add-camera-form" novalidate>
+        <div class="modal-body">
+          <div class="row g-3">
+            <!-- Basic Information -->
+            <div class="col-12">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-info-circle me-1"></i>Basic Information
+              </h6>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-name" class="form-label">Camera Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="camera-name" name="name" required>
+              <div class="invalid-feedback">
+                Please provide a camera name.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-position" class="form-label">Position <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="camera-position" name="position" placeholder="e.g., Main Entrance, Parking Lot" required>
+              <div class="invalid-feedback">
+                Please provide camera position.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-ip" class="form-label">IP Address <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="camera-ip" name="ip_address" placeholder="192.168.1.100" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+              <div class="invalid-feedback">
+                Please provide a valid IP address.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-status" class="form-label">Status</label>
+              <select class="form-select" id="camera-status" name="status">
+                <option value="offline">Offline</option>
+                <option value="online">Online</option>
+                <option value="warning">Warning</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+            
+            <!-- Technical Specifications -->
+            <div class="col-12 mt-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-gear me-1"></i>Technical Specifications
+              </h6>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-model" class="form-label">Model</label>
+              <input type="text" class="form-control" id="camera-model" name="model" placeholder="e.g., DS-2CD2143G0-I">
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-manufacturer" class="form-label">Manufacturer</label>
+              <select class="form-select" id="camera-manufacturer" name="manufacturer">
+                <option value="">Select Manufacturer</option>
+                <option value="Hikvision">Hikvision</option>
+                <option value="Dahua">Dahua</option>
+                <option value="Axis">Axis</option>
+                <option value="Bosch">Bosch</option>
+                <option value="Sony">Sony</option>
+                <option value="Panasonic">Panasonic</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-resolution" class="form-label">Resolution</label>
+              <select class="form-select" id="camera-resolution" name="resolution">
+                <option value="">Select Resolution</option>
+                <option value="720p">720p (1280x720)</option>
+                <option value="1080p">1080p (1920x1080)</option>
+                <option value="4K">4K (3840x2160)</option>
+                <option value="5MP">5MP (2560x1920)</option>
+                <option value="8MP">8MP (3840x2160)</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-fps" class="form-label">FPS</label>
+              <select class="form-select" id="camera-fps" name="fps">
+                <option value="15">15 FPS</option>
+                <option value="25" selected>25 FPS</option>
+                <option value="30">30 FPS</option>
+                <option value="60">60 FPS</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-bitrate" class="form-label">Bitrate (kbps)</label>
+              <input type="number" class="form-control" id="camera-bitrate" name="bitrate" placeholder="2048" min="512" max="8192">
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-storage" class="form-label">Edge Storage Size (GB)</label>
+              <input type="number" class="form-control" id="camera-storage" name="edge_storage_size" placeholder="64" min="0" max="1000">
+            </div>
+            
+            <!-- Assignment -->
+            <div class="col-12 mt-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-diagram-3 me-1"></i>Assignment
+              </h6>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="branch-id" class="form-label">Branch <span class="text-danger">*</span></label>
+              <select class="form-select" id="branch-id" name="branch_id" required>
+                <option value="">Select a branch...</option>
+              </select>
+              <div class="invalid-feedback">
+                Please select a branch.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="nvr-id" class="form-label">NVR <span class="text-danger">*</span></label>
+              <select class="form-select" id="nvr-id" name="nvr_id" required>
+                <option value="">Select an NVR...</option>
+              </select>
+              <div class="invalid-feedback">
+                Please select an NVR.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="camera-uptime" class="form-label">Initial Uptime (%)</label>
+              <input type="number" class="form-control" id="camera-uptime" name="uptime_percent" value="0.00" min="0" max="100" step="0.01">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i>Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" id="save-camera-btn">
+            <i class="bi bi-check-circle me-1"></i>Add Camera
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

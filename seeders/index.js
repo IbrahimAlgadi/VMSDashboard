@@ -17,6 +17,7 @@ class MainSeeder {
       { name: 'nvr-storage', file: '05-nvr-storage.js', description: 'NVR storage tracking' },
       { name: 'cameras', file: '06-cameras.js', description: 'Camera devices' },
       { name: 'camera-uptime', file: '07-camera-uptime.js', description: 'Camera uptime tracking' },
+      { name: 'camera-health-metrics', file: '08-camera-health-metrics.js', description: 'Camera health metrics' },
       { name: 'compliance-results', file: '09-compliance-results.js', description: 'Compliance check results' },
       { name: 'alerts', file: '10-alerts.js', description: 'System alerts' },
       { name: 'security-events', file: '11-security-events.js', description: 'Security incidents' },
