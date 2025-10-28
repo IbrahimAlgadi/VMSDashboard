@@ -405,6 +405,19 @@
         nvrData.maintenance_period_days = parseInt(nvrData.maintenance_period_days);
         nvrData.uptime_percent = parseFloat(nvrData.uptime_percent);
 
+        // Validate and clean date fields
+        const dateFields = ['installation_date', 'warranty_expiry', 'previous_maintenance_date', 'next_maintenance_date'];
+        dateFields.forEach(field => {
+          if (nvrData[field] && nvrData[field] !== '') {
+            const date = new Date(nvrData[field]);
+            if (isNaN(date.getTime())) {
+              nvrData[field] = null; // Set to null if invalid date
+            }
+          } else {
+            nvrData[field] = null; // Set to null if empty
+          }
+        });
+
         // Send to server
         const response = await fetch('/api/nvrs', {
           method: 'POST',

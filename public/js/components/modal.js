@@ -122,29 +122,38 @@
      * Populate status tab
      */
     populateStatus(nvrData) {
+      const healthMetrics = nvrData.healthMetrics;
+
       // Connection status
-      const connectionStatus = nvrData.status === 'online' ? 'Connected' : 'Disconnected';
+      const connectionStatus = healthMetrics?.connectionStatus || (nvrData.status === 'online' ? 'connected' : 'disconnected');
+      const connectionStatusText = connectionStatus === 'connected' ? 'Connected' : 
+                                  connectionStatus === 'unstable' ? 'Unstable' : 'Disconnected';
       const connectionHtml = `
-        <span class="status-indicator ${nvrData.status}">
-          <i class="bi bi-${nvrData.status === 'online' ? 'check-circle' : 'x-circle'}"></i>
-          ${connectionStatus}
+        <span class="status-indicator ${connectionStatus}">
+          <i class="bi bi-${connectionStatus === 'connected' ? 'check-circle' : 
+                            connectionStatus === 'unstable' ? 'exclamation-triangle' : 'x-circle'}"></i>
+          ${connectionStatusText}
         </span>
       `;
       document.getElementById('status-connection').innerHTML = connectionHtml;
 
       // Recording status
+      const recordingStatus = healthMetrics?.recordingStatus || 'stopped';
+      const recordingStatusText = recordingStatus === 'recording' ? 'Recording' :
+                                 recordingStatus === 'paused' ? 'Paused' :
+                                 recordingStatus === 'error' ? 'Error' : 'Stopped';
       const recordingHtml = `
-        <span class="status-indicator online">
+        <span class="status-indicator ${recordingStatus === 'recording' ? 'online' : 'offline'}">
           <i class="bi bi-record-circle"></i>
-          Recording
+          ${recordingStatusText}
         </span>
       `;
       document.getElementById('status-recording').innerHTML = recordingHtml;
 
-      // System health (mock data)
-      const cpu = Math.floor(Math.random() * 30) + 20;
-      const memory = Math.floor(Math.random() * 40) + 40;
-      const disk = Math.floor(Math.random() * 20) + 10;
+      // System health (real data or fallback to mock)
+      const cpu = healthMetrics ? Math.round(healthMetrics.cpuUsage) : Math.floor(Math.random() * 30) + 20;
+      const memory = healthMetrics ? Math.round(healthMetrics.memoryUsage) : Math.floor(Math.random() * 40) + 40;
+      const disk = healthMetrics ? Math.round(healthMetrics.diskIO) : Math.floor(Math.random() * 20) + 10;
 
       document.getElementById('status-cpu').textContent = `${cpu}%`;
       document.getElementById('status-cpu-bar').style.width = `${cpu}%`;
@@ -155,11 +164,16 @@
       document.getElementById('status-disk').textContent = `${disk}%`;
       document.getElementById('status-disk-bar').style.width = `${disk}%`;
 
-      // Network statistics (mock data)
-      document.getElementById('status-bandwidth-in').textContent = `${Math.floor(Math.random() * 50) + 20} Mbps`;
-      document.getElementById('status-bandwidth-out').textContent = `${Math.floor(Math.random() * 30) + 10} Mbps`;
-      document.getElementById('status-packets-sent').textContent = `${Math.floor(Math.random() * 10000) + 50000}`;
-      document.getElementById('status-packets-received').textContent = `${Math.floor(Math.random() * 15000) + 60000}`;
+      // Network statistics (real data or fallback to mock)
+      const bandwidthIn = healthMetrics ? Math.round(healthMetrics.bandwidthIn) : Math.floor(Math.random() * 50) + 20;
+      const bandwidthOut = healthMetrics ? Math.round(healthMetrics.bandwidthOut) : Math.floor(Math.random() * 30) + 10;
+      const packetsSent = healthMetrics ? healthMetrics.packetsSent : Math.floor(Math.random() * 10000) + 50000;
+      const packetsReceived = healthMetrics ? healthMetrics.packetsReceived : Math.floor(Math.random() * 15000) + 60000;
+
+      document.getElementById('status-bandwidth-in').textContent = `${bandwidthIn} Mbps`;
+      document.getElementById('status-bandwidth-out').textContent = `${bandwidthOut} Mbps`;
+      document.getElementById('status-packets-sent').textContent = packetsSent.toLocaleString();
+      document.getElementById('status-packets-received').textContent = packetsReceived.toLocaleString();
     },
 
     /**

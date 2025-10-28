@@ -1,13 +1,21 @@
 const { sequelize } = require('./src/models');
-const migration = require('./migrations/add-status-to-cameras');
 
 async function runMigration() {
   try {
-    console.log('🔄 Running migration: add-status-to-cameras...');
+    // Get migration file from command line arguments
+    const migrationFile = process.argv[2];
+    if (!migrationFile) {
+      console.error('❌ Please provide a migration file path');
+      console.log('Usage: node run-migration.js <migration-file>');
+      process.exit(1);
+    }
+
+    console.log(`🔄 Running migration: ${migrationFile}...`);
     
     await sequelize.authenticate();
     console.log('✅ Database connected');
     
+    const migration = require(`./${migrationFile}`);
     await migration.up(sequelize.getQueryInterface(), sequelize.constructor);
     console.log('✅ Migration completed successfully');
     

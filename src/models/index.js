@@ -5,6 +5,7 @@ const User = require('./User');
 const Region = require('./Region');
 const Branch = require('./Branch');
 const NVR = require('./NVR');
+const NVRHealthMetrics = require('./NVRHealthMetrics');
 const Camera = require('./Camera');
 const Alert = require('./Alert');
 const SecurityEvent = require('./SecurityEvent');
@@ -23,6 +24,10 @@ Branch.belongsTo(Region, { foreignKey: 'region_id', as: 'region' });
 // Branch -> NVR (One-to-Many)
 Branch.hasMany(NVR, { foreignKey: 'branch_id', as: 'nvrs' });
 NVR.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch' });
+
+// NVR -> NVRHealthMetrics (One-to-Many)
+NVR.hasMany(NVRHealthMetrics, { foreignKey: 'nvr_id', as: 'healthMetrics' });
+NVRHealthMetrics.belongsTo(NVR, { foreignKey: 'nvr_id', as: 'nvr' });
 
 // NVR -> Camera (One-to-Many)
 NVR.hasMany(Camera, { foreignKey: 'nvr_id', as: 'cameras' });
@@ -83,6 +88,7 @@ module.exports = {
   Region,
   Branch,
   NVR,
+  NVRHealthMetrics,
   Camera,
   Alert,
   SecurityEvent,

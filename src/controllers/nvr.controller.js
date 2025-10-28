@@ -1,4 +1,4 @@
-const { NVR, Branch, Region } = require('../models');
+const { NVR, Branch, Region, NVRHealthMetrics } = require('../models');
 const MOCK_DATA = require('../config/constants');
 
 class NVRController {
@@ -6,37 +6,108 @@ class NVRController {
   async showNVRManagement(req, res) {
     try {
       const nvrs = await NVR.findAll({
-        include: [{
-          model: Branch,
-          as: 'branch',
-          attributes: ['id', 'name']
-        }],
+        include: [
+          {
+            model: Branch,
+            as: 'branch',
+            attributes: ['id', 'name'],
+            include: [{
+              model: Region,
+              as: 'region',
+              attributes: ['id', 'name']
+            }]
+          }
+        ],
         where: { is_active: true },
         order: [['device_name', 'ASC']]
       }).catch(() => []);
 
       // Transform database results to frontend format
-      const transformedNVRs = nvrs.length > 0 ? nvrs.map(nvr => ({
-        id: nvr.id,
-        name: nvr.device_name,
-        location: nvr.branch?.name || 'Unknown',
-        ipAddress: nvr.ip_address,
-        status: nvr.status || 'offline',
-        uptime: parseFloat(nvr.uptime_percent) || 0,
-        cameras: {
-          current: nvr.current_cameras || 0,
-          max: nvr.max_cameras || 16
-        },
-        storage: {
-          percent: 0, // TODO: Calculate from actual storage data when available
-          used: '0 GB',
-          total: '0 GB'
-        },
-        lastSeen: nvr.last_seen ? new Date(nvr.last_seen).toISOString() : null,
-        branch: {
-          id: nvr.branch_id,
-          name: nvr.branch?.name || 'Unknown'
-        }
+      const transformedNVRs = nvrs.length > 0 ? await Promise.all(nvrs.map(async (nvr) => {
+        // Fetch latest health metrics for this NVR
+        const healthMetrics = await NVRHealthMetrics.findOne({
+          where: { 
+            nvr_id: nvr.id,
+            is_active: true 
+          },
+          order: [['last_health_check', 'DESC']],
+          attributes: [
+            'cpu_usage_percent',
+            'memory_usage_percent', 
+            'disk_io_percent',
+            'storage_used_gb',
+            'storage_total_gb',
+            'bandwidth_in_mbps',
+            'bandwidth_out_mbps',
+            'packets_sent',
+            'packets_received',
+            'connection_status',
+            'recording_status',
+            'health_score',
+            'temperature_celsius',
+            'fan_speed_rpm',
+            'power_consumption_watts',
+            'last_health_check'
+          ]
+        }).catch(() => null);
+        
+        // Calculate storage percentage
+        const storageUsed = healthMetrics?.storage_used_gb || 0;
+        const storageTotal = healthMetrics?.storage_total_gb || 0;
+        const storagePercent = storageTotal > 0 ? Math.round((storageUsed / storageTotal) * 100) : 0;
+
+        return {
+          id: nvr.id,
+          name: nvr.device_name,
+          location: nvr.branch?.name || 'Unknown',
+          region: nvr.branch?.region?.name || 'Unknown',
+          ipAddress: nvr.ip_address,
+          status: nvr.status || 'offline',
+          uptime: parseFloat(nvr.uptime_percent) || 0,
+          firmware: nvr.securos_version || 'Unknown',
+          cameras: nvr.max_cameras || 16,
+          camerasOnline: nvr.current_cameras || 0,
+          storage: {
+            percent: storagePercent,
+            used: `${storageUsed.toFixed(1)} GB`,
+            total: `${storageTotal.toFixed(1)} GB`
+          },
+          lastSeen: nvr.last_seen ? new Date(nvr.last_seen).toISOString() : null,
+          branch: {
+            id: nvr.branch_id,
+            name: nvr.branch?.name || 'Unknown'
+          },
+          // Additional fields for detailed view
+          processor: nvr.processor,
+          ram: nvr.ram,
+          device_id: nvr.device_id,
+          product_id: nvr.product_id,
+          system_type: nvr.system_type,
+          installation_date: nvr.installation_date,
+          warranty_expiry: nvr.warranty_expiry,
+          previous_maintenance_date: nvr.previous_maintenance_date,
+          maintenance_period_days: nvr.maintenance_period_days,
+          next_maintenance_date: nvr.next_maintenance_date,
+          // Health metrics data
+          healthMetrics: healthMetrics ? {
+            cpuUsage: parseFloat(healthMetrics.cpu_usage_percent),
+            memoryUsage: parseFloat(healthMetrics.memory_usage_percent),
+            diskIO: parseFloat(healthMetrics.disk_io_percent),
+            storageUsed: parseFloat(healthMetrics.storage_used_gb),
+            storageTotal: parseFloat(healthMetrics.storage_total_gb),
+            bandwidthIn: parseFloat(healthMetrics.bandwidth_in_mbps),
+            bandwidthOut: parseFloat(healthMetrics.bandwidth_out_mbps),
+            packetsSent: parseInt(healthMetrics.packets_sent),
+            packetsReceived: parseInt(healthMetrics.packets_received),
+            connectionStatus: healthMetrics.connection_status,
+            recordingStatus: healthMetrics.recording_status,
+            healthScore: parseInt(healthMetrics.health_score),
+            temperature: parseFloat(healthMetrics.temperature_celsius),
+            fanSpeed: parseInt(healthMetrics.fan_speed_rpm),
+            powerConsumption: parseFloat(healthMetrics.power_consumption_watts),
+            lastHealthCheck: healthMetrics.last_health_check
+          } : null
+        };
       })) : [];
 
       // Calculate statistics
@@ -147,11 +218,11 @@ class NVRController {
         securos_version,
         max_cameras,
         current_cameras,
-        installation_date,
-        warranty_expiry,
-        previous_maintenance_date,
+        installation_date: installation_date || null,
+        warranty_expiry: warranty_expiry || null,
+        previous_maintenance_date: previous_maintenance_date || null,
         maintenance_period_days,
-        next_maintenance_date,
+        next_maintenance_date: next_maintenance_date || null,
         uptime_percent,
         is_active: true
       });
