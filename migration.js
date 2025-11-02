@@ -57,7 +57,11 @@ const tableStatements = {
       branch_type VARCHAR(20) CHECK (branch_type IN ('Main Branch', 'Branch', 'ATM')) NOT NULL,
       address TEXT NOT NULL,
       coordinates JSON NOT NULL,
+      contact_phone VARCHAR(20),
+      manager_name VARCHAR(100),
+      operating_hours JSON,
       status VARCHAR(20) CHECK (status IN ('online', 'offline', 'warning', 'maintenance')) DEFAULT 'offline',
+      is_active BOOLEAN DEFAULT true,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (region_id) REFERENCES regions(id) ON DELETE CASCADE

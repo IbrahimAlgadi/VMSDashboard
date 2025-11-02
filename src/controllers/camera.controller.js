@@ -234,6 +234,311 @@ class CameraController {
     }
   }
 
+  // GET /api/cameras - Get all cameras
+  async getAllCameras(req, res) {
+    try {
+      const { branch_id, nvr_id, status, is_active } = req.query;
+
+      const where = {};
+      if (branch_id) where.branch_id = branch_id;
+      if (nvr_id) where.nvr_id = nvr_id;
+      if (status) where.status = status;
+      // Note: Camera model doesn't have is_active field, so we'll skip it
+
+      const cameras = await Camera.findAll({
+        include: [
+          {
+            model: NVR,
+            as: 'nvr',
+            attributes: ['id', 'device_name']
+          },
+          {
+            model: Branch,
+            as: 'branch',
+            attributes: ['id', 'name', 'branch_code'],
+            include: [{
+              model: Region,
+              as: 'region',
+              attributes: ['id', 'name', 'code']
+            }]
+          }
+        ],
+        where,
+        order: [['name', 'ASC']]
+      });
+
+      res.json({
+        success: true,
+        data: cameras
+      });
+
+    } catch (error) {
+      console.error('Error fetching cameras:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while fetching cameras'
+      });
+    }
+  }
+
+  // GET /api/cameras/:id - Get camera by ID
+  async getCameraById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const camera = await Camera.findByPk(id, {
+        include: [
+          {
+            model: NVR,
+            as: 'nvr',
+            attributes: ['id', 'device_name', 'ip_address']
+          },
+          {
+            model: Branch,
+            as: 'branch',
+            attributes: ['id', 'name', 'branch_code'],
+            include: [{
+              model: Region,
+              as: 'region',
+              attributes: ['id', 'name', 'code']
+            }]
+          }
+        ]
+      });
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with ID ${id} not found`
+        });
+      }
+
+      res.json({
+        success: true,
+        data: camera
+      });
+
+    } catch (error) {
+      console.error('Error fetching camera:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while fetching camera'
+      });
+    }
+  }
+
+  // PATCH /api/cameras/:name - Update camera by name
+  async updateCameraByName(req, res) {
+    try {
+      const { name } = req.params;
+      const updateData = req.body;
+
+      // Find camera by name
+      const camera = await Camera.findOne({
+        where: { name: name }
+      });
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with name "${name}" not found`
+        });
+      }
+
+      // Validate status if provided
+      if (updateData.status && !['online', 'offline', 'warning', 'maintenance'].includes(updateData.status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: online, offline, warning, maintenance'
+        });
+      }
+
+      // Update the camera
+      await camera.update(updateData);
+
+      res.json({
+        success: true,
+        message: 'Camera updated successfully',
+        data: {
+          id: camera.id,
+          name: camera.name,
+          status: camera.status,
+          position: camera.position,
+          uptime_percent: camera.uptime_percent
+        }
+      });
+
+    } catch (error) {
+      console.error('Error updating camera:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while updating camera'
+      });
+    }
+  }
+
+  // PATCH /api/cameras/:id - Update camera by ID
+  async updateCamera(req, res) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      const camera = await Camera.findByPk(id);
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with ID ${id} not found`
+        });
+      }
+
+      // Validate status if provided
+      if (updateData.status && !['online', 'offline', 'warning', 'maintenance'].includes(updateData.status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: online, offline, warning, maintenance'
+        });
+      }
+
+      // Check if name is being updated and already exists
+      if (updateData.name && updateData.name !== camera.name) {
+        const existingCamera = await Camera.findOne({
+          where: { name: updateData.name }
+        });
+
+        if (existingCamera) {
+          return res.status(400).json({
+            success: false,
+            message: 'A camera with this name already exists'
+          });
+        }
+      }
+
+      // Check if IP address is being updated and already exists
+      if (updateData.ip_address && updateData.ip_address !== camera.ip_address) {
+        const existingIP = await Camera.findOne({
+          where: { ip_address: updateData.ip_address }
+        });
+
+        if (existingIP) {
+          return res.status(400).json({
+            success: false,
+            message: 'A camera with this IP address already exists'
+          });
+        }
+      }
+
+      // Verify NVR exists if nvr_id is being updated
+      if (updateData.nvr_id && updateData.nvr_id !== camera.nvr_id) {
+        const nvr = await NVR.findByPk(updateData.nvr_id);
+        if (!nvr) {
+          return res.status(400).json({
+            success: false,
+            message: 'Selected NVR does not exist'
+          });
+        }
+      }
+
+      // Verify branch exists if branch_id is being updated
+      if (updateData.branch_id && updateData.branch_id !== camera.branch_id) {
+        const branch = await Branch.findByPk(updateData.branch_id);
+        if (!branch) {
+          return res.status(400).json({
+            success: false,
+            message: 'Selected branch does not exist'
+          });
+        }
+      }
+
+      // Update the camera
+      await camera.update(updateData);
+
+      // Fetch updated camera with relationships
+      const updatedCamera = await Camera.findByPk(id, {
+        include: [
+          {
+            model: NVR,
+            as: 'nvr',
+            attributes: ['id', 'device_name']
+          },
+          {
+            model: Branch,
+            as: 'branch',
+            attributes: ['id', 'name']
+          }
+        ]
+      });
+
+      res.json({
+        success: true,
+        message: 'Camera updated successfully',
+        data: updatedCamera
+      });
+
+    } catch (error) {
+      console.error('Error updating camera:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while updating camera'
+      });
+    }
+  }
+
+  // DELETE /api/cameras/:id - Delete camera by ID
+  async deleteCamera(req, res) {
+    try {
+      const { id } = req.params;
+
+      const camera = await Camera.findByPk(id);
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with ID ${id} not found`
+        });
+      }
+
+      const { hardDelete } = req.query;
+
+      if (hardDelete === 'true') {
+        // Hard delete
+        await camera.destroy();
+        return res.json({
+          success: true,
+          message: 'Camera deleted successfully'
+        });
+      } else {
+        // Soft delete - update status to offline and optionally remove from NVR count
+        await camera.update({ status: 'offline' });
+        
+        // Decrease NVR current_cameras count if needed
+        const nvr = await NVR.findByPk(camera.nvr_id);
+        if (nvr && nvr.current_cameras > 0) {
+          await nvr.update({
+            current_cameras: nvr.current_cameras - 1
+          });
+        }
+
+        return res.json({
+          success: true,
+          message: 'Camera deactivated successfully',
+          data: {
+            id: camera.id,
+            name: camera.name,
+            status: 'offline'
+          }
+        });
+      }
+
+    } catch (error) {
+      console.error('Error deleting camera:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while deleting camera'
+      });
+    }
+  }
+
   // GET /api/branches - Get all branches for dropdown
   async getBranches(req, res) {
     try {

@@ -260,6 +260,374 @@ class NVRController {
     }
   }
 
+  // GET /api/nvrs - Get all NVRs
+  async getAllNVRs(req, res) {
+    try {
+      const { branch_id, status, is_active } = req.query;
+
+      const where = {};
+      if (branch_id) where.branch_id = branch_id;
+      if (status) where.status = status;
+      if (is_active !== undefined) where.is_active = is_active === 'true';
+
+      const nvrs = await NVR.findAll({
+        include: [{
+          model: Branch,
+          as: 'branch',
+          attributes: ['id', 'name'],
+          include: [{
+            model: Region,
+            as: 'region',
+            attributes: ['id', 'name', 'code']
+          }]
+        }],
+        where,
+        order: [['device_name', 'ASC']]
+      });
+
+      res.json({
+        success: true,
+        data: nvrs
+      });
+
+    } catch (error) {
+      console.error('Error fetching NVRs:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while fetching NVRs'
+      });
+    }
+  }
+
+  // GET /api/nvrs/:id - Get NVR by ID
+  async getNVRById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const nvr = await NVR.findByPk(id, {
+        include: [{
+          model: Branch,
+          as: 'branch',
+          attributes: ['id', 'name', 'branch_code'],
+          include: [{
+            model: Region,
+            as: 'region',
+            attributes: ['id', 'name', 'code']
+          }]
+        }]
+      });
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with ID ${id} not found`
+        });
+      }
+
+      res.json({
+        success: true,
+        data: nvr
+      });
+
+    } catch (error) {
+      console.error('Error fetching NVR:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while fetching NVR'
+      });
+    }
+  }
+
+  // PATCH /api/nvrs/:name - Update NVR by name
+  async updateNVRByName(req, res) {
+    try {
+      const { name } = req.params;
+      const updateData = req.body;
+
+      // Find NVR by device_name
+      const nvr = await NVR.findOne({
+        where: { device_name: name }
+      });
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with name "${name}" not found`
+        });
+      }
+
+      // Validate status if provided
+      if (updateData.status && !['online', 'offline', 'warning', 'error'].includes(updateData.status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: online, offline, warning, error'
+        });
+      }
+
+      // Update the NVR
+      await nvr.update(updateData);
+
+      res.json({
+        success: true,
+        message: 'NVR updated successfully',
+        data: {
+          id: nvr.id,
+          device_name: nvr.device_name,
+          status: nvr.status,
+          uptime_percent: nvr.uptime_percent
+        }
+      });
+
+    } catch (error) {
+      console.error('Error updating NVR:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while updating NVR'
+      });
+    }
+  }
+
+  // PATCH /api/nvrs/hostname/:nvr_name - Update NVR by hostname
+  async updateNVRByHostname(req, res) {
+    try {
+      const { nvr_name } = req.params;
+      const updateData = req.body;
+
+      // Find NVR by hostname
+      const nvr = await NVR.findOne({
+        where: { hostname: nvr_name }
+      });
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with hostname "${nvr_name}" not found`
+        });
+      }
+
+      // Validate status if provided
+      if (updateData.status && !['online', 'offline', 'warning', 'error'].includes(updateData.status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: online, offline, warning, error'
+        });
+      }
+
+      // Check if device_name is being updated and already exists
+      if (updateData.device_name && updateData.device_name !== nvr.device_name) {
+        const existingNVR = await NVR.findOne({
+          where: { device_name: updateData.device_name }
+        });
+
+        if (existingNVR) {
+          return res.status(400).json({
+            success: false,
+            message: 'A NVR with this device name already exists'
+          });
+        }
+      }
+
+      // Check if hostname is being updated and already exists
+      if (updateData.hostname && updateData.hostname !== nvr.hostname) {
+        const existingHostname = await NVR.findOne({
+          where: { hostname: updateData.hostname }
+        });
+
+        if (existingHostname) {
+          return res.status(400).json({
+            success: false,
+            message: 'A NVR with this hostname already exists'
+          });
+        }
+      }
+
+      // Check if IP address is being updated and already exists
+      if (updateData.ip_address && updateData.ip_address !== nvr.ip_address) {
+        const existingIP = await NVR.findOne({
+          where: { ip_address: updateData.ip_address }
+        });
+
+        if (existingIP) {
+          return res.status(400).json({
+            success: false,
+            message: 'A NVR with this IP address already exists'
+          });
+        }
+      }
+
+      // Verify branch exists if branch_id is being updated
+      if (updateData.branch_id && updateData.branch_id !== nvr.branch_id) {
+        const branch = await Branch.findByPk(updateData.branch_id);
+        if (!branch) {
+          return res.status(400).json({
+            success: false,
+            message: 'Selected branch does not exist'
+          });
+        }
+      }
+
+      // Update the NVR
+      await nvr.update(updateData);
+
+      // Fetch updated NVR with branch info
+      const updatedNVR = await NVR.findByPk(nvr.id, {
+        include: [{
+          model: Branch,
+          as: 'branch',
+          attributes: ['id', 'name']
+        }]
+      });
+
+      res.json({
+        success: true,
+        message: 'NVR updated successfully',
+        data: updatedNVR
+      });
+
+    } catch (error) {
+      console.error('Error updating NVR:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while updating NVR'
+      });
+    }
+  }
+
+  // PATCH /api/nvrs/:id - Update NVR by ID
+  async updateNVR(req, res) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      const nvr = await NVR.findByPk(id);
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with ID ${id} not found`
+        });
+      }
+
+      // Validate status if provided
+      if (updateData.status && !['online', 'offline', 'warning', 'error'].includes(updateData.status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: online, offline, warning, error'
+        });
+      }
+
+      // Check if device_name is being updated and already exists
+      if (updateData.device_name && updateData.device_name !== nvr.device_name) {
+        const existingNVR = await NVR.findOne({
+          where: { device_name: updateData.device_name }
+        });
+
+        if (existingNVR) {
+          return res.status(400).json({
+            success: false,
+            message: 'A NVR with this device name already exists'
+          });
+        }
+      }
+
+      // Check if IP address is being updated and already exists
+      if (updateData.ip_address && updateData.ip_address !== nvr.ip_address) {
+        const existingIP = await NVR.findOne({
+          where: { ip_address: updateData.ip_address }
+        });
+
+        if (existingIP) {
+          return res.status(400).json({
+            success: false,
+            message: 'A NVR with this IP address already exists'
+          });
+        }
+      }
+
+      // Verify branch exists if branch_id is being updated
+      if (updateData.branch_id && updateData.branch_id !== nvr.branch_id) {
+        const branch = await Branch.findByPk(updateData.branch_id);
+        if (!branch) {
+          return res.status(400).json({
+            success: false,
+            message: 'Selected branch does not exist'
+          });
+        }
+      }
+
+      // Update the NVR
+      await nvr.update(updateData);
+
+      // Fetch updated NVR with branch info
+      const updatedNVR = await NVR.findByPk(id, {
+        include: [{
+          model: Branch,
+          as: 'branch',
+          attributes: ['id', 'name']
+        }]
+      });
+
+      res.json({
+        success: true,
+        message: 'NVR updated successfully',
+        data: updatedNVR
+      });
+
+    } catch (error) {
+      console.error('Error updating NVR:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while updating NVR'
+      });
+    }
+  }
+
+  // DELETE /api/nvrs/:id - Delete NVR by ID
+  async deleteNVR(req, res) {
+    try {
+      const { id } = req.params;
+
+      const nvr = await NVR.findByPk(id);
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with ID ${id} not found`
+        });
+      }
+
+      const { hardDelete } = req.query;
+
+      if (hardDelete === 'true') {
+        // Hard delete - will cascade delete related cameras
+        await nvr.destroy();
+        return res.json({
+          success: true,
+          message: 'NVR deleted successfully'
+        });
+      } else {
+        // Soft delete - set is_active to false
+        await nvr.update({ is_active: false });
+        return res.json({
+          success: true,
+          message: 'NVR deactivated successfully',
+          data: {
+            id: nvr.id,
+            device_name: nvr.device_name,
+            is_active: false
+          }
+        });
+      }
+
+    } catch (error) {
+      console.error('Error deleting NVR:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while deleting NVR'
+      });
+    }
+  }
+
   // GET /api/branches - Get all branches for dropdown
   async getBranches(req, res) {
     try {
@@ -292,6 +660,135 @@ class NVRController {
       res.status(500).json({
         success: false,
         message: 'Internal server error while fetching branches'
+      });
+    }
+  }
+
+  // POST /api/nvrs/:hostname/metrics - Ingest health metrics from VM/NVR
+  async ingestHealthMetrics(req, res) {
+    try {
+      const { hostname } = req.params;
+      const metrics = req.body;
+
+      // Validate required fields
+      if (!metrics.storage || !metrics.systemHealth || !metrics.uptime) {
+        return res.status(400).json({
+          success: false,
+          message: 'Missing required metrics fields: storage, systemHealth, uptime'
+        });
+      }
+
+      // Find NVR by hostname
+      let nvr = await NVR.findOne({
+        where: { hostname }
+      });
+
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR not found for hostname: ${hostname}. Please register the system first.`
+        });
+      }
+
+      // Calculate health score (0-100)
+      const cpuUsage = parseFloat(metrics.systemHealth?.cpuPercent) || 0;
+      const memoryUsage = parseFloat(metrics.systemHealth?.memoryPercent) || 0;
+      const storageUsage = parseFloat(metrics.storage?.usedPercent) || 0;
+      
+      let healthScore = 100;
+      // Penalize for high resource usage
+      if (cpuUsage > 90) healthScore -= 30;
+      else if (cpuUsage > 70) healthScore -= 15;
+      else if (cpuUsage > 50) healthScore -= 5;
+      
+      if (memoryUsage > 95) healthScore -= 30;
+      else if (memoryUsage > 80) healthScore -= 15;
+      else if (memoryUsage > 70) healthScore -= 5;
+      
+      if (storageUsage > 95) healthScore -= 20;
+      else if (storageUsage > 85) healthScore -= 10;
+      
+      healthScore = Math.max(0, Math.min(100, healthScore));
+
+      // Extract network statistics if provided
+      const bandwidthIn = parseFloat(metrics.network?.bandwidthInMbps) || 0;
+      const bandwidthOut = parseFloat(metrics.network?.bandwidthOutMbps) || 0;
+
+      // Map incoming payload to database schema
+      const healthMetricsData = {
+        nvr_id: nvr.id,
+        cpu_usage_percent: cpuUsage,
+        memory_usage_percent: memoryUsage,
+        disk_io_percent: 0, // Not provided in simplified payload
+        storage_used_gb: metrics.storage?.usedGB || 0,
+        storage_total_gb: metrics.storage?.totalGB || 0,
+        bandwidth_in_mbps: bandwidthIn,
+        bandwidth_out_mbps: bandwidthOut,
+        packets_sent: 0,
+        packets_received: 0,
+        connection_status: 'connected',
+        recording_status: 'recording',
+        health_score: Math.round(healthScore),
+        last_health_check: metrics.timestamp ? new Date(metrics.timestamp) : new Date(),
+        is_active: true
+      };
+
+      // Find or create health metrics
+      let healthMetrics = await NVRHealthMetrics.findOne({
+        where: { nvr_id: nvr.id, is_active: true }
+      });
+
+      let created = false;
+      if (healthMetrics) {
+        await healthMetrics.update(healthMetricsData);
+      } else {
+        healthMetrics = await NVRHealthMetrics.create(healthMetricsData);
+        created = true;
+      }
+
+      // Determine NVR status based on health
+      let nvrStatus = 'online';
+      if (healthScore < 50) {
+        nvrStatus = 'error';
+      } else if (healthScore < 70 || storageUsage > 90) {
+        nvrStatus = 'warning';
+      }
+
+      // Update NVR status, last_seen, and uptime
+      await nvr.update({
+        status: nvrStatus,
+        last_seen: new Date(metrics.timestamp || Date.now()),
+        uptime_percent: parseFloat(metrics.uptime?.percentOf24h || 0)
+      });
+
+      res.json({
+        success: true,
+        message: created ? 'Health metrics created' : 'Health metrics updated',
+        data: {
+          nvr_id: nvr.id,
+          nvr_name: nvr.device_name,
+          health_score: healthMetrics.health_score,
+          status: nvrStatus,
+          metrics_received: {
+            cpu: cpuUsage,
+            memory: memoryUsage,
+            storage: storageUsage,
+            uptime: metrics.uptime?.percentOf24h,
+            network: {
+              bandwidth_in: bandwidthIn,
+              bandwidth_out: bandwidthOut
+            }
+          },
+          timestamp: metrics.timestamp
+        }
+      });
+
+    } catch (error) {
+      console.error('Error ingesting health metrics:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while processing health metrics',
+        error: error.message
       });
     }
   }
