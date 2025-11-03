@@ -1,5 +1,13 @@
-const { Camera, NVR, Branch, Region, CameraHealthMetrics } = require('../models');
+const { Camera, NVR, Branch, Region, CameraHealthMetrics, Alert } = require('../models');
 const MOCK_DATA = require('../config/constants');
+const { 
+  validateComprehensiveData, 
+  extractCameraIP, 
+  processComprehensiveData,
+  isValidIPAddress,
+  updateNVRStatus,
+  isValidNumericId
+} = require('../utils/validation');
 
 class CameraController {
   // GET /camera-management
@@ -11,7 +19,7 @@ class CameraController {
           { model: Branch, as: 'branch', attributes: ['id', 'name'] }
         ],
         attributes: ['id', 'name', 'position', 'nvr_id', 'branch_id', 'ip_address', 
-                     'model', 'manufacturer', 'resolution', 'fps', 'uptime_percent', 'status'],
+                     'model', 'manufacturer', 'resolution', 'fps', 'bitrate', 'uptime_percent', 'status', 'edge_storage_size', 'edge_storage_retention'],
         order: [['name', 'ASC']]
       }).catch(() => []);
 
@@ -33,6 +41,8 @@ class CameraController {
             'quality_score',
             'recording_time_days',
             'space_used_gb',
+            'edge_storage_size_gb',
+            'storage_total_gb',
             'retention_days',
             'motion_events_today',
             'alerts_pending',
@@ -56,6 +66,9 @@ class CameraController {
           manufacturer: camera.manufacturer || 'Unknown',
           resolution: camera.resolution || 'Unknown',
           fps: camera.fps || 0,
+          bitrate: camera.bitrate !== null && camera.bitrate !== undefined ? camera.bitrate : null,
+          edgeStorageSize: camera.edge_storage_size !== null && camera.edge_storage_size !== undefined ? camera.edge_storage_size : null,
+          edgeStorageRetention: camera.edge_storage_retention !== null && camera.edge_storage_retention !== undefined ? camera.edge_storage_retention : null,
           // Health metrics data
           healthMetrics: healthMetrics ? {
             pingMs: parseFloat(healthMetrics.ping_ms),
@@ -66,6 +79,8 @@ class CameraController {
             qualityScore: parseInt(healthMetrics.quality_score),
             recordingTimeDays: parseInt(healthMetrics.recording_time_days),
             spaceUsedGb: parseFloat(healthMetrics.space_used_gb),
+            edgeStorageSizeGb: parseFloat(healthMetrics.edge_storage_size_gb) || null,
+            storageTotalGb: parseFloat(healthMetrics.storage_total_gb) || null,
             retentionDays: parseInt(healthMetrics.retention_days),
             motionEventsToday: parseInt(healthMetrics.motion_events_today),
             alertsPending: parseInt(healthMetrics.alerts_pending),
@@ -120,6 +135,7 @@ class CameraController {
         fps = 25,
         bitrate,
         edge_storage_size,
+        edge_storage_retention,
         uptime_percent = 0.00
       } = req.body;
 
@@ -195,8 +211,12 @@ class CameraController {
         fps: parseInt(fps),
         bitrate: bitrate ? parseInt(bitrate) : null,
         edge_storage_size: edge_storage_size ? parseInt(edge_storage_size) : null,
+        edge_storage_retention: edge_storage_retention ? parseInt(edge_storage_retention) : null,
         uptime_percent: parseFloat(uptime_percent)
       });
+
+      // Update NVR status since a new camera was added
+      await updateNVRStatus(NVR, Camera, nvr_id);
 
       // Fetch the created camera with related data
       const createdCamera = await Camera.findByPk(newCamera.id, {
@@ -286,7 +306,15 @@ class CameraController {
     try {
       const { id } = req.params;
 
-      const camera = await Camera.findByPk(id, {
+      // Validate that ID is numeric
+      if (!isValidNumericId(id)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid camera ID format. Expected numeric ID, got: "${id}". Use /api/cameras/by-name/${encodeURIComponent(id)} if you meant to search by name.`
+        });
+      }
+
+      const camera = await Camera.findByPk(parseInt(id, 10), {
         include: [
           {
             model: NVR,
@@ -327,6 +355,54 @@ class CameraController {
     }
   }
 
+  // GET /api/cameras/by-name/:name - Get camera by name
+  async getCameraByName(req, res) {
+    try {
+      const { name } = req.params;
+
+      // Find camera by name
+      const camera = await Camera.findOne({
+        where: { name: name },
+        include: [
+          {
+            model: NVR,
+            as: 'nvr',
+            attributes: ['id', 'device_name', 'ip_address']
+          },
+          {
+            model: Branch,
+            as: 'branch',
+            attributes: ['id', 'name', 'branch_code'],
+            include: [{
+              model: Region,
+              as: 'region',
+              attributes: ['id', 'name', 'code']
+            }]
+          }
+        ]
+      });
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with name "${name}" not found`
+        });
+      }
+
+      res.json({
+        success: true,
+        data: camera
+      });
+
+    } catch (error) {
+      console.error('Error getting camera by name:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while fetching camera'
+      });
+    }
+  }
+
   // PATCH /api/cameras/:name - Update camera by name
   async updateCameraByName(req, res) {
     try {
@@ -353,8 +429,16 @@ class CameraController {
         });
       }
 
+      // Store original status for comparison
+      const originalStatus = camera.status;
+
       // Update the camera
       await camera.update(updateData);
+
+      // Update NVR status if camera status was changed
+      if (updateData.status && updateData.status !== originalStatus) {
+        await updateNVRStatus(NVR, Camera, camera.nvr_id);
+      }
 
       res.json({
         success: true,
@@ -377,13 +461,21 @@ class CameraController {
     }
   }
 
-  // PATCH /api/cameras/:id - Update camera by ID
-  async updateCamera(req, res) {
+  // PATCH /api/cameras/by-id/:id - Update camera by numeric ID
+  async updateCameraById(req, res) {
     try {
       const { id } = req.params;
       const updateData = req.body;
 
-      const camera = await Camera.findByPk(id);
+      // Validate that ID is numeric
+      if (!isValidNumericId(id)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid camera ID format. Expected numeric ID, got: "${id}". Use /api/cameras/by-name/${encodeURIComponent(id)} if you meant to search by name.`
+        });
+      }
+
+      const camera = await Camera.findByPk(parseInt(id, 10));
 
       if (!camera) {
         return res.status(404).json({
@@ -453,8 +545,13 @@ class CameraController {
       // Update the camera
       await camera.update(updateData);
 
+      // Update NVR status if camera status was changed
+      if (updateData.status && updateData.status !== camera.status) {
+        await updateNVRStatus(NVR, Camera, camera.nvr_id);
+      }
+
       // Fetch updated camera with relationships
-      const updatedCamera = await Camera.findByPk(id, {
+      const updatedCamera = await Camera.findByPk(parseInt(id, 10), {
         include: [
           {
             model: NVR,
@@ -485,11 +582,19 @@ class CameraController {
   }
 
   // DELETE /api/cameras/:id - Delete camera by ID
-  async deleteCamera(req, res) {
+  async deleteCameraById(req, res) {
     try {
       const { id } = req.params;
 
-      const camera = await Camera.findByPk(id);
+      // Validate that ID is numeric
+      if (!isValidNumericId(id)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid camera ID format. Expected numeric ID, got: "${id}".`
+        });
+      }
+
+      const camera = await Camera.findByPk(parseInt(id, 10));
 
       if (!camera) {
         return res.status(404).json({
@@ -510,6 +615,9 @@ class CameraController {
       } else {
         // Soft delete - update status to offline and optionally remove from NVR count
         await camera.update({ status: 'offline' });
+        
+        // Update NVR status since camera went offline
+        await updateNVRStatus(NVR, Camera, camera.nvr_id);
         
         // Decrease NVR current_cameras count if needed
         const nvr = await NVR.findByPk(camera.nvr_id);
@@ -532,6 +640,67 @@ class CameraController {
 
     } catch (error) {
       console.error('Error deleting camera:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while deleting camera'
+      });
+    }
+  }
+
+  // DELETE /api/cameras/by-name/:name - Delete camera by name
+  async deleteCameraByName(req, res) {
+    try {
+      const { name } = req.params;
+
+      // Find camera by name
+      const camera = await Camera.findOne({
+        where: { name: name }
+      });
+
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with name "${name}" not found`
+        });
+      }
+
+      const { hardDelete } = req.query;
+
+      if (hardDelete === 'true') {
+        // Hard delete
+        await camera.destroy();
+        return res.json({
+          success: true,
+          message: 'Camera deleted successfully'
+        });
+      } else {
+        // Soft delete - update status to offline and optionally remove from NVR count
+        await camera.update({ status: 'offline' });
+        
+        // Update NVR status since camera went offline
+        await updateNVRStatus(NVR, Camera, camera.nvr_id);
+        
+        // Decrease NVR current_cameras count if needed
+        const nvr = await NVR.findByPk(camera.nvr_id);
+        if (nvr && nvr.current_cameras > 0) {
+          await nvr.update({
+            current_cameras: nvr.current_cameras - 1
+          });
+        }
+
+        return res.json({
+          success: true,
+          message: 'Camera deactivated successfully',
+          data: {
+            id: camera.id,
+            name: camera.name,
+            status: 'offline'
+          }
+        });
+      }
+
+    } catch (error) {
+      console.error('Error deleting camera by name:', error);
       res.status(500).json({
         success: false,
         message: 'Internal server error while deleting camera'
@@ -645,6 +814,206 @@ class CameraController {
       res.status(500).json({
         success: false,
         message: 'Internal server error while fetching NVRs'
+      });
+    }
+  }
+
+  /**
+   * PATCH /api/cameras/ingest-comprehensive-data/:hostname/:ip_address
+   * Ingest comprehensive camera data and update database
+   */
+  async ingestComprehensiveData(req, res) {
+    const { hostname, ip_address } = req.params;
+    const comprehensiveData = req.body;
+    
+    try {
+      // Validate input data
+      const validation = validateComprehensiveData(comprehensiveData);
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid comprehensive data format',
+          errors: validation.errors,
+          warnings: validation.warnings
+        });
+      }
+      
+      // Validate hostname parameter
+      if (!hostname || hostname.trim() === '') {
+        return res.status(400).json({
+          success: false,
+          message: 'Hostname parameter is required'
+        });
+      }
+      
+      // Validate IP address parameter
+      if (!isValidIPAddress(ip_address)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid IP address format'
+        });
+      }
+      
+      // Find NVR by hostname first to verify it exists
+      const nvr = await NVR.findOne({
+        where: { hostname: hostname.trim() },
+        attributes: ['id', 'device_name', 'hostname']
+      });
+      
+      if (!nvr) {
+        return res.status(404).json({
+          success: false,
+          message: `NVR with hostname "${hostname}" not found in database`
+        });
+      }
+      
+      // Verify the IP in data matches parameter
+      const dataIP = extractCameraIP(comprehensiveData.metadata);
+      if (dataIP && dataIP !== ip_address) {
+        return res.status(400).json({
+          success: false,
+          message: `IP address mismatch: parameter (${ip_address}) vs data (${dataIP})`
+        });
+      }
+      
+      // Find camera by IP address AND NVR ID to handle cases where multiple cameras share the same IP
+      const camera = await Camera.findOne({ 
+        where: { 
+          ip_address,
+          nvr_id: nvr.id
+        },
+        include: [
+          { model: NVR, as: 'nvr', attributes: ['id', 'device_name', 'hostname'] },
+          { model: Branch, as: 'branch', attributes: ['id', 'name'] }
+        ]
+      });
+      
+      if (!camera) {
+        return res.status(404).json({
+          success: false,
+          message: `Camera with IP address ${ip_address} not found for NVR with hostname "${hostname}" in database`
+        });
+      }
+      
+      // Optional: Verify NVR hostname match if provided in data
+      if (comprehensiveData.metadata?.nvr_hostname && 
+          camera.nvr?.hostname !== comprehensiveData.metadata.nvr_hostname) {
+        console.warn(`NVR hostname mismatch for camera ${ip_address}: expected ${camera.nvr?.hostname}, got ${comprehensiveData.metadata.nvr_hostname}`);
+      }
+      
+      // Process the comprehensive data
+      const processedData = processComprehensiveData(comprehensiveData);
+      
+      // Update database in transaction
+      const result = await Camera.sequelize.transaction(async (t) => {
+        const updates = {
+          camera: false,
+          healthMetrics: false,
+          alerts: 0,
+          statusChanged: false
+        };
+        
+        // 1. Update camera basic info
+        const oldStatus = camera.status;
+        const basicInfo = processedData.basicInfo;
+        
+        // Prepare update object with all available fields
+        const cameraUpdate = {
+          status: processedData.status,
+          updated_at: new Date()
+        };
+        
+        // Update fields if they exist in the processed data
+        if (basicInfo.manufacturer) cameraUpdate.manufacturer = basicInfo.manufacturer;
+        if (basicInfo.model) cameraUpdate.model = basicInfo.model;
+        if (basicInfo.resolution) cameraUpdate.resolution = basicInfo.resolution;
+        if (basicInfo.fps !== null && basicInfo.fps !== undefined) cameraUpdate.fps = basicInfo.fps;
+        if (basicInfo.bitrate !== null && basicInfo.bitrate !== undefined) {
+          cameraUpdate.bitrate = basicInfo.bitrate;
+        }
+        
+        // Update edge storage size from health metrics if available
+        if (processedData.healthMetrics.edge_storage_size_gb) {
+          cameraUpdate.edge_storage_size = Math.round(processedData.healthMetrics.edge_storage_size_gb);
+        }
+        
+        // Update edge storage retention from health metrics if available
+        if (processedData.healthMetrics.retention_days !== null && processedData.healthMetrics.retention_days !== undefined) {
+          cameraUpdate.edge_storage_retention = processedData.healthMetrics.retention_days;
+        }
+        
+        // Only update if we have new information
+        if (Object.keys(cameraUpdate).length > 2) { // More than just status and updated_at
+          await camera.update(cameraUpdate, { transaction: t });
+          updates.camera = true;
+          updates.statusChanged = oldStatus !== processedData.status;
+        } else if (oldStatus !== processedData.status) {
+          // Update status even if no other fields changed
+          await camera.update({ status: processedData.status }, { transaction: t });
+          updates.statusChanged = true;
+        }
+        
+        // 2. Update/create health metrics
+        const [healthMetrics, created] = await CameraHealthMetrics.upsert({
+          camera_id: camera.id,
+          ...processedData.healthMetrics
+        }, { 
+          transaction: t,
+          returning: true
+        });
+        updates.healthMetrics = true;
+        
+        // 3. Create alerts for critical system events
+        for (const alertData of processedData.alerts) {
+          await Alert.create({
+            ...alertData,
+            source_id: camera.id,
+            branch_id: camera.branch_id
+          }, { transaction: t });
+          updates.alerts++;
+        }
+        
+        return updates;
+      });
+      
+      // Update NVR status if camera status changed
+      if (result.statusChanged) {
+        await updateNVRStatus(NVR, Camera, camera.nvr_id);
+      }
+      
+      // Log warnings if any
+      if (validation.warnings.length > 0) {
+        console.warn(`Camera ${ip_address} data warnings:`, validation.warnings);
+      }
+      
+      res.json({
+        success: true,
+        message: 'Comprehensive camera data processed successfully',
+        camera: {
+          id: camera.id,
+          name: camera.name,
+          ip_address: camera.ip_address,
+          previous_status: result.statusChanged ? 
+            (camera.status === 'online' ? 'offline' : 'online') : camera.status,
+          current_status: processedData.status
+        },
+        processed: {
+          basic_info_updated: result.camera,
+          health_metrics_updated: result.healthMetrics,
+          alerts_created: result.alerts,
+          status_changed: result.statusChanged,
+          data_timestamp: comprehensiveData.metadata?.timestamp,
+          processing_timestamp: new Date().toISOString()
+        },
+        warnings: validation.warnings
+      });
+      
+    } catch (error) {
+      console.error('Error processing comprehensive camera data:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error while processing camera data',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   }
