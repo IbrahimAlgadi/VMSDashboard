@@ -1,5 +1,6 @@
 const { WebSocketServer } = require('ws');
 const { NVR, Camera } = require('../models');
+const { updateNVRStatus } = require('../utils/validation');
 
 /**
  * WebSocket server for NVR heartbeat and real-time status updates
@@ -134,15 +135,39 @@ class NVRWebSocketServer {
       ws.isNVR = true;
       this.nvrConnections.set(hostname, ws);
 
-      // Mark NVR as online
+      // Mark NVR as online (but don't broadcast yet - we'll recalculate after cameras are processed)
       await this.markNVROnline(hostname);
 
       // Process systemStatus if provided to update individual cameras
       if (systemStatus && systemStatus.cameras) {
         await this.processSystemStatus(hostname, systemStatus);
+        // processSystemStatus now recalculates NVR status after updating cameras
       } else {
         // Fallback: mark all cameras online if no systemStatus
         await this.markAllCamerasOnline(nvr.id);
+        // markAllCamerasOnline now recalculates NVR status
+      }
+      
+      // Final NVR status recalculation to ensure it's correct after all camera updates
+      // (This is a safety check - should already be done in processSystemStatus/markAllCamerasOnline)
+      await updateNVRStatus(NVR, Camera, nvr.id);
+      
+      // Fetch final NVR status and broadcast (with branch_id for map updates)
+      const finalNVR = await NVR.findOne({
+        where: { id: nvr.id },
+        attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
+      });
+      
+      if (finalNVR) {
+        this.broadcastToDashboard({
+          type: 'nvr_status_update',
+          hostname: finalNVR.hostname,
+          device_name: finalNVR.device_name,
+          nvr_id: finalNVR.id,
+          branch_id: finalNVR.branch_id, // Include branch_id for map updates
+          status: finalNVR.status,
+          timestamp: new Date().toISOString()
+        });
       }
 
       // Send authentication confirmation
@@ -181,7 +206,7 @@ class NVRWebSocketServer {
     try {
       const nvr = await NVR.findOne({ 
         where: { hostname },
-        attributes: ['id', 'hostname', 'device_name', 'status']
+        attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
       });
 
       if (!nvr) {
@@ -200,6 +225,9 @@ class NVRWebSocketServer {
         // Still update last_seen even if already online
         await nvr.update({ last_seen: new Date() });
       }
+      
+      // Note: We don't broadcast here because status will be recalculated
+      // based on camera statuses after processing systemStatus
 
     } catch (error) {
       console.error(`❌ Error marking NVR online:`, error.message);
@@ -221,6 +249,9 @@ class NVRWebSocketServer {
 
       if (camerasUpdated[0] > 0) {
         console.log(`✅ Updated ${camerasUpdated[0]} cameras to online`);
+        
+        // Recalculate NVR status after marking cameras online
+        await updateNVRStatus(NVR, Camera, nvrId);
       }
     } catch (error) {
       console.error(`❌ Error marking all cameras online:`, error.message);
@@ -234,7 +265,7 @@ class NVRWebSocketServer {
     try {
       const nvr = await NVR.findOne({ 
         where: { hostname },
-        attributes: ['id', 'hostname', 'device_name']
+        attributes: ['id', 'hostname', 'device_name', 'branch_id']
       });
 
       if (!nvr) {
@@ -252,20 +283,46 @@ class NVRWebSocketServer {
       // Update each camera individually based on NVR's reported status
       for (const cameraStatus of systemStatus.cameras) {
         try {
-          // Find camera by name and NVR ID
+          console.log(`🔍 Looking for camera: name="${cameraStatus.name}", nvr_id=${nvr.id}, status="${cameraStatus.status}"`);
+          
+          // Find camera by name and NVR ID (include branch_id for map updates)
           const camera = await Camera.findOne({
             where: { 
               name: cameraStatus.name,
               nvr_id: nvr.id
             },
-            attributes: ['id', 'name', 'status']
+            attributes: ['id', 'name', 'status', 'branch_id']
           });
 
-          if (camera && camera.status !== cameraStatus.status) {
+          if (!camera) {
+            console.log(`⚠️ Camera not found: name="${cameraStatus.name}", nvr_id=${nvr.id}`);
+            continue;
+          }
+
+          console.log(`📹 Found camera: id=${camera.id}, current_status="${camera.status}", new_status="${cameraStatus.status}"`);
+
+          if (camera.status !== cameraStatus.status) {
             const oldStatus = camera.status;
             await camera.update({ status: cameraStatus.status });
             updatedCount++;
-            console.log(`📹 Camera ${camera.name}: ${oldStatus} → ${cameraStatus.status}`);
+            console.log(`✅ Camera ${camera.name} (ID: ${camera.id}): ${oldStatus} → ${cameraStatus.status}`);
+
+            // Broadcast individual camera status update
+            const broadcastMessage = {
+              type: 'camera_status_update',
+              camera_id: camera.id,
+              camera_name: camera.name,
+              nvr_id: nvr.id,
+              branch_id: camera.branch_id || nvr.branch_id, // Include branch_id for map updates
+              old_status: oldStatus,
+              new_status: cameraStatus.status,
+              timestamp: new Date().toISOString()
+            };
+            
+            console.log(`📤 Broadcasting camera status update:`, broadcastMessage);
+            this.broadcastToDashboard(broadcastMessage);
+          } else {
+            console.log(`ℹ️ Camera ${camera.name} status unchanged: ${camera.status}`);
           }
         } catch (error) {
           console.error(`❌ Error updating camera ${cameraStatus.name}:`, error.message);
@@ -275,16 +332,33 @@ class NVRWebSocketServer {
       if (updatedCount > 0) {
         console.log(`✅ Updated ${updatedCount} cameras based on NVR systemStatus`);
       }
+      
+      // Always recalculate NVR status based on current camera statuses
+      // (even if no cameras changed, status might have changed from previous heartbeat)
+      const nvrStatusUpdated = await updateNVRStatus(NVR, Camera, nvr.id);
+      if (nvrStatusUpdated) {
+        // Fetch updated NVR to get new status (with branch_id for map updates)
+        const updatedNVR = await NVR.findOne({
+          where: { id: nvr.id },
+          attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
+        });
+        
+        if (updatedNVR) {
+          console.log(`📡 NVR ${updatedNVR.device_name} status recalculated: ${updatedNVR.status}`);
 
-      // Broadcast status update to dashboard clients
-      this.broadcastToDashboard({
-        type: 'nvr_status_update',
-        hostname: nvr.hostname,
-        device_name: nvr.device_name,
-        nvr_id: nvr.id,
-        cameras_updated: updatedCount,
-        timestamp: new Date().toISOString()
-      });
+          // Broadcast NVR status update
+          this.broadcastToDashboard({
+            type: 'nvr_status_update',
+            hostname: updatedNVR.hostname,
+            device_name: updatedNVR.device_name,
+            nvr_id: updatedNVR.id,
+            branch_id: updatedNVR.branch_id, // Include branch_id for map updates
+            status: updatedNVR.status,
+            cameras_updated: updatedCount,
+            timestamp: new Date().toISOString()
+          });
+        }
+      }
 
     } catch (error) {
       console.error(`❌ Error processing systemStatus:`, error.message);
@@ -373,7 +447,7 @@ class NVRWebSocketServer {
     try {
       const nvr = await NVR.findOne({ 
         where: { hostname },
-        attributes: ['id', 'hostname', 'device_name', 'status']
+        attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
       });
 
       if (!nvr) {
@@ -403,12 +477,24 @@ class NVRWebSocketServer {
         console.log(`❌ Updated ${camerasUpdated[0]} cameras to offline for NVR ${nvr.device_name}`);
       }
 
+      // NVR status is already set to offline above, but recalculate to ensure consistency
+      // (though it should be offline since NVR disconnected)
+      await updateNVRStatus(NVR, Camera, nvr.id);
+      
+      // Fetch updated NVR to get final status (with branch_id for map updates)
+      const updatedNVR = await NVR.findOne({
+        where: { id: nvr.id },
+        attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
+      });
+
       // Broadcast status update to dashboard clients
       this.broadcastToDashboard({
         type: 'nvr_offline',
-        hostname: nvr.hostname,
-        device_name: nvr.device_name,
+        hostname: updatedNVR?.hostname || nvr.hostname,
+        device_name: updatedNVR?.device_name || nvr.device_name,
         nvr_id: nvr.id,
+        branch_id: updatedNVR?.branch_id || nvr.branch_id, // Include branch_id for map updates
+        status: updatedNVR?.status || 'offline',
         cameras_updated: camerasUpdated[0],
         timestamp: new Date().toISOString()
       });
@@ -422,6 +508,11 @@ class NVRWebSocketServer {
    * Broadcast message to all dashboard clients
    */
   broadcastToDashboard(message) {
+    if (this.dashboardClients.size === 0) {
+      console.log('⚠️ No dashboard clients connected to broadcast:', message.type);
+      return;
+    }
+
     const data = JSON.stringify(message);
     let sentCount = 0;
 

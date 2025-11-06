@@ -1,10 +1,12 @@
 // Dashboard Page JavaScript
 
 let dashboardData = null;
+let chartInstances = {};
 
 document.addEventListener('DOMContentLoaded', () => {
   loadDashboard();
   initRefresh();
+  initRealtimeUpdates();
 });
 
 // Load dashboard data
@@ -84,6 +86,7 @@ function renderCharts() {
 // System Health Gauge Chart
 function renderSystemHealthChart() {
   const chart = echarts.init(document.getElementById('systemHealthChart'));
+  chartInstances.systemHealth = chart; // Store instance for updates
   // Handle both object format (systemHealth.current) and array format (take last value)
   const health = dashboardData.charts.systemHealth?.current || 
                  (Array.isArray(dashboardData.charts.systemHealth) ? 
@@ -143,6 +146,7 @@ function renderSystemHealthChart() {
 // Camera Status Trend Chart
 function renderCameraStatusTrendChart() {
   const chart = echarts.init(document.getElementById('cameraStatusChart'));
+  chartInstances.cameraStatus = chart; // Store instance for updates
   let data = dashboardData.charts.cameraStatus || dashboardData.charts.cameraStatusTrend || [];
   
   // Handle array format (just values) vs object format (objects with date, online, offline)
@@ -195,6 +199,7 @@ function renderCameraStatusTrendChart() {
   // NVR Status Trend Chart
   function renderNVRStatusTrendChart() {
     const chart = echarts.init(document.getElementById('nvrStatusChart'));
+    chartInstances.nvrStatus = chart; // Store instance for updates
     let data = dashboardData.charts.nvrStatus || dashboardData.charts.nvrStatusTrend || [];
     
     // Handle array format
@@ -246,6 +251,7 @@ function renderCameraStatusTrendChart() {
 // Storage Trend Chart
 function renderStorageTrendChart() {
   const chart = echarts.init(document.getElementById('storageTrendChart'));
+  chartInstances.storageTrend = chart; // Store instance for updates
   let data = dashboardData.charts.storageTrend || [];
   
   // Handle array format
@@ -391,4 +397,117 @@ function initRefresh() {
   document.getElementById('refreshBtn')?.addEventListener('click', () => {
     location.reload();
   });
+}
+
+// Initialize real-time updates
+function initRealtimeUpdates() {
+  // Wait for RealtimeManager to be ready
+  if (typeof RealtimeManager === 'undefined') {
+    setTimeout(initRealtimeUpdates, 100);
+    return;
+  }
+
+  // Initialize state with current dashboard data
+  if (dashboardData) {
+    // Store initial data in state manager if we have NVR/camera data
+    // This will be populated from server-rendered data or API calls
+  }
+
+  // Subscribe to stats updates
+  RealtimeManager.on('stats:updated', (summary) => {
+    updateKPIsFromStats(summary);
+    updateChartsFromStats(summary);
+  });
+
+  // Subscribe to NVR status changes
+  RealtimeManager.on('nvr:status:changed', (data) => {
+    // Update dashboard when NVR status changes
+    updateKPIsFromStats(StateManager.getSummary());
+  });
+
+  // Subscribe to camera status changes
+  RealtimeManager.on('camera:status:changed', (data) => {
+    // Update dashboard when camera status changes
+    updateKPIsFromStats(StateManager.getSummary());
+  });
+
+  console.log('✓ Dashboard real-time updates initialized');
+}
+
+// Update KPIs from real-time stats
+function updateKPIsFromStats(summary) {
+  if (!summary) return;
+
+  // Update total NVRs
+  const totalNVRsEl = document.getElementById('totalNVRs');
+  if (totalNVRsEl) {
+    animateValue(totalNVRsEl, parseInt(totalNVRsEl.textContent) || 0, summary.totalNVRs || 0);
+  }
+
+  // Update total Cameras
+  const totalCamerasEl = document.getElementById('totalCameras');
+  if (totalCamerasEl) {
+    animateValue(totalCamerasEl, parseInt(totalCamerasEl.textContent) || 0, summary.totalCameras || 0);
+  }
+
+  // Update offline NVRs
+  const offlineNVRsEl = document.getElementById('offlineNVRs');
+  if (offlineNVRsEl) {
+    animateValue(offlineNVRsEl, parseInt(offlineNVRsEl.textContent) || 0, summary.offlineNVRs || 0);
+  }
+
+  // Update offline Cameras
+  const offlineCamerasEl = document.getElementById('offlineCameras');
+  if (offlineCamerasEl) {
+    animateValue(offlineCamerasEl, parseInt(offlineCamerasEl.textContent) || 0, summary.offlineCameras || 0);
+  }
+
+  // Update last update time
+  const lastUpdateEl = document.getElementById('lastUpdate');
+  if (lastUpdateEl) {
+    lastUpdateEl.textContent = new Date().toLocaleTimeString();
+  }
+}
+
+// Update charts from real-time stats
+function updateChartsFromStats(summary) {
+  if (!summary) return;
+
+  // Update system health chart based on online percentage
+  if (chartInstances.systemHealth) {
+    const totalDevices = (summary.totalNVRs || 0) + (summary.totalCameras || 0);
+    const onlineDevices = (summary.onlineNVRs || 0) + (summary.onlineCameras || 0);
+    const healthPercentage = totalDevices > 0 ? Math.round((onlineDevices / totalDevices) * 100) : 100;
+
+    chartInstances.systemHealth.setOption({
+      series: [{
+        data: [{
+          value: healthPercentage,
+          name: 'System Health'
+        }],
+        itemStyle: {
+          color: healthPercentage >= 90 ? '#198754' : healthPercentage >= 70 ? '#ffc107' : '#dc3545'
+        }
+      }]
+    });
+  }
+}
+
+// Animate value change
+function animateValue(element, start, end, duration = 500) {
+  if (start === end) return;
+
+  const range = end - start;
+  const increment = end > start ? 1 : -1;
+  const stepTime = Math.abs(Math.floor(duration / range));
+  let current = start;
+
+  const timer = setInterval(() => {
+    current += increment;
+    element.textContent = current;
+    
+    if (current === end) {
+      clearInterval(timer);
+    }
+  }, stepTime);
 }

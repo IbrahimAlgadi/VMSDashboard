@@ -4,6 +4,8 @@ let mapComponent;
 let locations = [];
 let filteredLocations = [];
 let sidebar;
+let nvrToBranchMap = {}; // Map NVR ID to branch ID
+let cameraToBranchMap = {}; // Map Camera ID to branch ID
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSidebar();
   initControls();
   loadLocations();
+  initRealtimeUpdates();
 });
 
 // Initialize map
@@ -82,6 +85,9 @@ async function loadLocations() {
 
     locations = data.locations;
     filteredLocations = [...locations];
+
+    // Build NVR and Camera to Branch mapping (async, don't wait)
+    buildLocationMappings();
 
     // Update statistics
     updateStatistics(data.summary);
@@ -245,4 +251,428 @@ window.addEventListener('resize', () => {
     mapComponent.resize();
   }
 });
+
+// Build mappings from NVR/Camera IDs to branch IDs
+async function buildLocationMappings() {
+  nvrToBranchMap = {};
+  cameraToBranchMap = {};
+  
+  try {
+    // Fetch NVR and camera data to build mappings
+    const [nvrsResponse, camerasResponse] = await Promise.all([
+      fetch('/api/nvrs').catch(() => ({ json: () => ({ nvrs: [] }) })),
+      fetch('/api/cameras').catch(() => ({ json: () => ({ cameras: [] }) }))
+    ]);
+
+    const nvrsData = await nvrsResponse.json();
+    const camerasData = await camerasResponse.json();
+    
+    const nvrs = nvrsData.data || nvrsData.nvrs || [];
+    const cameras = camerasData.data || camerasData.cameras || [];
+
+    // Build NVR to branch mapping
+    nvrs.forEach(nvr => {
+      if (nvr.branch_id) {
+        nvrToBranchMap[nvr.id] = nvr.branch_id;
+      }
+    });
+
+    // Build Camera to branch mapping
+    cameras.forEach(camera => {
+      if (camera.branch_id) {
+        cameraToBranchMap[camera.id] = camera.branch_id;
+      }
+    });
+
+    console.log('🗺️ Built location mappings:', {
+      nvrs: Object.keys(nvrToBranchMap).length,
+      cameras: Object.keys(cameraToBranchMap).length
+    });
+  } catch (error) {
+    console.error('Error building location mappings:', error);
+  }
+}
+
+// Initialize real-time updates
+function initRealtimeUpdates() {
+  // Wait for RealtimeManager to be ready
+  if (typeof RealtimeManager === 'undefined') {
+    setTimeout(initRealtimeUpdates, 100);
+    return;
+  }
+
+  // Subscribe to NVR status changes
+  RealtimeManager.on('nvr:status:changed', (data) => {
+    handleNVRStatusChange(data);
+  });
+
+  // Subscribe to camera status changes
+  RealtimeManager.on('camera:status:changed', (data) => {
+    handleCameraStatusChange(data);
+  });
+
+  // Subscribe to stats updates
+  RealtimeManager.on('stats:updated', (summary) => {
+    // Could update overall statistics if needed
+  });
+
+  console.log('✓ Map real-time updates initialized');
+}
+
+// Handle NVR status change
+function handleNVRStatusChange(data) {
+  if (!data) return;
+  
+  const nvrId = data.nvrId || data.nvr_id;
+  if (!nvrId) return;
+
+  console.log('🗺️ NVR status change on map:', nvrId, data.status || data.new_status);
+
+  // Try to get branch_id from message data first
+  let branchId = data.branch_id || null;
+
+  // Try to get branch_id from StateManager
+  if (!branchId && typeof StateManager !== 'undefined') {
+    const nvr = StateManager.getNVR(nvrId);
+    if (nvr && nvr.branch_id) {
+      branchId = nvr.branch_id;
+    }
+  }
+
+  // Fallback to mapping
+  if (!branchId) {
+    branchId = nvrToBranchMap[nvrId];
+  }
+
+  if (branchId) {
+    // Update only the affected location
+    updateLocationStatus(branchId);
+  } else {
+    // If mapping not found, try to rebuild mappings and update all locations (fallback)
+    console.warn('NVR to branch mapping not found, rebuilding mappings...');
+    buildLocationMappings().then(() => {
+      const newBranchId = nvrToBranchMap[nvrId];
+      if (newBranchId) {
+        updateLocationStatus(newBranchId);
+      } else {
+        updateLocationStatuses();
+      }
+    });
+  }
+}
+
+// Handle camera status change
+function handleCameraStatusChange(data) {
+  if (!data) return;
+  
+  const cameraId = data.cameraId || data.camera_id;
+  if (!cameraId) return;
+
+  console.log('🗺️ Camera status change on map:', cameraId, data.newStatus);
+
+  // Try to get branch_id from message data first
+  let branchId = data.branch_id || null;
+
+  // Try to get branch_id from StateManager
+  if (!branchId && typeof StateManager !== 'undefined') {
+    const camera = StateManager.getCamera(cameraId);
+    if (camera && camera.branch_id) {
+      branchId = camera.branch_id;
+    }
+  }
+
+  // Fallback to mapping
+  if (!branchId) {
+    branchId = cameraToBranchMap[cameraId];
+  }
+
+  if (branchId) {
+    // Update only the affected location
+    updateLocationStatus(branchId);
+  } else {
+    // If mapping not found, try to rebuild mappings and update all locations (fallback)
+    console.warn('Camera to branch mapping not found, rebuilding mappings...');
+    buildLocationMappings().then(() => {
+      const newBranchId = cameraToBranchMap[cameraId];
+      if (newBranchId) {
+        updateLocationStatus(newBranchId);
+      } else {
+        updateLocationStatuses();
+      }
+    });
+  }
+}
+
+// Update status for a specific location
+async function updateLocationStatus(branchId) {
+  try {
+    const location = locations.find(l => l.id === branchId);
+    if (!location) {
+      console.warn('Location not found for branch ID:', branchId);
+      return;
+    }
+
+    // Fetch NVRs and cameras for this branch
+    const [nvrsResponse, camerasResponse] = await Promise.all([
+      fetch(`/api/nvrs?branch_id=${branchId}`).catch(() => ({ json: () => ({ data: [] }) })),
+      fetch(`/api/cameras?branch_id=${branchId}`).catch(() => ({ json: () => ({ data: [] }) }))
+    ]);
+
+    const nvrsData = await nvrsResponse.json();
+    const camerasData = await camerasResponse.json();
+    
+    const locationNVRs = nvrsData.data || nvrsData.nvrs || [];
+    const locationCameras = camerasData.data || camerasData.cameras || [];
+
+    // Calculate NVR status counts
+    const nvrStatus = {
+      online: locationNVRs.filter(n => n.status === 'online').length,
+      offline: locationNVRs.filter(n => n.status === 'offline').length,
+      warning: locationNVRs.filter(n => n.status === 'warning').length
+    };
+
+    // Calculate Camera status counts
+    const cameraStatus = {
+      online: locationCameras.filter(c => c.status === 'online').length,
+      offline: locationCameras.filter(c => c.status === 'offline').length,
+      warning: locationCameras.filter(c => c.status === 'warning').length
+    };
+
+    // Determine overall branch status
+    let newStatus = 'online';
+    if (nvrStatus.offline === locationNVRs.length && locationNVRs.length > 0) {
+      newStatus = 'offline';
+    } else if (nvrStatus.warning > 0 || cameraStatus.offline > 0) {
+      newStatus = 'warning';
+    }
+
+    // Update location
+    const oldStatus = location.status;
+    location.status = newStatus;
+    location.nvrStatus = nvrStatus;
+    location.cameraStatus = cameraStatus;
+    location.nvrs = locationNVRs.length;
+    location.cameras = locationCameras.length;
+
+    if (oldStatus !== newStatus) {
+      console.log(`🗺️ Location ${location.name} status: ${oldStatus} → ${newStatus}`);
+      updateLocationMarker(location);
+      updateLocationInList(location);
+    } else {
+      // Update counts even if status didn't change
+      updateLocationMarkerPopup(location);
+      updateLocationInList(location);
+    }
+
+    // Recalculate and update statistics
+    const summary = {
+      total: locations.length,
+      online: locations.filter(l => l.status === 'online').length,
+      offline: locations.filter(l => l.status === 'offline').length,
+      warning: locations.filter(l => l.status === 'warning').length
+    };
+    updateStatistics(summary);
+
+  } catch (error) {
+    console.error('Error updating location status:', error);
+  }
+}
+
+// Update location statuses based on current NVR and camera data
+async function updateLocationStatuses() {
+  try {
+    // Fetch current NVR and camera data from API
+    const [nvrsResponse, camerasResponse] = await Promise.all([
+      fetch('/api/nvrs').catch(() => ({ json: () => ({ nvrs: [] }) })),
+      fetch('/api/cameras').catch(() => ({ json: () => ({ cameras: [] }) }))
+    ]);
+
+    const nvrsData = await nvrsResponse.json();
+    const camerasData = await camerasResponse.json();
+    
+    const nvrs = nvrsData.data || nvrsData.nvrs || [];
+    const cameras = camerasData.data || camerasData.cameras || [];
+
+    // Group NVRs and cameras by branch_id
+    const branchNVRs = {};
+    const branchCameras = {};
+
+    nvrs.forEach(nvr => {
+      if (nvr.branch_id) {
+        if (!branchNVRs[nvr.branch_id]) {
+          branchNVRs[nvr.branch_id] = [];
+        }
+        branchNVRs[nvr.branch_id].push(nvr);
+      }
+    });
+
+    cameras.forEach(camera => {
+      if (camera.branch_id) {
+        if (!branchCameras[camera.branch_id]) {
+          branchCameras[camera.branch_id] = [];
+        }
+        branchCameras[camera.branch_id].push(camera);
+      }
+    });
+
+    // Update each location
+    locations.forEach(location => {
+      const branchId = location.id;
+      const locationNVRs = branchNVRs[branchId] || [];
+      const locationCameras = branchCameras[branchId] || [];
+
+      // Calculate NVR status counts
+      const nvrStatus = {
+        online: locationNVRs.filter(n => n.status === 'online').length,
+        offline: locationNVRs.filter(n => n.status === 'offline').length,
+        warning: locationNVRs.filter(n => n.status === 'warning').length
+      };
+
+      // Calculate Camera status counts
+      const cameraStatus = {
+        online: locationCameras.filter(c => c.status === 'online').length,
+        offline: locationCameras.filter(c => c.status === 'offline').length,
+        warning: locationCameras.filter(c => c.status === 'warning').length
+      };
+
+      // Determine overall branch status
+      let newStatus = 'online';
+      if (nvrStatus.offline === locationNVRs.length && locationNVRs.length > 0) {
+        newStatus = 'offline';
+      } else if (nvrStatus.warning > 0 || cameraStatus.offline > 0) {
+        newStatus = 'warning';
+      }
+
+      // Update location if status changed
+      if (location.status !== newStatus) {
+        const oldStatus = location.status;
+        location.status = newStatus;
+        location.nvrStatus = nvrStatus;
+        location.cameraStatus = cameraStatus;
+        location.nvrs = locationNVRs.length;
+        location.cameras = locationCameras.length;
+
+        console.log(`🗺️ Location ${location.name} status: ${oldStatus} → ${newStatus}`);
+
+        // Update marker
+        updateLocationMarker(location);
+
+        // Update location list
+        updateLocationInList(location);
+      } else {
+        // Update counts even if status didn't change
+        location.nvrStatus = nvrStatus;
+        location.cameraStatus = cameraStatus;
+        location.nvrs = locationNVRs.length;
+        location.cameras = locationCameras.length;
+
+        // Update marker popup
+        updateLocationMarkerPopup(location);
+      }
+    });
+
+    // Recalculate and update statistics
+    const summary = {
+      total: locations.length,
+      online: locations.filter(l => l.status === 'online').length,
+      offline: locations.filter(l => l.status === 'offline').length,
+      warning: locations.filter(l => l.status === 'warning').length
+    };
+    updateStatistics(summary);
+
+  } catch (error) {
+    console.error('Error updating location statuses:', error);
+  }
+}
+
+// Update location marker on map
+function updateLocationMarker(location) {
+  if (!mapComponent || !mapComponent.markers) return;
+
+  const marker = mapComponent.markers[location.id];
+  if (!marker) {
+    console.warn('Marker not found for location:', location.id);
+    return;
+  }
+
+  // Update marker icon
+  const newIcon = mapComponent.createMarkerIcon(location.status);
+  marker.setIcon(newIcon);
+
+  // Update popup content
+  mapComponent.updateMarkerPopup(location.id, location);
+
+  // Update layers (remove from old layer, add to new layer)
+  const oldStatus = marker._oldStatus || location.status;
+  if (oldStatus !== location.status) {
+    // Remove from old status layer
+    if (mapComponent.layers[oldStatus]) {
+      mapComponent.layers[oldStatus].removeLayer(marker);
+    }
+    
+    // Add to new status layer
+    if (mapComponent.layers[location.status]) {
+      mapComponent.layers[location.status].addLayer(marker);
+    }
+    
+    // Update stored status
+    marker._oldStatus = location.status;
+    
+    // If current layer is filtered, update cluster group
+    if (mapComponent.currentLayer !== 'all') {
+      mapComponent.switchLayer(mapComponent.currentLayer);
+    }
+  }
+
+  console.log('✅ Updated marker for location:', location.name);
+}
+
+// Update location marker popup only
+function updateLocationMarkerPopup(location) {
+  if (!mapComponent) return;
+  mapComponent.updateMarkerPopup(location.id, location);
+}
+
+// Update location in sidebar list
+function updateLocationInList(location) {
+  const locationItem = document.querySelector(`[data-location-id="${location.id}"]`);
+  if (!locationItem) return;
+
+  const statusColors = {
+    online: 'success',
+    offline: 'danger',
+    warning: 'warning',
+    maintenance: 'warning'
+  };
+
+  // Update status indicator
+  const statusIndicator = locationItem.querySelector('.location-status');
+  if (statusIndicator) {
+    statusIndicator.innerHTML = `
+      <i class="bi bi-circle-fill text-${statusColors[location.status]}"></i>
+      <span>${location.status}</span>
+    `;
+  }
+
+  // Update stats
+  const statsContainer = locationItem.querySelector('.location-stats');
+  if (statsContainer) {
+    statsContainer.innerHTML = `
+      <div class="stat">
+        <i class="bi bi-hdd"></i>
+        <span>NVRs: <strong>${location.nvrs}</strong></span>
+      </div>
+      <div class="stat">
+        <i class="bi bi-camera-video"></i>
+        <span>Cameras: <strong>${location.cameras}</strong></span>
+      </div>
+    `;
+  }
+
+  // Add animation
+  locationItem.classList.add('status-updated');
+  setTimeout(() => {
+    locationItem.classList.remove('status-updated');
+  }, 1000);
+}
 

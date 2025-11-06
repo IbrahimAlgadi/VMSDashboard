@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initViewToggle();
   initFilters();
   initAddCameraModal();
+  initRealtimeUpdates();
 });
 
 // Load camera data
@@ -50,6 +51,168 @@ function updateStatistics(summary) {
   document.getElementById('onlineCameras').textContent = summary.online;
   document.getElementById('offlineCameras').textContent = summary.offline;
   document.getElementById('warningCameras').textContent = summary.warning || summary.maintenance || 0;
+}
+
+// Initialize real-time updates
+function initRealtimeUpdates() {
+  // Wait for RealtimeManager to be ready
+  if (typeof RealtimeManager === 'undefined') {
+    setTimeout(initRealtimeUpdates, 100);
+    return;
+  }
+
+  // Subscribe to camera status changes
+  RealtimeManager.on('camera:status:changed', (data) => {
+    handleCameraStatusChange(data);
+  });
+
+  // Subscribe to stats updates
+  RealtimeManager.on('stats:updated', (summary) => {
+    updateStatisticsFromSummary(summary);
+  });
+
+  console.log('✓ Camera Management real-time updates initialized');
+}
+
+// Handle camera status change
+function handleCameraStatusChange(data) {
+  if (!data) return;
+  
+  // Support both cameraId and camera_id
+  const cameraId = data.cameraId || data.camera_id;
+  if (!cameraId) {
+    console.warn('Camera status change missing camera ID:', data);
+    return;
+  }
+
+  console.log('📹 Camera status change in page:', cameraId, data.newStatus);
+
+  // Update camera in local data
+  const camera = cameras.find(c => c.id === cameraId || c.id === parseInt(cameraId));
+  if (camera) {
+    const oldStatus = camera.status;
+    camera.status = data.newStatus || data.cameraData?.status || camera.status;
+    
+    console.log(`📹 Camera ${camera.name}: ${oldStatus} → ${camera.status}`);
+    
+    // Update UI
+    updateCameraCard(cameraId, camera);
+    
+    // Update filtered cameras if needed
+    const filteredCamera = filteredCameras.find(c => c.id === cameraId || c.id === parseInt(cameraId));
+    if (filteredCamera) {
+      filteredCamera.status = camera.status;
+    }
+  } else {
+    console.warn('Camera not found in local data:', cameraId);
+  }
+
+  // Update statistics
+  if (typeof StateManager !== 'undefined') {
+    const summary = StateManager.getSummary();
+    updateStatisticsFromSummary(summary);
+  } else {
+    // Fallback: recalculate from local data
+    const summary = {
+      totalCameras: cameras.length,
+      onlineCameras: cameras.filter(c => c.status === 'online').length,
+      offlineCameras: cameras.filter(c => c.status === 'offline').length,
+      warningCameras: cameras.filter(c => c.status === 'warning').length
+    };
+    updateStatisticsFromSummary(summary);
+  }
+}
+
+// Update camera card/row in UI
+function updateCameraCard(cameraId, cameraData) {
+  // Try both string and number IDs
+  const idStr = String(cameraId);
+  const idNum = parseInt(cameraId);
+  
+  // Update grid view card
+  const gridCard = document.querySelector(`.camera-card[data-camera-id="${idStr}"], .camera-card[data-camera-id="${idNum}"]`);
+  if (gridCard) {
+    // Find status badge - could be .camera-status-badge or .status-badge
+    let statusBadge = gridCard.querySelector('.camera-status-badge');
+    if (!statusBadge) {
+      statusBadge = gridCard.querySelector('.status-badge');
+    }
+    
+    if (statusBadge) {
+      // Update classes - keep camera-status-badge if it exists, add status class
+      const statusText = cameraData.status.charAt(0).toUpperCase() + cameraData.status.slice(1);
+      statusBadge.className = `camera-status-badge status-badge status-${cameraData.status}`;
+      statusBadge.innerHTML = `
+        <i class="bi bi-circle-fill"></i> ${statusText}
+      `;
+      console.log('✅ Updated status badge for camera:', cameraId, 'to', cameraData.status);
+    } else {
+      console.warn('⚠️ Status badge not found in grid card for camera:', cameraId);
+    }
+
+    // Add animation
+    gridCard.classList.add('status-updated');
+    setTimeout(() => {
+      gridCard.classList.remove('status-updated');
+    }, 1000);
+    
+    console.log('✅ Updated grid card for camera:', cameraId);
+  } else {
+    console.warn('⚠️ Grid card not found for camera:', cameraId, 'Tried IDs:', idStr, idNum);
+  }
+
+  // Update list view row
+  const listRow = document.querySelector(`tr[data-camera-id="${idStr}"], tr[data-camera-id="${idNum}"]`);
+  if (listRow) {
+    const statusBadge = listRow.querySelector('.status-badge');
+    if (statusBadge) {
+      // Determine status class
+      const statusClass = cameraData.status === 'online' ? 'bg-success' : 
+                         cameraData.status === 'offline' ? 'bg-danger' : 'bg-warning';
+      statusBadge.className = `status-badge ${statusClass}`;
+      statusBadge.innerHTML = `
+        <i class="bi bi-circle-fill"></i>
+        ${cameraData.status}
+      `;
+      console.log('✅ Updated status badge in list row for camera:', cameraId, 'to', cameraData.status);
+    } else {
+      console.warn('⚠️ Status badge not found in list row for camera:', cameraId);
+    }
+
+    // Add animation
+    listRow.classList.add('status-updated');
+    setTimeout(() => {
+      listRow.classList.remove('status-updated');
+    }, 1000);
+    
+    console.log('✅ Updated list row for camera:', cameraId);
+  }
+  
+  if (!gridCard && !listRow) {
+    console.warn('⚠️ Camera card/row not found in DOM:', cameraId, 'Tried IDs:', idStr, idNum);
+    // Debug: log all camera cards
+    const allCards = document.querySelectorAll('.camera-card, tr[data-camera-id]');
+    console.log('Available camera elements:', Array.from(allCards).map(el => ({
+      id: el.getAttribute('data-camera-id'),
+      tag: el.tagName,
+      class: el.className
+    })));
+  }
+}
+
+// Update statistics from summary
+function updateStatisticsFromSummary(summary) {
+  if (!summary) return;
+
+  const totalEl = document.getElementById('totalCameras');
+  const onlineEl = document.getElementById('onlineCameras');
+  const offlineEl = document.getElementById('offlineCameras');
+  const warningEl = document.getElementById('warningCameras');
+
+  if (totalEl) totalEl.textContent = summary.totalCameras || 0;
+  if (onlineEl) onlineEl.textContent = summary.onlineCameras || 0;
+  if (offlineEl) offlineEl.textContent = summary.offlineCameras || 0;
+  if (warningEl) warningEl.textContent = summary.warningCameras || 0;
 }
 
 // Populate NVR filter dropdown
@@ -154,19 +317,19 @@ function renderGridView() {
   
   gridContainer.innerHTML = filteredCameras.map(camera => `
     <div class="col">
-      <div class="card camera-card">
+      <div class="card camera-card" data-camera-id="${camera.id}">
         <div class="card-img-top">
           <i class="bi bi-camera-video-fill"></i>
           ${camera.status === 'online' ? `
-            <span class="camera-status-badge status-${camera.status}">
+            <span class="camera-status-badge status-badge status-${camera.status}">
               <i class="bi bi-circle-fill"></i> Online
             </span>
           ` : camera.status === 'offline' ? `
-            <span class="camera-status-badge status-${camera.status}">
+            <span class="camera-status-badge status-badge status-${camera.status}">
               <i class="bi bi-circle-fill"></i> Offline
             </span>
           ` : `
-            <span class="camera-status-badge status-${camera.status}">
+            <span class="camera-status-badge status-badge status-${camera.status}">
               <i class="bi bi-circle-fill"></i> Maintenance
             </span>
           `}
@@ -222,7 +385,7 @@ function renderListView() {
                        camera.uptime >= 95 ? 'uptime-medium' : 'uptime-low';
     
     return `
-      <tr>
+      <tr data-camera-id="${camera.id}">
         <td><strong>${camera.name}</strong></td>
         <td>${camera.location}</td>
         <td>${camera.position}</td>

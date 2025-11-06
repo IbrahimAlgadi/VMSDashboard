@@ -91,12 +91,15 @@ class MapComponent {
       className: 'custom-popup'
     });
 
-    // Store marker reference
+    // Store marker reference with initial status
     this.markers[location.id] = marker;
+    marker._oldStatus = location.status; // Store initial status for layer updates
 
     // Add to appropriate layers
     this.layers.all.addLayer(marker);
-    this.layers[location.status].addLayer(marker);
+    if (this.layers[location.status]) {
+      this.layers[location.status].addLayer(marker);
+    }
 
     // Add to cluster group
     this.markerClusterGroup.addLayer(marker);
@@ -199,6 +202,15 @@ class MapComponent {
     if (marker) {
       marker.openPopup();
       this.centerOn(marker.getLatLng());
+    }
+  }
+
+  // Update marker popup content
+  updateMarkerPopup(locationId, location) {
+    const marker = this.markers[locationId];
+    if (marker) {
+      const popupContent = this.createPopupContent(location);
+      marker.setPopupContent(popupContent);
     }
   }
 

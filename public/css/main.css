@@ -175,3 +175,39 @@ body {
   }
 }
 
+/* ===================================
+   Real-time Status Updates
+   =================================== */
+
+/* Status update animation */
+.status-updated {
+  animation: statusPulse 1s ease-in-out;
+  transition: background-color 0.3s ease;
+}
+
+@keyframes statusPulse {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Status badge transitions */
+.status-badge {
+  transition: all 0.3s ease;
+}
+
+.status-badge .status-dot {
+  transition: background-color 0.3s ease;
+}
+
+/* Smooth value transitions */
+[data-animate-value] {
+  transition: color 0.3s ease;
+}
+

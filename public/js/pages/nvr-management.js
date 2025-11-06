@@ -20,6 +20,7 @@
       this.renderTable();
       this.setupFilters();
       this.setupEventListeners();
+      this.initRealtimeUpdates();
       
       console.log('✓ NVR Management initialized');
     },
@@ -60,14 +61,32 @@
      * Render statistics
      */
     renderStatistics() {
-      if (!this.data) return;
+      if (!this.data || !this.data.nvrs) return;
 
-      const { summary } = this.data;
+      // Calculate statistics from actual NVR data
+      const nvrs = this.data.nvrs;
+      const summary = {
+        total: nvrs.length,
+        online: nvrs.filter(n => n.status === 'online').length,
+        offline: nvrs.filter(n => n.status === 'offline').length,
+        warning: nvrs.filter(n => n.status === 'warning').length
+      };
 
-      document.getElementById('total-nvrs-count').textContent = summary.total;
-      document.getElementById('online-nvrs-count').textContent = summary.online;
-      document.getElementById('offline-nvrs-count').textContent = summary.offline;
-      document.getElementById('warning-nvrs-count').textContent = summary.warning;
+      // Update UI
+      const totalEl = document.getElementById('total-nvrs-count');
+      const onlineEl = document.getElementById('online-nvrs-count');
+      const offlineEl = document.getElementById('offline-nvrs-count');
+      const warningEl = document.getElementById('warning-nvrs-count');
+
+      if (totalEl) totalEl.textContent = summary.total || 0;
+      if (onlineEl) onlineEl.textContent = summary.online || 0;
+      if (offlineEl) offlineEl.textContent = summary.offline || 0;
+      if (warningEl) warningEl.textContent = summary.warning || 0;
+
+      // Update data.summary for consistency
+      this.data.summary = summary;
+
+      console.log('📊 NVR Statistics updated:', summary);
     },
 
     /**
@@ -249,6 +268,142 @@
       document.getElementById('save-nvr-btn').addEventListener('click', () => {
         this.saveNVR();
       });
+    },
+
+    /**
+     * Initialize real-time updates
+     */
+    initRealtimeUpdates() {
+      // Wait for RealtimeManager to be ready
+      if (typeof RealtimeManager === 'undefined') {
+        setTimeout(() => this.initRealtimeUpdates(), 100);
+        return;
+      }
+
+      // Initialize StateManager with current NVR data
+      if (this.data && this.data.nvrs && typeof StateManager !== 'undefined') {
+        this.data.nvrs.forEach(nvr => {
+          StateManager.setNVR(nvr.id, {
+            id: nvr.id,
+            hostname: nvr.hostname,
+            device_name: nvr.name,
+            status: nvr.status,
+            last_seen: nvr.lastSeen,
+            ...nvr
+          });
+        });
+        console.log('📊 Initialized StateManager with', this.data.nvrs.length, 'NVRs');
+      }
+
+      // Subscribe to NVR status changes
+      RealtimeManager.on('nvr:status:changed', (data) => {
+        this.handleNVRStatusChange(data);
+      });
+
+      // Subscribe to NVR online/offline events
+      RealtimeManager.on('nvr:online', (data) => {
+        console.log('📡 NVR came online:', data);
+        this.handleNVRStatusChange({ ...data, status: 'online', new_status: 'online' });
+      });
+
+      RealtimeManager.on('nvr:offline', (data) => {
+        console.log('📡 NVR went offline:', data);
+        this.handleNVRStatusChange({ ...data, status: 'offline', new_status: 'offline' });
+      });
+
+      // Subscribe to stats updates
+      RealtimeManager.on('stats:updated', (summary) => {
+        this.updateStatisticsFromSummary(summary);
+      });
+
+      console.log('✓ NVR Management real-time updates initialized');
+    },
+
+    /**
+     * Handle NVR status change
+     */
+    handleNVRStatusChange(data) {
+      if (!data) return;
+
+      // Support both nvrId and nvr_id
+      const nvrId = data.nvrId || data.nvr_id;
+      if (!nvrId) {
+        console.warn('NVR status change missing NVR ID:', data);
+        return;
+      }
+
+      console.log('📡 NVR status change in page:', nvrId, data.status || data.new_status);
+
+      // Update NVR in local data
+      const nvr = this.data.nvrs.find(n => n.id === nvrId || n.id === parseInt(nvrId));
+      if (nvr) {
+        const oldStatus = nvr.status;
+        nvr.status = data.status || data.new_status || data.nvrData?.status || nvr.status;
+        nvr.lastSeen = data.last_seen || data.nvrData?.last_seen || nvr.lastSeen;
+
+        console.log(`📡 NVR ${nvr.name || nvrId}: ${oldStatus} → ${nvr.status}`);
+
+        // Update table row
+        this.updateNVRRow(nvrId, nvr);
+      } else {
+        console.warn('NVR not found in local data:', nvrId);
+      }
+
+      // Recalculate and update statistics
+      this.renderStatistics();
+    },
+
+    /**
+     * Update NVR table row
+     */
+    updateNVRRow(nvrId, nvrData) {
+      // Try both string and number IDs
+      const idStr = String(nvrId);
+      const idNum = parseInt(nvrId);
+      
+      const row = document.querySelector(`tr[data-nvr-id="${idStr}"], tr[data-nvr-id="${idNum}"]`);
+      if (!row) {
+        console.warn('⚠️ NVR row not found for ID:', nvrId, 'Tried:', idStr, idNum);
+        return;
+      }
+
+      // Update status badge
+      const statusBadge = row.querySelector('.status-badge');
+      if (statusBadge) {
+        statusBadge.className = `status-badge ${nvrData.status}`;
+        statusBadge.innerHTML = `
+          <span class="status-dot"></span>
+          ${nvrData.status.charAt(0).toUpperCase() + nvrData.status.slice(1)}
+        `;
+        console.log('✅ Updated status badge for NVR:', nvrId, 'to', nvrData.status);
+      } else {
+        console.warn('⚠️ Status badge not found in NVR row:', nvrId);
+      }
+
+      // Add animation class
+      row.classList.add('status-updated');
+      setTimeout(() => {
+        row.classList.remove('status-updated');
+      }, 1000);
+      
+      console.log('✅ Updated NVR row for:', nvrId);
+    },
+
+    /**
+     * Update statistics from summary
+     */
+    updateStatisticsFromSummary(summary) {
+      if (!summary) return;
+
+      const totalEl = document.getElementById('total-nvrs-count');
+      const onlineEl = document.getElementById('online-nvrs-count');
+      const offlineEl = document.getElementById('offline-nvrs-count');
+      const warningEl = document.getElementById('warning-nvrs-count');
+
+      if (totalEl) totalEl.textContent = summary.totalNVRs || 0;
+      if (onlineEl) onlineEl.textContent = summary.onlineNVRs || 0;
+      if (offlineEl) offlineEl.textContent = summary.offlineNVRs || 0;
+      if (warningEl) warningEl.textContent = summary.warningNVRs || 0;
     },
 
     /**

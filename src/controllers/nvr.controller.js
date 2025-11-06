@@ -59,6 +59,7 @@ class NVRController {
         return {
           id: nvr.id,
           name: nvr.device_name,
+          hostname: nvr.hostname, // Include hostname for WebSocket matching
           location: nvr.branch?.name || 'Unknown',
           region: nvr.branch?.region?.name || 'Unknown',
           ipAddress: nvr.ip_address,

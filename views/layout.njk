@@ -54,6 +54,16 @@
   
   <!-- Core JS -->
   <script src="/js/app.js"></script>
+  
+  <!-- Real-time Core (must load in order) -->
+  <script src="/js/core/event-bus.js"></script>
+  <script src="/js/core/state-manager.js"></script>
+  <script src="/js/core/websocket-client.js"></script>
+  <script src="/js/core/realtime-manager.js"></script>
+  
+  <!-- Components -->
+  <script src="/js/components/notifications.js"></script>
+  <script src="/js/components/connection-status.js"></script>
   <script src="/js/components/navbar.js"></script>
   <script src="/js/components/sidebar.js"></script>
   <script src="/js/components/modal.js"></script>
