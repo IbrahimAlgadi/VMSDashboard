@@ -1,9 +1,11 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const path = require('path');
+const http = require('http');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const server = http.createServer(app);
 
 // Configure Nunjucks
 const env = nunjucks.configure('views', {
@@ -71,6 +73,9 @@ app.use((err, req, res, next) => {
 // Database connection and server start
 const { sequelize } = require('./src/models');
 
+// Import WebSocket server
+const nvrWebSocket = require('./src/websocket/nvr-websocket');
+
 async function startServer() {
   try {
     // Test database connection
@@ -81,9 +86,14 @@ async function startServer() {
     await sequelize.sync({ force: false });
     console.log('📊 Database tables ready');
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    // Attach WebSocket server to HTTP server
+    nvrWebSocket.attach(server);
+
+    // Start HTTP server
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
       console.log(`📊 VMS Dashboard ready with Sequelize!`);
+      console.log(`🔌 WebSocket server ready on ws://0.0.0.0:${PORT}/ws`);
       console.log('💡 Using mock data for now - database tables will be created');
     });
   } catch (error) {
@@ -93,6 +103,16 @@ async function startServer() {
 }
 
 startServer();
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing WebSocket server...');
+  nvrWebSocket.close();
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
 
 module.exports = app;
 

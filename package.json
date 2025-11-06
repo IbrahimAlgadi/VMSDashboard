@@ -8,6 +8,12 @@
     "dev": "nodemon server.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage",
+    "test:all": "npm run test:unit && npm run test",
+    "test:ws:nvr": "node test-nvr-websocket.js",
+    "test:ws:dashboard": "node test-dashboard-websocket.js",
     "db:create": "node migration.js create",
     "db:check": "node migration.js check",
     "db:migrate": "node migration.js migrate",
@@ -40,10 +46,13 @@
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.3",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
-    "nodemon": "^3.0.2"
+    "jest": "^30.2.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^7.1.4"
   }
 }

@@ -909,17 +909,15 @@ class CameraController {
         const updates = {
           camera: false,
           healthMetrics: false,
-          alerts: 0,
-          statusChanged: false
+          alerts: 0
         };
         
         // 1. Update camera basic info
-        const oldStatus = camera.status;
         const basicInfo = processedData.basicInfo;
         
         // Prepare update object with all available fields
+        // NOTE: Status is NOT updated here - only through WebSocket
         const cameraUpdate = {
-          status: processedData.status,
           updated_at: new Date()
         };
         
@@ -943,14 +941,9 @@ class CameraController {
         }
         
         // Only update if we have new information
-        if (Object.keys(cameraUpdate).length > 2) { // More than just status and updated_at
+        if (Object.keys(cameraUpdate).length > 1) { // More than just updated_at
           await camera.update(cameraUpdate, { transaction: t });
           updates.camera = true;
-          updates.statusChanged = oldStatus !== processedData.status;
-        } else if (oldStatus !== processedData.status) {
-          // Update status even if no other fields changed
-          await camera.update({ status: processedData.status }, { transaction: t });
-          updates.statusChanged = true;
         }
         
         // 2. Update/create health metrics
@@ -976,11 +969,6 @@ class CameraController {
         return updates;
       });
       
-      // Update NVR status if camera status changed
-      if (result.statusChanged) {
-        await updateNVRStatus(NVR, Camera, camera.nvr_id);
-      }
-      
       // Log warnings if any
       if (validation.warnings.length > 0) {
         console.warn(`Camera ${ip_address} data warnings:`, validation.warnings);
@@ -993,15 +981,12 @@ class CameraController {
           id: camera.id,
           name: camera.name,
           ip_address: camera.ip_address,
-          previous_status: result.statusChanged ? 
-            (camera.status === 'online' ? 'offline' : 'online') : camera.status,
-          current_status: processedData.status
+          current_status: camera.status
         },
         processed: {
           basic_info_updated: result.camera,
           health_metrics_updated: result.healthMetrics,
           alerts_created: result.alerts,
-          status_changed: result.statusChanged,
           data_timestamp: comprehensiveData.metadata?.timestamp,
           processing_timestamp: new Date().toISOString()
         },
