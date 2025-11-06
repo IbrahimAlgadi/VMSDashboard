@@ -59,8 +59,10 @@
         storageBar.classList.add('bg-success');
       }
 
-      // Populate Cameras tab
-      this.populateCameras(nvrData);
+      // Populate Cameras tab (async)
+      this.populateCameras(nvrData).catch(error => {
+        console.error('Error loading cameras:', error);
+      });
 
       // Populate Status tab
       this.populateStatus(nvrData);
@@ -76,46 +78,96 @@
     },
 
     /**
-     * Populate cameras tab
+     * Populate cameras tab with real data from API
      */
-    populateCameras(nvrData) {
+    async populateCameras(nvrData) {
       const container = document.getElementById('cameras-list');
-      document.getElementById('cameras-count-badge').textContent = nvrData.cameras;
-
-      // Generate mock camera data
-      const cameras = [];
-      for (let i = 1; i <= nvrData.cameras; i++) {
-        const isOnline = i <= nvrData.camerasOnline;
-        cameras.push({
-          id: i,
-          name: `Camera ${i}`,
-          location: `Position ${i}`,
-          status: isOnline ? 'online' : 'offline',
-          resolution: '1920x1080',
-          fps: 25
-        });
-      }
-
-      container.innerHTML = cameras.map(camera => `
-        <div class="camera-list-item">
-          <div class="camera-info">
-            <div class="camera-icon ${camera.status}">
-              <i class="bi bi-camera-video"></i>
-            </div>
-            <div class="camera-details">
-              <div class="camera-name">${camera.name}</div>
-              <div class="camera-meta">
-                <i class="bi bi-geo-alt"></i> ${camera.location} &bull; 
-                ${camera.resolution} @ ${camera.fps} FPS
-              </div>
-            </div>
+      const countBadge = document.getElementById('cameras-count-badge');
+      
+      // Show loading state
+      container.innerHTML = `
+        <div class="text-center py-4 text-muted">
+          <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
-          <span class="status-badge ${camera.status}">
-            <span class="status-dot"></span>
-            ${camera.status}
-          </span>
+          Loading camera information...
         </div>
-      `).join('');
+      `;
+      countBadge.textContent = '0';
+
+      try {
+        // Fetch real camera data from API
+        const response = await fetch(`/api/cameras?nvr_id=${nvrData.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch cameras: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.message || 'Failed to fetch cameras');
+        }
+
+        const cameras = result.data || [];
+
+        // Update count badge with actual camera count
+        countBadge.textContent = cameras.length;
+
+        // Handle empty state
+        if (cameras.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-4 text-muted">
+              <i class="bi bi-camera-video fs-1"></i>
+              <p class="mt-2">No cameras found for this NVR</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Render cameras with real data
+        const self = this;
+        container.innerHTML = cameras.map(camera => {
+          // Use actual camera data from database
+          const cameraName = camera.name || 'Unknown Camera';
+          const position = camera.position || 'Unknown Position';
+          const resolution = camera.resolution || 'Unknown';
+          const fps = camera.fps || 0;
+          const status = camera.status || 'offline';
+
+          return `
+            <div class="camera-list-item">
+              <div class="camera-info">
+                <div class="camera-icon ${status}">
+                  <i class="bi bi-camera-video"></i>
+                </div>
+                <div class="camera-details">
+                  <div class="camera-name">${self.escapeHtml(cameraName)}</div>
+                  <div class="camera-meta">
+                    <i class="bi bi-geo-alt"></i> ${self.escapeHtml(position)} &bull; 
+                    ${self.escapeHtml(resolution)} @ ${fps} FPS
+                  </div>
+                </div>
+              </div>
+              <span class="status-badge ${status}">
+                <span class="status-dot"></span>
+                ${status}
+              </span>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('Error fetching cameras:', error);
+        container.innerHTML = `
+          <div class="text-center py-4 text-danger">
+            <i class="bi bi-exclamation-triangle fs-1"></i>
+            <p class="mt-2">Failed to load camera information</p>
+            <small class="text-muted">${this.escapeHtml(error.message)}</small>
+          </div>
+        `;
+        countBadge.textContent = '?';
+      }
     },
 
     /**
@@ -187,6 +239,8 @@
      * Format date
      */
     formatDate(dateString) {
+      if (!dateString) return 'Never';
+      
       const date = new Date(dateString);
       const now = new Date();
       const diff = Math.floor((now - date) / 1000);
@@ -202,6 +256,16 @@
         hour: '2-digit',
         minute: '2-digit'
       });
+    },
+
+    /**
+     * Escape HTML to prevent XSS
+     */
+    escapeHtml(text) {
+      if (text == null) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
   };
 

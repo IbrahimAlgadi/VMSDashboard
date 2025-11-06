@@ -112,9 +112,19 @@ class NvrsSeeder {
         const warrantyYears = randomChoice([2, 3, 5]);
         const warrantyExpiry = new Date(installationDate.getTime() + warrantyYears * 365 * 24 * 60 * 60 * 1000);
         
+        // Generate unique hostname for this NVR
+        const hostnamePrefix = randomChoice(['DESKTOP', 'SERVER', 'NVR', 'WORKSTATION']);
+        const hostnameSuffix = randomChoice([
+          randomInt(100000, 999999).toString().substring(0, 6),
+          randomChoice(['T7MNQIA', 'X9KPLM', 'H5RTEW', 'V2NKLS', 'Q8MJHG', 'P4XLZR']),
+          `${randomChoice(['A', 'B', 'C', 'X', 'Z'])}${randomInt(1, 9)}${randomChoice(['MNQ', 'XYZ', 'ABC', 'KLM'])}`
+        ]);
+        const hostname = `${hostnamePrefix}-${hostnameSuffix}`;
+
         const nvr = {
           branch_id: branch.id,
           device_name: deviceName,
+          hostname: hostname,
           processor: randomChoice(processors[manufacturer] || processors['Hikvision']),
           ram: randomChoice(ramOptions),
           device_id: `${manufacturer.substring(0, 3).toUpperCase()}-${randomInt(100000, 999999)}`,

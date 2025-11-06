@@ -1,0 +1,330 @@
+{
+  "metadata": {
+    "timestamp": "2025-10-30T13:42:08.850Z",
+    "camera": "192.168.0.100:443",
+    "nvr_hostname": "DESKTOP-T7MNQIA",
+    "collectionMethods": [
+      "onvif-api",
+      "web-scraping"
+    ],
+    "totalDataSources": 7
+  },
+  "onvifData": {
+    "deviceInfo": {
+      "manufacturer": "Bosch",
+      "model": "FLEXIDOME outdoor 3100i IR - 5MP",
+      "firmwareVersion": "9.10.0192",
+      "serialNumber": 404771847524020740,
+      "hardwareId": "NDE-3713-AL, NDE-3703-AL"
+    },
+    "networkInterfaces": [
+      {
+        "$": {
+          "token": 1
+        },
+        "enabled": true,
+        "info": {
+          "name": "Network Interface 1",
+          "hwAddress": "a4-18-94-08-a9-b4",
+          "MTU": 1514
+        },
+        "link": {
+          "adminSettings": {
+            "autoNegotiation": true,
+            "speed": 10,
+            "duplex": "Full"
+          },
+          "operSettings": {
+            "autoNegotiation": true,
+            "speed": 10,
+            "duplex": "Full"
+          },
+          "interfaceType": 6
+        },
+        "IPv4": {
+          "enabled": true,
+          "config": {
+            "manual": {
+              "address": "192.168.0.100",
+              "prefixLength": 24
+            },
+            "DHCP": false
+          }
+        }
+      }
+    ],
+    "networkProtocols": {
+      "networkProtocols": [
+        {
+          "name": "HTTP",
+          "enabled": true,
+          "port": 80
+        },
+        {
+          "name": "HTTPS",
+          "enabled": true,
+          "port": 443
+        },
+        {
+          "name": "RTSP",
+          "enabled": true,
+          "port": 554
+        }
+      ]
+    }
+  },
+  "webScrapingData": {
+    "recordingStatus": {
+      "recordings": [
+        {
+          "recordingNumber": 1,
+          "status": "Offline",
+          "lastError": "None",
+          "recordingTarget": "0.0.0.0",
+          "media": "",
+          "bitRate": "0",
+          "ramBufferSize": "0",
+          "ramBufferBitRate": "992",
+          "ramBufferTimeSeconds": "",
+          "ramBufferFill": ""
+        },
+        {
+          "recordingNumber": 2,
+          "status": "Offline",
+          "lastError": "None",
+          "recordingTarget": "0.0.0.0",
+          "media": "",
+          "bitRate": "0",
+          "ramBufferSize": "0",
+          "ramBufferBitRate": "0",
+          "ramBufferTimeSeconds": "",
+          "ramBufferFill": ""
+        }
+      ],
+      "timestamp": "2025-10-30T13:42:19.435Z",
+      "totalRecordings": 2
+    },
+    "sdCardStatus": {
+      "sdCards": [
+        {
+          "cardIndex": 1,
+          "manufacturer": "Sandisk",
+          "product": "SL32G",
+          "size": "30437 MB",
+          "state": "Device OK",
+          "present": true
+        }
+      ],
+      "totalSlots": 1,
+      "availableCards": 1,
+      "timestamp": "2025-10-30T13:42:22.468Z"
+    },
+    "networkServices": {
+      "services": [
+        {
+          "name": "HTTP",
+          "enabled": true,
+          "disabled": false,
+          "port": 80,
+          "status": "enabled"
+        },
+        {
+          "name": "HTTPS",
+          "enabled": true,
+          "disabled": true,
+          "port": 443,
+          "status": "disabled"
+        },
+        {
+          "name": "RTSP",
+          "enabled": true,
+          "disabled": false,
+          "port": 554,
+          "status": "enabled"
+        },
+        {
+          "name": "RCP",
+          "enabled": false,
+          "disabled": false,
+          "port": null,
+          "status": "available"
+        },
+        {
+          "name": "SNMP",
+          "enabled": false,
+          "disabled": false,
+          "port": null,
+          "status": "available"
+        },
+        {
+          "name": "ISCSI",
+          "enabled": false,
+          "disabled": false,
+          "port": null,
+          "status": "available"
+        },
+        {
+          "name": "NTP server",
+          "enabled": false,
+          "disabled": false,
+          "port": null,
+          "status": "available"
+        },
+        {
+          "name": "Discovery",
+          "enabled": true,
+          "disabled": false,
+          "port": 1800,
+          "status": "enabled"
+        },
+        {
+          "name": "ONVIF discovery",
+          "enabled": true,
+          "disabled": false,
+          "port": null,
+          "status": "enabled"
+        },
+        {
+          "name": "Password reset mechanism",
+          "enabled": true,
+          "disabled": false,
+          "port": null,
+          "status": "enabled"
+        },
+        {
+          "name": "Ping response",
+          "enabled": true,
+          "disabled": false,
+          "port": null,
+          "status": "enabled"
+        },
+        {
+          "name": "RTSPS",
+          "enabled": true,
+          "disabled": false,
+          "port": 9554,
+          "status": "enabled"
+        }
+      ],
+      "totalServices": 12,
+      "timestamp": "2025-10-30T13:42:25.503Z"
+    },
+    "systemLogs": {
+      "logs": [
+        {
+          "priority": "EMERGENCY",
+          "timestamp": "2025-10-29T16:06:02.236+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "Syslog log level changed to 2"
+        },
+        {
+          "priority": "ALERT",
+          "timestamp": "2025-10-29T15:56:32.973+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "Recording 1 max retention time set to 604800 seconds"
+        },
+        {
+          "priority": "ALERT",
+          "timestamp": "2025-10-29T15:50:36.728+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "Recording 1 max retention time set to 345600 seconds"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:19:46.039+03:00",
+          "module": "config_intern",
+          "user": "daemon@hd_mgr_disp",
+          "message": "Video encoder 1 changed current preset to 3"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:19:46.001+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "Video encoder 1 changed current preset to 2"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:19:41.814+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "configuration settings changed (id 199, MPEG4_PARAMS)"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:17:08.265+03:00",
+          "module": "config_intern",
+          "user": "daemon@hd_mgr_disp",
+          "message": "Video encoder 1 changed current preset to 3"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:17:08.265+03:00",
+          "module": "config_intern",
+          "user": "daemon@hd_mgr_disp",
+          "message": "configuration settings changed (id 199, MPEG4_PARAMS)"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:17:08.259+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "configuration settings changed (id 259, SPAN_REC_CAM) val 0x1"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2025-10-29T14:17:08.102+03:00",
+          "module": "configuration",
+          "user": "service@http",
+          "message": "configuration settings changed (id 318, STORAGE_LIST )"
+        },
+        {
+          "priority": "EMERGENCY",
+          "timestamp": "2000-01-03T00:00:15.025+00:00",
+          "module": "system",
+          "user": "daemon@AppThread",
+          "message": "System starting..."
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2024-03-18T19:54:45.241+03:00",
+          "module": "configuration",
+          "user": "system@HdPMInit",
+          "message": "configuration settings changed (id 837, FORMAT_STORAGE_LOG_CNT)"
+        },
+        {
+          "priority": "ALERT",
+          "timestamp": "2024-03-18T19:54:44.956+03:00",
+          "module": "storage",
+          "user": "system@HdPMInit",
+          "message": "Storage formatting Lun 0 succeded: Lun 29 GB, Sector 512 bytes"
+        },
+        {
+          "priority": "WARNING",
+          "timestamp": "2024-03-18T19:54:42.066+03:00",
+          "module": "configuration",
+          "user": "system@HdPmMgr",
+          "message": "configuration settings changed (id 837, FORMAT_STORAGE_LOG_CNT)"
+        },
+        {
+          "priority": "EMERGENCY",
+          "timestamp": "2000-01-03T00:00:15.102+00:00",
+          "module": "system",
+          "user": "daemon@AppThread",
+          "message": "System starting..."
+        }
+      ],
+      "totalEntries": 15,
+      "timestamp": "2025-10-30T13:42:29.537Z"
+    }
+  },
+  "analysis": {
+    "onvifStatus": "success",
+    "webScrapingStatus": "success",
+    "totalDataPoints": 7,
+    "collectionTimestamp": "2025-10-30T13:42:30.545Z"
+  }
+}

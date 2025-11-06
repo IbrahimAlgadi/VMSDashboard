@@ -74,6 +74,7 @@ const tableStatements = {
       id SERIAL PRIMARY KEY,
       branch_id INTEGER NOT NULL,
       device_name VARCHAR(50) UNIQUE NOT NULL,
+      hostname VARCHAR(50) UNIQUE NOT NULL,
       processor VARCHAR(100),
       ram VARCHAR(50),
       device_id VARCHAR(100),
@@ -125,6 +126,8 @@ const tableStatements = {
       fps INTEGER DEFAULT 25,
       bitrate INTEGER,
       edge_storage_size INTEGER,
+      edge_storage_retention INTEGER,
+      status VARCHAR(20) CHECK (status IN ('online', 'offline', 'warning', 'error')) DEFAULT 'offline',
       uptime_percent DECIMAL(5,2) DEFAULT 0.00,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -300,6 +303,7 @@ const indexStatements = [
   
   // NVRs indexes
   'CREATE INDEX IF NOT EXISTS idx_nvrs_branch_id ON nvrs(branch_id);',
+  'CREATE INDEX IF NOT EXISTS idx_nvrs_hostname ON nvrs(hostname);',
   'CREATE INDEX IF NOT EXISTS idx_nvrs_ip_address ON nvrs(ip_address);',
   'CREATE INDEX IF NOT EXISTS idx_nvrs_status ON nvrs(status);',
   'CREATE INDEX IF NOT EXISTS idx_nvrs_last_seen ON nvrs(last_seen);',
@@ -308,6 +312,7 @@ const indexStatements = [
   'CREATE INDEX IF NOT EXISTS idx_cameras_nvr_id ON cameras(nvr_id);',
   'CREATE INDEX IF NOT EXISTS idx_cameras_branch_id ON cameras(branch_id);',
   'CREATE INDEX IF NOT EXISTS idx_cameras_ip_address ON cameras(ip_address);',
+  'CREATE INDEX IF NOT EXISTS idx_cameras_status ON cameras(status);',
   
   // Camera uptime indexes
   'CREATE INDEX IF NOT EXISTS idx_camera_uptime_camera_id ON camera_uptime(camera_id);',

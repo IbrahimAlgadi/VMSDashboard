@@ -14,6 +14,7 @@ const analyticsRoutes = require('./analytics.routes');
 const reportRoutes = require('./report.routes');
 const settingsRoutes = require('./settings.routes');
 const profileRoutes = require('./profile.routes');
+const initializationRoutes = require('./initialization.routes');
 
 // Use all route modules
 router.use('/', dashboardRoutes);
@@ -28,5 +29,6 @@ router.use('/', analyticsRoutes);
 router.use('/', reportRoutes);
 router.use('/', settingsRoutes);
 router.use('/', profileRoutes);
+router.use('/', initializationRoutes);
 
 module.exports = router;

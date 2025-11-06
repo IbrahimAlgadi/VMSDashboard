@@ -12,6 +12,11 @@ const NVR = sequelize.define('NVR', {
     unique: true,
     allowNull: false
   },
+  hostname: {
+    type: DataTypes.STRING(50),
+    unique: true,
+    allowNull: false
+  },
   processor: DataTypes.STRING(100),
   ram: DataTypes.STRING(20),
   device_id: DataTypes.STRING(50),

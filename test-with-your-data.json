@@ -1,0 +1,73 @@
+{
+  "region": {
+    "name": "Riyadh",
+    "code": "RD",
+    "timezone": "Asia/Riyadh",
+    "branches": [
+      {
+        "name": "Main Branch",
+        "branch_code": "MB-001",
+        "branch_type": "Main Branch",
+        "address": "King Fahd Avenue, Diplomatic Quarter, Riyadh 12022, Saudi Arabia",
+        "coordinates": [
+          24.6574,
+          46.7125
+        ],
+        "contact_phone": "+966-11-4567890",
+        "manager_name": "Ahmed Al-Saud",
+        "operating_hours": {
+          "sunday_thursday": "08:00-17:00",
+          "friday": "closed",
+          "saturday": "09:00-15:00"
+        },
+        "nvrs": [
+          {
+            "device_name": "NVR-RD-001-01",
+            "hostname": "DESKTOP-T7MNQIA",
+            "processor": "Intel64 Family 6 Model 141 Stepping 1 GenuineIntel ~2304 Mhz",
+            "ram": "16GB DDR4",
+            "device_id": "DAH-455642",
+            "product_id": "00328-90000-00000-AAOEM",
+            "system_type": "x64-based PC",
+            "securos_version": "v11.13",
+            "ip_address": "192.168.0.30",
+            "max_cameras": 10,
+            "installation_date": "2024-01-15",
+            "maintenance_period_days": 90,
+            "warranty_expiry": "2026-01-15",
+            "storage": {
+              "storage_total_gb": 2000,
+              "storage_used_gb": 600
+            },
+            "cameras": [
+              {
+                "name": "CAM-RD-001-01",
+                "position": "Main Entrance Security Camera",
+                "ip_address": "192.168.0.100",
+                "model": "DS-2CD2387G2-LU",
+                "manufacturer": "Hikvision",
+                "resolution": "8MP",
+                "fps": 25,
+                "bitrate": 8192,
+                "edge_storage_size": 256,
+                "status": "online"
+              },
+              {
+                "name": "CAM-RD-001-02",
+                "position": "Lobby Reception Area Camera",
+                "ip_address": "192.168.0.111",
+                "model": "DS-2CD2147G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "4MP",
+                "fps": 30,
+                "bitrate": 6144,
+                "edge_storage_size": 128,
+                "status": "online"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

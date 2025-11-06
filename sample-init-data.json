@@ -1,0 +1,297 @@
+{
+  "region": {
+    "name": "Central Saudi Arabia Region",
+    "code": "CSA",
+    "description": "Central region covering Riyadh, Qassim, and surrounding areas",
+    "coordinates": {
+      "lat": 25.0000,
+      "lng": 45.0000
+    },
+    "timezone": "Asia/Riyadh",
+    "branches": [
+      {
+        "name": "Riyadh Main Office",
+        "branch_code": "CSA-001",
+        "branch_type": "Main Branch",
+        "address": "King Fahd Road, Al Olaya District, Riyadh 12613",
+        "coordinates": {
+          "lat": 24.7136,
+          "lng": 46.6753
+        },
+        "contact_phone": "+966-11-4567890",
+        "manager_name": "Mohammed Al-Rashid",
+        "operating_hours": {
+          "sunday_thursday": "08:00-17:00",
+          "friday": "closed",
+          "saturday": "09:00-15:00"
+        },
+        "nvrs": [
+          {
+            "device_name": "NVR-CSA-001-01",
+            "hostname": "DESKTOP-T7MNQIA",
+            "processor": "Intel Core i7-12700K",
+            "ram": "32GB DDR4",
+            "device_id": "HIK-RD-001-NVR01",
+            "product_id": "DS-7732NI-K4",
+            "system_type": "Hikvision 32-Channel NVR",
+            "securos_version": "v4.61.025",
+            "ip_address": "192.168.1.100",
+            "max_cameras": 32,
+            "installation_date": "2024-01-15",
+            "maintenance_period_days": 90,
+            "warranty_expiry": "2027-01-15",
+            "storage": {
+              "storage_total_gb": 16000,
+              "storage_used_gb": 4800
+            },
+            "cameras": [
+              {
+                "name": "CAM-CSA-001-01",
+                "position": "Main Entrance - Exterior",
+                "ip_address": "192.168.1.101",
+                "model": "DS-2CD2387G2-LU",
+                "manufacturer": "Hikvision",
+                "resolution": "8MP",
+                "fps": 25,
+                "bitrate": 8192,
+                "edge_storage_size": 256,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-001-02",
+                "position": "Lobby - Interior",
+                "ip_address": "192.168.1.102",
+                "model": "DS-2CD2147G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "4MP",
+                "fps": 30,
+                "bitrate": 6144,
+                "edge_storage_size": 128,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-001-03",
+                "position": "Parking Area - Exterior",
+                "ip_address": "192.168.1.103",
+                "model": "DS-2CD2T87G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "8MP",
+                "fps": 20,
+                "bitrate": 12288,
+                "edge_storage_size": 256,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-001-04",
+                "position": "Cash Counter Area",
+                "ip_address": "192.168.1.104",
+                "model": "DS-2CD2147G2-L", 
+                "manufacturer": "Hikvision",
+                "resolution": "4MP",
+                "fps": 30,
+                "bitrate": 6144,
+                "edge_storage_size": 128,
+                "status": "online"
+              }
+            ]
+          },
+          {
+            "device_name": "NVR-CSA-001-02", 
+            "hostname": "SERVER-BACKUP01",
+            "processor": "Intel Core i5-12400",
+            "ram": "16GB DDR4",
+            "device_id": "DAH-RD-001-NVR02",
+            "product_id": "NVR4216-16P-4KS2",
+            "system_type": "Dahua 16-Channel NVR",
+            "securos_version": "v4.001.0000004.0",
+            "ip_address": "192.168.1.110",
+            "max_cameras": 16,
+            "installation_date": "2024-02-01",
+            "maintenance_period_days": 60,
+            "warranty_expiry": "2027-02-01",
+            "storage": {
+              "storage_total_gb": 8000,
+              "storage_used_gb": 2100
+            },
+            "cameras": [
+              {
+                "name": "CAM-CSA-001-05",
+                "position": "Back Office Area",
+                "ip_address": "192.168.1.111",
+                "model": "IPC-HFW2431T-ZS",
+                "manufacturer": "Dahua",
+                "resolution": "4MP",
+                "fps": 25,
+                "bitrate": 4096,
+                "edge_storage_size": 128,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-001-06",
+                "position": "Emergency Exit",
+                "ip_address": "192.168.1.112",
+                "model": "IPC-HFW2831T-ZS",
+                "manufacturer": "Dahua", 
+                "resolution": "8MP",
+                "fps": 20,
+                "bitrate": 8192,
+                "edge_storage_size": 256,
+                "status": "warning"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Riyadh North Branch",
+        "branch_code": "CSA-002",
+        "branch_type": "Branch",
+        "address": "Exit 9, King Khalid Road, Riyadh 13313",
+        "coordinates": {
+          "lat": 24.8247,
+          "lng": 46.6407
+        },
+        "contact_phone": "+966-11-9876543",
+        "manager_name": "Fatima Al-Zahra",
+        "operating_hours": {
+          "sunday_thursday": "08:00-16:00",
+          "friday": "closed",
+          "saturday": "closed"
+        },
+        "nvrs": [
+          {
+            "device_name": "NVR-CSA-002-01",
+            "hostname": "WORKSTATION-NORTH",
+            "processor": "Intel Core i5-11400",
+            "ram": "16GB DDR4",
+            "device_id": "HIK-RD-N001-NVR01",
+            "product_id": "DS-7616NI-K2",
+            "system_type": "Hikvision 16-Channel NVR",
+            "securos_version": "v4.60.000",
+            "ip_address": "192.168.2.100",
+            "max_cameras": 16,
+            "installation_date": "2024-03-10",
+            "maintenance_period_days": 120,
+            "warranty_expiry": "2027-03-10",
+            "storage": {
+              "storage_total_gb": 6000,
+              "storage_used_gb": 1800
+            },
+            "cameras": [
+              {
+                "name": "CAM-CSA-002-01",
+                "position": "Branch Entrance",
+                "ip_address": "192.168.2.101",
+                "model": "DS-2CD2147G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "4MP",
+                "fps": 25,
+                "bitrate": 6144,
+                "edge_storage_size": 128,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-002-02",
+                "position": "Customer Service Area",
+                "ip_address": "192.168.2.102",
+                "model": "DS-2CD2147G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "4MP", 
+                "fps": 30,
+                "bitrate": 6144,
+                "edge_storage_size": 128,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-002-03",
+                "position": "ATM Area - Exterior",
+                "ip_address": "192.168.2.103",
+                "model": "DS-2CD2T47G2-L",
+                "manufacturer": "Hikvision",
+                "resolution": "4MP",
+                "fps": 25,
+                "bitrate": 8192,
+                "edge_storage_size": 256,
+                "status": "offline"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Qassim Regional ATM",
+        "branch_code": "CSA-003",
+        "branch_type": "ATM",
+        "address": "Prince Sultan Road, Buraydah, Qassim 51431",
+        "coordinates": {
+          "lat": 26.3260,
+          "lng": 43.9750
+        },
+        "contact_phone": "+966-16-3334455",
+        "manager_name": "Omar Al-Qassimi",
+        "operating_hours": {
+          "all_days": "24/7"
+        },
+        "nvrs": [
+          {
+            "device_name": "NVR-CSA-003-01",
+            "hostname": "ATM-QASSIM-001",
+            "processor": "ARM Cortex-A76",
+            "ram": "8GB DDR4",
+            "device_id": "UNV-QS-ATM001",
+            "product_id": "NVR301-04LX-P4",
+            "system_type": "Uniview Compact NVR",
+            "securos_version": "v3.2.15",
+            "ip_address": "192.168.3.100",
+            "max_cameras": 4,
+            "installation_date": "2024-04-20",
+            "maintenance_period_days": 30,
+            "warranty_expiry": "2026-04-20",
+            "storage": {
+              "storage_total_gb": 2000,
+              "storage_used_gb": 650
+            },
+            "cameras": [
+              {
+                "name": "CAM-CSA-003-01",
+                "position": "ATM Face View",
+                "ip_address": "192.168.3.101",
+                "model": "IPC2122SR3-PF40-C",
+                "manufacturer": "Uniview",
+                "resolution": "2MP",
+                "fps": 30,
+                "bitrate": 4096,
+                "edge_storage_size": 64,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-003-02",
+                "position": "ATM Area Overview",
+                "ip_address": "192.168.3.102",
+                "model": "IPC2124SR3-PF28-C",
+                "manufacturer": "Uniview",
+                "resolution": "2MP",
+                "fps": 25,
+                "bitrate": 4096,
+                "edge_storage_size": 64,
+                "status": "online"
+              },
+              {
+                "name": "CAM-CSA-003-03",
+                "position": "Perimeter Security",
+                "ip_address": "192.168.3.103",
+                "model": "IPC2128SR3-PF28-C",
+                "manufacturer": "Uniview",
+                "resolution": "2MP",
+                "fps": 20,
+                "bitrate": 3072,
+                "edge_storage_size": 64,
+                "status": "warning"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

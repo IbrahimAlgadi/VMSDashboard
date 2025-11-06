@@ -44,6 +44,7 @@ const Camera = sequelize.define('Camera', {
   },
   bitrate: DataTypes.INTEGER,
   edge_storage_size: DataTypes.INTEGER,
+  edge_storage_retention: DataTypes.INTEGER,
   uptime_percent: {
     type: DataTypes.DECIMAL(5, 2),
     defaultValue: 0.00

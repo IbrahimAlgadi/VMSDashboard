@@ -300,7 +300,20 @@ function showCameraDetail(camera, editMode = false) {
   document.getElementById('modalCameraIP').textContent = camera.ipAddress;
   document.getElementById('modalCameraModel').textContent = camera.model;
   document.getElementById('modalCameraResolution').textContent = camera.resolution;
-  document.getElementById('modalCameraFPS').textContent = camera.fps;
+  document.getElementById('modalCameraFPS').textContent = camera.fps || '-';
+  
+  // Bitrate - prefer from camera model, fallback to health metrics
+  const bitrate = camera.bitrate !== null && camera.bitrate !== undefined
+    ? camera.bitrate
+    : (camera.healthMetrics?.bitrateKbps !== null && camera.healthMetrics?.bitrateKbps !== undefined
+        ? camera.healthMetrics.bitrateKbps
+        : null);
+  if (bitrate !== null && bitrate !== undefined) {
+    document.getElementById('modalCameraBitrate').textContent = bitrate;
+  } else {
+    document.getElementById('modalCameraBitrate').textContent = '-';
+  }
+  
   document.getElementById('modalCameraUptime').textContent = camera.uptime.toFixed(1);
   
   // Status badge
@@ -312,65 +325,55 @@ function showCameraDetail(camera, editMode = false) {
   );
   statusBadge.innerHTML = `<i class="bi bi-circle-fill"></i> ${camera.status}`;
   
-  // Populate diagnostic data if available
-  if (camera.healthMetrics) {
-    // Network diagnostics
-    document.getElementById('diagPing').textContent = `${camera.healthMetrics.pingMs.toFixed(1)}ms`;
-    document.getElementById('diagPacketLoss').textContent = `${camera.healthMetrics.packetLoss.toFixed(1)}%`;
-    document.getElementById('diagBandwidth').textContent = `${camera.healthMetrics.bandwidthMbps.toFixed(1)} Mbps`;
-    
-    // Stream quality
-    document.getElementById('diagBitrate').textContent = `${camera.healthMetrics.bitrateKbps} kbps`;
-    document.getElementById('diagFrameDrop').textContent = `${camera.healthMetrics.frameDropPercent.toFixed(1)}%`;
-    
-    // Quality badge
-    const qualityBadge = document.getElementById('diagQuality');
-    qualityBadge.className = 'badge';
-    if (camera.healthMetrics.qualityScore >= 90) {
-      qualityBadge.classList.add('bg-success');
-      qualityBadge.textContent = 'Excellent';
-    } else if (camera.healthMetrics.qualityScore >= 70) {
-      qualityBadge.classList.add('bg-warning');
-      qualityBadge.textContent = 'Good';
-    } else if (camera.healthMetrics.qualityScore >= 50) {
-      qualityBadge.classList.add('bg-warning');
-      qualityBadge.textContent = 'Fair';
-    } else {
-      qualityBadge.classList.add('bg-danger');
-      qualityBadge.textContent = 'Poor';
-    }
-    
-    // Storage
-    document.getElementById('diagRecTime').textContent = `${camera.healthMetrics.recordingTimeDays} days`;
-    document.getElementById('diagSpaceUsed').textContent = `${camera.healthMetrics.spaceUsedGb.toFixed(0)} GB`;
-    document.getElementById('diagRetention').textContent = `${camera.healthMetrics.retentionDays} days`;
-    
-    // Events
-    document.getElementById('diagMotion').textContent = `${camera.healthMetrics.motionEventsToday} today`;
-    document.getElementById('diagAlerts').textContent = `${camera.healthMetrics.alertsPending} pending`;
-    
-    // Last reboot
-    if (camera.healthMetrics.lastRebootDate) {
-      const rebootDate = new Date(camera.healthMetrics.lastRebootDate);
-      const daysAgo = Math.floor((new Date() - rebootDate) / (1000 * 60 * 60 * 24));
-      document.getElementById('diagReboot').textContent = `${daysAgo} days ago`;
-    } else {
-      document.getElementById('diagReboot').textContent = 'Unknown';
-    }
+  // Populate edge storage data if available
+  // Edge Storage Size - prefer from health metrics, fallback to camera.edgeStorageSize
+  const edgeStorageSize = camera.healthMetrics?.edgeStorageSizeGb || camera.edgeStorageSize;
+  if (edgeStorageSize !== null && edgeStorageSize !== undefined) {
+    document.getElementById('diagEdgeStorageSize').textContent = `${edgeStorageSize} GB`;
   } else {
-    // Fallback to default values for cameras without health metrics
-    document.getElementById('diagPing').textContent = 'N/A';
-    document.getElementById('diagPacketLoss').textContent = 'N/A';
-    document.getElementById('diagBandwidth').textContent = 'N/A';
-    document.getElementById('diagBitrate').textContent = 'N/A';
-    document.getElementById('diagFrameDrop').textContent = 'N/A';
-    document.getElementById('diagQuality').textContent = 'Unknown';
+    document.getElementById('diagEdgeStorageSize').textContent = 'N/A';
+  }
+  
+  // Recording Time - from health metrics
+  if (camera.healthMetrics?.recordingTimeDays !== null && camera.healthMetrics?.recordingTimeDays !== undefined) {
+    document.getElementById('diagRecTime').textContent = `${camera.healthMetrics.recordingTimeDays} days`;
+  } else {
     document.getElementById('diagRecTime').textContent = 'N/A';
+  }
+  
+  // Space Used - from health metrics
+  if (camera.healthMetrics?.spaceUsedGb !== null && camera.healthMetrics?.spaceUsedGb !== undefined) {
+    document.getElementById('diagSpaceUsed').textContent = `${camera.healthMetrics.spaceUsedGb.toFixed(0)} GB`;
+  } else {
     document.getElementById('diagSpaceUsed').textContent = 'N/A';
+  }
+  
+  // Retention - prefer from health metrics, fallback to camera.edgeStorageRetention
+  let retention = null;
+  
+  // Check health metrics first
+  if (camera.healthMetrics) {
+    const healthRetention = camera.healthMetrics.retentionDays;
+    if (healthRetention !== null && healthRetention !== undefined && healthRetention !== '') {
+      retention = typeof healthRetention === 'number' ? healthRetention : parseInt(healthRetention);
+      if (!isNaN(retention)) {
+        // Use health metrics value
+      }
+    }
+  }
+  
+  // Fallback to camera.edgeStorageRetention if health metrics doesn't have it
+  if (retention === null || isNaN(retention)) {
+    const cameraRetention = camera.edgeStorageRetention;
+    if (cameraRetention !== null && cameraRetention !== undefined && cameraRetention !== '') {
+      retention = typeof cameraRetention === 'number' ? cameraRetention : parseInt(cameraRetention);
+    }
+  }
+  
+  if (retention !== null && !isNaN(retention)) {
+    document.getElementById('diagRetention').textContent = `${retention} days`;
+  } else {
     document.getElementById('diagRetention').textContent = 'N/A';
-    document.getElementById('diagMotion').textContent = 'N/A';
-    document.getElementById('diagAlerts').textContent = 'N/A';
-    document.getElementById('diagReboot').textContent = 'Unknown';
   }
   
   // Edit button

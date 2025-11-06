@@ -16,7 +16,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="diagnostics-tab" data-bs-toggle="tab" data-bs-target="#diagnostics-pane" type="button" role="tab">
-              <i class="bi bi-heart-pulse"></i> Diagnostics
+              <i class="bi bi-hdd"></i> Edge Storage Details
             </button>
           </li>
         </ul>
@@ -84,6 +84,12 @@
               </div>
               <div class="col-md-6">
                 <div class="info-group">
+                  <label class="info-label">Bitrate</label>
+                  <div class="info-value"><span id="modalCameraBitrate">-</span> kbps</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-group">
                   <label class="info-label">Uptime</label>
                   <div class="info-value"><span id="modalCameraUptime">-</span>%</div>
                 </div>
@@ -91,46 +97,16 @@
             </div>
           </div>
 
-          <!-- Diagnostics Tab -->
+          <!-- Edge Storage Details Tab -->
           <div class="tab-pane fade" id="diagnostics-pane" role="tabpanel">
-            <div class="row g-3">
-              <div class="col-md-6">
+            <div class="row g-3 justify-content-center">
+              <div class="col-md-8">
                 <div class="diagnostic-card">
-                  <h6><i class="bi bi-diagram-3"></i> Network</h6>
+                  <h6><i class="bi bi-hdd"></i> Edge Storage</h6>
                   <div class="diagnostic-item">
-                    <span>Ping:</span>
-                    <span class="text-success"><strong id="diagPing">15ms</strong></span>
+                    <span>Edge Storage Size:</span>
+                    <span><strong id="diagEdgeStorageSize">-</strong></span>
                   </div>
-                  <div class="diagnostic-item">
-                    <span>Packet Loss:</span>
-                    <span class="text-success"><strong id="diagPacketLoss">0%</strong></span>
-                  </div>
-                  <div class="diagnostic-item">
-                    <span>Bandwidth:</span>
-                    <span><strong id="diagBandwidth">2.5 Mbps</strong></span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="diagnostic-card">
-                  <h6><i class="bi bi-camera"></i> Stream Quality</h6>
-                  <div class="diagnostic-item">
-                    <span>Bitrate:</span>
-                    <span><strong id="diagBitrate">4096 kbps</strong></span>
-                  </div>
-                  <div class="diagnostic-item">
-                    <span>Frame Drop:</span>
-                    <span class="text-success"><strong id="diagFrameDrop">0.2%</strong></span>
-                  </div>
-                  <div class="diagnostic-item">
-                    <span>Quality:</span>
-                    <span class="badge bg-success" id="diagQuality">Excellent</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="diagnostic-card">
-                  <h6><i class="bi bi-hdd"></i> Storage</h6>
                   <div class="diagnostic-item">
                     <span>Recording Time:</span>
                     <span><strong id="diagRecTime">15 days</strong></span>
@@ -142,23 +118,6 @@
                   <div class="diagnostic-item">
                     <span>Retention:</span>
                     <span><strong id="diagRetention">30 days</strong></span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="diagnostic-card">
-                  <h6><i class="bi bi-activity"></i> Events</h6>
-                  <div class="diagnostic-item">
-                    <span>Motion Events:</span>
-                    <span><strong id="diagMotion">24 today</strong></span>
-                  </div>
-                  <div class="diagnostic-item">
-                    <span>Alerts:</span>
-                    <span class="text-warning"><strong id="diagAlerts">2 pending</strong></span>
-                  </div>
-                  <div class="diagnostic-item">
-                    <span>Last Reboot:</span>
-                    <span><strong id="diagReboot">15 days ago</strong></span>
                   </div>
                 </div>
               </div>
