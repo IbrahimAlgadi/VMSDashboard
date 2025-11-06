@@ -92,6 +92,11 @@ async function loadLocations() {
     // Update statistics
     updateStatistics(data.summary);
 
+    // Clear existing markers before adding new ones (prevents duplicates on reload)
+    if (mapComponent && typeof mapComponent.clearMarkers === 'function') {
+      mapComponent.clearMarkers();
+    }
+
     // Add markers to map
     locations.forEach(location => {
       mapComponent.addMarker(location);
@@ -300,6 +305,12 @@ function initRealtimeUpdates() {
     setTimeout(initRealtimeUpdates, 100);
     return;
   }
+
+  // Reload data when WebSocket reconnects
+  EventBus.on('websocket:registered', () => {
+    console.log('🔄 WebSocket reconnected, reloading map data...');
+    loadLocations();
+  });
 
   // Subscribe to NVR status changes
   RealtimeManager.on('nvr:status:changed', (data) => {

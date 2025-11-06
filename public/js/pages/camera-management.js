@@ -61,6 +61,12 @@ function initRealtimeUpdates() {
     return;
   }
 
+  // Reload data when WebSocket reconnects
+  EventBus.on('websocket:registered', () => {
+    console.log('🔄 WebSocket reconnected, reloading camera data...');
+    loadCameras();
+  });
+
   // Subscribe to camera status changes
   RealtimeManager.on('camera:status:changed', (data) => {
     handleCameraStatusChange(data);

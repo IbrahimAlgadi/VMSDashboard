@@ -277,20 +277,43 @@ async function calculateNVRStatus(NVR, Camera, nvrId) {
  * @param {Object} NVR - NVR model
  * @param {Object} Camera - Camera model
  * @param {number} nvrId - NVR ID to update
+ * @param {boolean} forceRecalculate - Force recalculation even if NVR is offline (default: false)
  * @returns {Promise<boolean>} - Success status
  */
-async function updateNVRStatus(NVR, Camera, nvrId) {
+async function updateNVRStatus(NVR, Camera, nvrId, forceRecalculate = false) {
   try {
+    // Check current NVR status first
+    const currentNVR = await NVR.findOne({
+      where: { id: nvrId },
+      attributes: ['status']
+    });
+
+    if (!currentNVR) {
+      console.error(`NVR ${nvrId} not found`);
+      return false;
+    }
+
+    // If NVR is already marked as 'offline', it means the hardware is disconnected
+    // Don't recalculate based on camera statuses unless forced
+    if (currentNVR.status === 'offline' && !forceRecalculate) {
+      console.log(`NVR ${nvrId} is offline (hardware disconnected), preserving status`);
+      return false; // Status unchanged, but not an error
+    }
+
     const calculatedStatus = await calculateNVRStatus(NVR, Camera, nvrId);
     
-    // Update the NVR status
-    await NVR.update(
-      { status: calculatedStatus },
-      { where: { id: nvrId } }
-    );
-
-    console.log(`Updated NVR ${nvrId} status to: ${calculatedStatus}`);
-    return true;
+    // Only update if status actually changed
+    if (calculatedStatus !== currentNVR.status) {
+      await NVR.update(
+        { status: calculatedStatus },
+        { where: { id: nvrId } }
+      );
+      console.log(`Updated NVR ${nvrId} status: ${currentNVR.status} → ${calculatedStatus}`);
+      return true;
+    } else {
+      console.log(`NVR ${nvrId} status unchanged: ${calculatedStatus}`);
+      return false; // Status unchanged, but not an error
+    }
   } catch (error) {
     console.error('Error updating NVR status:', error);
     return false;

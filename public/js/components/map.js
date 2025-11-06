@@ -77,6 +77,11 @@ class MapComponent {
 
   // Add location marker
   addMarker(location) {
+    // Remove existing marker for this location if it exists (prevents duplicates)
+    if (this.markers[location.id]) {
+      this.removeMarker(location.id);
+    }
+
     const icon = this.createMarkerIcon(location.status);
     
     const marker = L.marker(location.coordinates, {
@@ -110,6 +115,28 @@ class MapComponent {
     });
 
     return marker;
+  }
+
+  // Remove a specific marker
+  removeMarker(locationId) {
+    const marker = this.markers[locationId];
+    if (marker) {
+      // Remove from cluster group
+      this.markerClusterGroup.removeLayer(marker);
+      
+      // Remove from all layers
+      Object.values(this.layers).forEach(layer => {
+        layer.removeLayer(marker);
+      });
+      
+      // Remove from map if directly added
+      if (this.map.hasLayer(marker)) {
+        this.map.removeLayer(marker);
+      }
+      
+      // Remove marker reference
+      delete this.markers[locationId];
+    }
   }
 
   // Create popup content

@@ -86,8 +86,8 @@ async function startServer() {
     await sequelize.sync({ force: false });
     console.log('📊 Database tables ready');
 
-    // Attach WebSocket server to HTTP server
-    nvrWebSocket.attach(server);
+    // Attach WebSocket server to HTTP server (async - initializes all NVRs as offline)
+    await nvrWebSocket.attach(server);
 
     // Start HTTP server
     server.listen(PORT, '0.0.0.0', () => {

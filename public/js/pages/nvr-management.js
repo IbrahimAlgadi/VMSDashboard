@@ -295,6 +295,30 @@
         console.log('📊 Initialized StateManager with', this.data.nvrs.length, 'NVRs');
       }
 
+      // Reload data when WebSocket reconnects
+      EventBus.on('websocket:registered', () => {
+        console.log('🔄 WebSocket reconnected, reloading NVR data...');
+        this.loadData().then(() => {
+          // Update StateManager with fresh data
+          if (this.data && this.data.nvrs && typeof StateManager !== 'undefined') {
+            this.data.nvrs.forEach(nvr => {
+              StateManager.setNVR(nvr.id, {
+                id: nvr.id,
+                hostname: nvr.hostname,
+                device_name: nvr.name,
+                status: nvr.status,
+                last_seen: nvr.lastSeen,
+                ...nvr
+              });
+            });
+            console.log('📊 Updated StateManager with', this.data.nvrs.length, 'NVRs');
+          }
+          this.renderStatistics();
+          this.renderTable();
+          console.log('✅ NVR data reloaded after reconnection');
+        });
+      });
+
       // Subscribe to NVR status changes
       RealtimeManager.on('nvr:status:changed', (data) => {
         this.handleNVRStatusChange(data);
