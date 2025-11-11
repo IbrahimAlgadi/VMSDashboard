@@ -2,6 +2,8 @@ const { WebSocketServer } = require('ws');
 const { Op } = require('sequelize');
 const { NVR, Camera } = require('../models');
 const { updateNVRStatus } = require('../utils/validation');
+const bus = require('../events/bus');
+const TOPICS = require('../events/topics');
 
 /**
  * WebSocket server for NVR heartbeat and real-time status updates
@@ -107,6 +109,20 @@ class NVRWebSocketServer {
         return;
       }
 
+      // Initialize - full system data from NVR
+      if (message.type === 'initialize' && ws.hostname) {
+        console.log('📦 Initialize data received from:', ws.hostname);
+        await this.handleInitialize(ws, message.data);
+        return;
+      }
+
+      // Camera status update from NVR
+      if (message.type === 'camera_update' && ws.hostname) {
+        console.log('📹 Camera update received from:', ws.hostname);
+        await this.handleCameraUpdate(ws.hostname, message.camera_name, message.status);
+        return;
+      }
+
       // Dashboard client connection (for broadcasting updates)
       if (message.type === 'dashboard') {
         this.dashboardClients.add(ws);
@@ -186,6 +202,12 @@ class NVRWebSocketServer {
         });
       }
 
+      bus.emit(TOPICS.COMPLIANCE_NVR_UPDATED, {
+        deviceId: nvr.id,
+        branchId: finalNVR?.branch_id || nvr.branch_id,
+        hostname: nvr.hostname
+      });
+
       // Send authentication confirmation
       ws.send(JSON.stringify({ 
         type: 'auth_ok', 
@@ -198,6 +220,147 @@ class NVRWebSocketServer {
     } catch (error) {
       console.error('❌ Error during NVR authentication:', error.message);
       ws.close(1011, 'Internal server error');
+    }
+  }
+
+  /**
+   * Handle initialization data from NVR
+   * This replaces the old POST /api/initialize endpoint
+   */
+  async handleInitialize(ws, data) {
+    try {
+      if (!data || !data.region) {
+        console.log('⚠️ Invalid initialization data: missing region');
+        ws.send(JSON.stringify({ 
+          type: 'initialize_error',
+          message: 'Invalid data format'
+        }));
+        return;
+      }
+
+      console.log(`📦 Processing initialization data from ${ws.hostname}...`);
+      
+      // The initialization data is already processed during auth
+      // The NVR and cameras are already in the database from seeding
+      // This message is mainly for confirmation and logging
+      
+      // We could validate that the data matches what's in the database
+      // but for now, just acknowledge receipt
+      
+      ws.send(JSON.stringify({ 
+        type: 'initialize_ok',
+        message: 'Initialization data received'
+      }));
+
+      console.log(`✅ Initialization data acknowledged for ${ws.hostname}`);
+
+    } catch (error) {
+      console.error('❌ Error handling initialization:', error.message);
+      ws.send(JSON.stringify({ 
+        type: 'initialize_error',
+        message: 'Failed to process initialization data'
+      }));
+    }
+  }
+
+  /**
+   * Handle camera status update from NVR
+   * This replaces the old PATCH /api/cameras/by-name/:name endpoint
+   */
+  async handleCameraUpdate(hostname, cameraName, status) {
+    try {
+      if (!cameraName || !status) {
+        console.log('⚠️ Invalid camera update: missing camera_name or status');
+        return;
+      }
+
+      // Find NVR by hostname
+      const nvr = await NVR.findOne({ 
+        where: { hostname },
+        attributes: ['id', 'hostname', 'device_name', 'branch_id']
+      });
+
+      if (!nvr) {
+        console.log(`⚠️ NVR not found for hostname: ${hostname}`);
+        return;
+      }
+
+      // Find camera by name and NVR ID
+      const camera = await Camera.findOne({
+        where: { 
+          name: cameraName,
+          nvr_id: nvr.id
+        },
+        attributes: ['id', 'name', 'status', 'branch_id']
+      });
+
+      if (!camera) {
+        console.log(`⚠️ Camera not found: name="${cameraName}", nvr_id=${nvr.id}`);
+        return;
+      }
+
+      const oldStatus = camera.status;
+      const statusChanged = camera.status !== status;
+
+      if (statusChanged) {
+        await camera.update({ status });
+        console.log(`✅ Camera ${camera.name} (ID: ${camera.id}): ${oldStatus} → ${status}`);
+      } else {
+        console.log(`ℹ️ Camera ${camera.name} status unchanged: ${status}`);
+      }
+
+      // Broadcast camera status update
+      this.broadcastToDashboard({
+        type: 'camera_status_update',
+        camera_id: camera.id,
+        camera_name: camera.name,
+        nvr_id: nvr.id,
+        branch_id: camera.branch_id || nvr.branch_id,
+        old_status: oldStatus,
+        new_status: status,
+        timestamp: new Date().toISOString()
+      });
+
+      // Recalculate NVR status based on camera changes
+      const nvrStatusUpdated = await updateNVRStatus(NVR, Camera, nvr.id, true);
+      
+      // Fetch and broadcast updated NVR status
+      const updatedNVR = await NVR.findOne({
+        where: { id: nvr.id },
+        attributes: ['id', 'hostname', 'device_name', 'status', 'branch_id']
+      });
+      
+      if (updatedNVR) {
+        this.broadcastToDashboard({
+          type: 'nvr_status_update',
+          hostname: updatedNVR.hostname,
+          device_name: updatedNVR.device_name,
+          nvr_id: updatedNVR.id,
+          branch_id: updatedNVR.branch_id,
+          status: updatedNVR.status,
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      // Emit compliance event for camera update
+      bus.emit(TOPICS.COMPLIANCE_CAMERA_UPDATED, {
+        deviceId: camera.id,
+        branchId: camera.branch_id || nvr.branch_id,
+        cameraName: camera.name
+      });
+
+      // Send confirmation to NVR
+      const ws = this.nvrConnections.get(hostname);
+      if (ws && ws.readyState === 1) {
+        ws.send(JSON.stringify({ 
+          type: 'camera_update_ok',
+          camera_name: cameraName,
+          status: status
+        }));
+      }
+
+    } catch (error) {
+      console.error('❌ Error handling camera update:', error.message);
     }
   }
 
